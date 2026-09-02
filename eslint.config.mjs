@@ -5,6 +5,7 @@ export default defineConfig([
 		rules: {
 			semi: "error",
 			"prefer-const": "error",
+			"@typescript-eslint/no-unused-vars": "off",
 		},
 	},
 ]);
