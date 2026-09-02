@@ -1,0 +1,28 @@
+{
+  "name": "tmp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "type": "module",
+  "devDependencies": {
+    "@tsconfig/node26": "^26.0.1",
+    "@types/node": "^26.4.1",
+    "eslint": "^10.9.1",
+    "tsx": "^4.23.13",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.69.0"
+  },
+  "dependencies": {
+    "@sequelize/mariadb": "^7.0.0-alpha.48",
+    "express": "^5.2.1",
+    "mariadb": "^3.5.4",
+    "sequelize": "^6.37.8"
+  }
+}
