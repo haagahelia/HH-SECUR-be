@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import { createRoutes } from "./routes/routes.js";
 
 export const createServer = () => {
     const app = express ();
@@ -6,6 +7,8 @@ export const createServer = () => {
     app.get("/status", (req: Request, res: Response) => {
         res.json({ ok: true});
     });
+
+    createRoutes(app);
 
     return app;
 }
