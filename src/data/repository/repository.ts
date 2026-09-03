@@ -1,5 +1,9 @@
 import BaseRepository from "./BaseRepository.js";
+import { AddUserRepository } from "./AddUserRepository.js";
 
-const repository = new BaseRepository();
+const CombinedRepository = AddUserRepository(BaseRepository);
+const repository = new CombinedRepository();
+
+//const repository = new BaseRepository();
 
 export default repository;

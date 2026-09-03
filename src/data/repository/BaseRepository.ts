@@ -12,7 +12,8 @@ export default class BaseRepository {
             database: config.db.database,
             dialect: "mariadb",
             username: config.db.username,
-            password: config.db.password
+            password: config.db.password,
+            models: [__dirname + "/../models"],
         });
     }
 }

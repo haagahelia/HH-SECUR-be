@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt"
 import { generateToken } from "../utils/jwt.js";
 
-const hashedPassword = await bcrypt.hash("password", 10); //Remove after user db implementation
+//const hashedPassword = await bcrypt.hash("password", 10); //Remove after user db implementation
+const hashedPassword = "$2a$10$HN7AR4scRDb2fvtUA7u2DO/C5g0MvgsZ2Q8f.Jp3ZSepfJj0OfFcu";
 const users = [{ id: 123, username: "user", passwordHash: hashedPassword }]; //Remove after user db implementation
 
 export const login = async (req: Request, res: Response) => {
