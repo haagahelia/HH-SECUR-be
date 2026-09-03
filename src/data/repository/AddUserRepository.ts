@@ -18,5 +18,20 @@ export function AddUserRepository<TBase extends Constructor<BaseRepository>>(
             return User.create(userAttributes);
         }
 
+        async deleteUser(id: number) {
+            const user = await User.findByPk(id);
+            if (user) {
+                await user.destroy();
+            }
+        }
+
+        async deleteByEmail(email: string) {
+            await User.destroy({
+                where: {
+                    email: email,
+                },
+            });
+        }
+
     }
 }
