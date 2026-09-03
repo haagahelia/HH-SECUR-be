@@ -29,3 +29,15 @@ Uses Bearer authentication to look for valid token.
     - Success: {"token": "accepted"}
     
     - Failed: failure status response from auth middleware
+
+**/defaultuser**
+
+Creates default user, first deletes it if email is already present.
+
+Requires following env variables set:
+
+```
+DEFAULT_USER_USERNAME=username
+DEFAULT_USER_PASSWORD=password
+DEFAULT_USER_EMAIL=email
+```
