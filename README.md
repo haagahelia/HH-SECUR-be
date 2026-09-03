@@ -25,5 +25,7 @@ Until user model and repository implementation `user` and `password` are the cre
 Uses Bearer authentication to look for valid token.
 
 **Responses:**
+
     - Success: {"token": "accepted"}
+    
     - Failed: failure status response from auth middleware
