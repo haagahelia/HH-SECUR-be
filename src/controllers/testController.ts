@@ -26,7 +26,7 @@ export const addDefaultUser = async (req: Request, res: Response) => {
         username: username,
         email: email,
         password_hash: passwordHash,
-        user_role: role
+        role: role
     }
 
     try {
@@ -63,7 +63,7 @@ export const addDefaultAdmin = async (req: Request, res: Response) => {
         username: adminUsername,
         email: adminEmail,
         password_hash: adminPasswordHash,
-        user_role: adminRole
+        role: adminRole
     }
 
     try {

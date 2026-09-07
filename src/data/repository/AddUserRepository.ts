@@ -14,7 +14,7 @@ export function AddUserRepository<TBase extends Constructor<BaseRepository>>(
             return User.findByPk(id);
         }
 
-        createUser(userAttributes: { username: string; email: string; password_hash: string; user_role: string }) {
+        createUser(userAttributes: { username: string; email: string; password_hash: string; role: string }) {
             return User.create(userAttributes);
         }
 
@@ -27,6 +27,14 @@ export function AddUserRepository<TBase extends Constructor<BaseRepository>>(
 
         async deleteByEmail(email: string) {
             await User.destroy({
+                where: {
+                    email: email,
+                },
+            });
+        }
+
+        async findByEmail(email: string) {
+            return User.findOne({
                 where: {
                     email: email,
                 },

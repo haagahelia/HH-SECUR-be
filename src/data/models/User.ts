@@ -36,7 +36,7 @@ export default class User extends Model<
     @Column({
         type: DataType.STRING
     })
-    declare user_role: string;
+    declare role: string;
 
     @CreatedAt
     declare created_at: CreationOptional<Date>;
