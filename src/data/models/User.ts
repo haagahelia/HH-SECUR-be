@@ -33,6 +33,11 @@ export default class User extends Model<
     })
     declare password_hash: string;
 
+    @Column({
+        type: DataType.STRING
+    })
+    declare user_role: string;
+
     @CreatedAt
     declare created_at: CreationOptional<Date>;
 

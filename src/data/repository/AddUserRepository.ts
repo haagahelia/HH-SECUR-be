@@ -14,7 +14,7 @@ export function AddUserRepository<TBase extends Constructor<BaseRepository>>(
             return User.findByPk(id);
         }
 
-        createUser(userAttributes: { username: string; email: string; password_hash: string }) {
+        createUser(userAttributes: { username: string; email: string; password_hash: string; user_role: string }) {
             return User.create(userAttributes);
         }
 
