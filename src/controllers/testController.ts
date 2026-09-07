@@ -9,6 +9,10 @@ export const tokenStatus = async (req: Request, res: Response) => {
     res.json({ token: "accepted" });
 }
 
+export const tokenStatusAdmin = async (req: Request, res: Response) => {
+    res.json({ adminAccess: true });
+}
+
 export const addDefaultUser = async (req: Request, res: Response) => {
 
     if (!process.env.DEFAULT_USER_PASSWORD || !process.env.DEFAULT_USER_USERNAME || !process.env.DEFAULT_USER_EMAIL || !process.env.DEFAULT_USER_ROLE) {
@@ -30,7 +34,10 @@ export const addDefaultUser = async (req: Request, res: Response) => {
     }
 
     try {
-        await repository.deleteByEmail(email);
+        const oldUser = repository.findByEmail(email);
+        if (oldUser != null) {
+            await repository.deleteByEmail(email);
+        } 
         const newUser = await repository.createUser(user);
         res.json({
             message: "User created successfully",
@@ -67,7 +74,10 @@ export const addDefaultAdmin = async (req: Request, res: Response) => {
     }
 
     try {
-        await repository.deleteByEmail(adminEmail);
+        const oldAdmin = await repository.findByEmail(adminEmail);
+        if (oldAdmin != null) {
+            await repository.deleteByEmail(adminEmail);
+        }
         const newUser = await repository.createUser(admin);
         res.json({
             message: "User created successfully",

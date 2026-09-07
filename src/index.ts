@@ -9,7 +9,7 @@ console.log("Backend is running");
 
 server.listen(port, async () => {
     try {
-        await repository.sequelizeClient.sync();
+        await repository.sequelizeClient.sync({ alter: true });
         console.log("Succsefully connected to database")
     } catch (error) {
         console.log("Database connection failed");

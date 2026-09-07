@@ -3,8 +3,11 @@ import bcrypt from "bcrypt"
 import { generateToken } from "../utils/jwt.js";
 
 //const hashedPassword = await bcrypt.hash("password", 10); //Remove after user db implementation
-const hashedPassword = "$2a$10$HN7AR4scRDb2fvtUA7u2DO/C5g0MvgsZ2Q8f.Jp3ZSepfJj0OfFcu";
-const users = [{ id: 123, username: "user", passwordHash: hashedPassword }]; //Remove after user db implementation
+const hashedPassword = "$2a$10$HN7AR4scRDb2fvtUA7u2DO/C5g0MvgsZ2Q8f.Jp3ZSepfJj0OfFcu"; //password
+const hashedAdminPassword = "$2a$10$tb1ZscEiK9ODOc2FYvMHh.i0Xi4Zp4fqa8LYn8jSuFucBBjw.kRkG" //adminPassword
+
+//Remove after user db implementation
+export const tempUsers = [{ id: 123, username: "user", passwordHash: hashedPassword, email:  "user@testing.com", role: "user"}, { id: 124, username: "admin", passwordHash: hashedAdminPassword, email:  "admin@testing.com", role: "admin"}];
 
 export const login = async (req: Request, res: Response) => {
     const { username, password } = req.body;
@@ -16,7 +19,7 @@ export const login = async (req: Request, res: Response) => {
         return;
     }
 
-    const user = users.find( //Replace with db lookup once user in db is implemented
+    const user = tempUsers.find( //Replace with db lookup once user in db is implemented
         (user) => user.username === username
     );
 
@@ -39,11 +42,13 @@ export const login = async (req: Request, res: Response) => {
     const token = generateToken({
         userId: user.id,
         username: user.username,
+        email: user.email
     });
 
     res.json({
         message: "Login successful",
         username: user.username,
+        role: user.role,
         token
     });
 }

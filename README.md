@@ -30,6 +30,18 @@ Uses Bearer authentication to look for valid token.
     
     - Failed: failure status response from auth middleware
 
+**/tokenstatusadmin**
+
+Checks for token authenticity and if that passes checks for admin role.
+
+**Responses:**
+
+    - Authentic token with admin role: {"adminAccess" : true}
+
+    - Authentic token without admin role: {"message": "Admin status required"}
+
+    - Token check failed: failure status response from auth middleware
+
 **/defaultuser**
 
 Creates default user, first deletes it if email is already present.
