@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import repository from "../data/repository/repository.js";
+import User from "../data/models/User.js";
 
 dotenv.config();
 
@@ -34,15 +35,24 @@ export const addDefaultUser = async (req: Request, res: Response) => {
     }
 
     try {
-        const oldUser = repository.findByEmail(email);
+        const oldUser: User | null = await repository.findByEmail(email);
         if (oldUser != null) {
-            await repository.deleteByEmail(email);
-        } 
-        const newUser = await repository.createUser(user);
-        res.json({
-            message: "User created successfully",
-            newUser
-        });
+            oldUser.username = username;
+            oldUser.email = email;
+            oldUser.password_hash = passwordHash;
+            oldUser.role = role;
+            await oldUser.save();
+            res.json({
+                message: "User reset to default values",
+                User: oldUser
+            })
+        } else {
+            const newUser = await repository.createUser(user);
+            res.json({
+                message: "User created successfully",
+                User: newUser
+            });
+        }
     } catch (error) {
         console.log(error);
         res.status(400).json({
@@ -74,15 +84,24 @@ export const addDefaultAdmin = async (req: Request, res: Response) => {
     }
 
     try {
-        const oldAdmin = await repository.findByEmail(adminEmail);
+        const oldAdmin: User | null = await repository.findByEmail(adminEmail);
         if (oldAdmin != null) {
-            await repository.deleteByEmail(adminEmail);
+            oldAdmin.username = adminUsername;
+            oldAdmin.email = adminEmail;
+            oldAdmin.password_hash = adminPasswordHash;
+            oldAdmin.role = adminRole;
+            await oldAdmin.save();
+            res.json({
+                message: "User reset to default values",
+                User: oldAdmin
+            })
+        } else {
+            const newAdmin = await repository.createUser(admin);
+            res.json({
+                message: "User created successfully",
+                User: newAdmin
+            });
         }
-        const newUser = await repository.createUser(admin);
-        res.json({
-            message: "User created successfully",
-            newUser
-        });
     } catch (error) {
         console.log(error);
         res.status(400).json({
