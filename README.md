@@ -15,35 +15,30 @@ Fetches user by the id of {id}
 
     - Success: 200
 
-    ```
-    {
-        user: {
-            id: number,
-            username: string,
-            email: string,
-            password_hash: string,
-            role: string,
-            created_at: DATE,
-            updated_at: DATE
+        {
+            user: {
+                id: number,
+                username: string,
+                email: string,
+                password_hash: string,
+                role: string,
+                created_at: DATE,
+                updated_at: DATE
+            }
         }
-    }
-    ```
 
     - Not a number failure: 400
 
-    ```
-    {
-        message: "Requested id {id} is not a number
-    }
-    ```
+        {
+            message: "Requested id {id} is not a number
+        }
 
     - User not found failure: 404
 
-    ```
-    {
-        message: "User by the id of {id} does not exist"
-    }
-    ```
+        {
+            message: "User by the id of {id} does not exist"
+        }
+
 
 
 **/login** - POST
