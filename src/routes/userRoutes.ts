@@ -1,6 +1,8 @@
 import { Express} from "express";
-import { login } from "../controllers/userController.js";
+import { getUserById, login } from "../controllers/userController.js";
 
 export const createUserRoutes = (app: Express) => {
-    app.post("/login", login);    
+    app.post("/login", login);
+
+    app.get("/users/:id", getUserById);
 };
