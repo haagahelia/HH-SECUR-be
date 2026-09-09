@@ -1,5 +1,5 @@
 import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AutoIncrement, Column, CreatedAt, DataType, Model, PrimaryKey, Table, Unique, UpdatedAt } from "sequelize-typescript";
+import { AllowNull, AutoIncrement, Column, CreatedAt, DataType, Model, NotEmpty, PrimaryKey, Table, Unique, UpdatedAt } from "sequelize-typescript";
 
 
 @Table({
@@ -17,22 +17,32 @@ export default class User extends Model<
     })
     declare id: CreationOptional<number>
 
+    @AllowNull(false)
+    @NotEmpty
+    @Unique
     @Column({
         type: DataType.STRING
     })
     declare username: string;
 
+    @AllowNull(false)
+    @NotEmpty
     @Unique
     @Column({
         type: DataType.STRING
     })
     declare email: string;
 
+
+    @AllowNull(false)
+    @NotEmpty
     @Column({
         type: DataType.STRING
     })
     declare password_hash: string;
 
+    @AllowNull(false)
+    @NotEmpty
     @Column({
         type: DataType.STRING
     })
