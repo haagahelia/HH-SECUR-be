@@ -1,0 +1,40 @@
+name: dbbe_project
+
+services:
+  hh_secur_db_service:
+    image: mariadb:12 # OR: e.g. mariadb:latest OR  mariadb:12.2.2-ubi10
+    container_name: hh_secur_db_container
+    env_file: .env
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - hh_secur_db_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - hh_secur_network
+
+  hh_secur_be_service:
+    container_name: hh_secur_be_container
+    build: .
+    env_file: .env
+    depends_on:
+      hh_secur_db_service:
+        condition: service_healthy
+    environment:
+      - DB_HOST=hh_secur_db_service
+    ports:
+      - "${BE_SERVER_PORT}:${BE_SERVER_PORT}"
+    networks:
+      - hh_secur_network
+
+networks:
+  hh_secur_network:
+    driver: bridge
+
+volumes:
+  hh_secur_db_data:
