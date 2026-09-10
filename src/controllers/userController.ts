@@ -3,12 +3,15 @@ import bcrypt from "bcrypt"
 import { generateToken } from "../utils/jwt.js";
 import repository from "../data/repository/repository.js";
 
+
+/* 
 //const hashedPassword = await bcrypt.hash("password", 10); //Remove after user db implementation
 const hashedPassword = "$2a$10$HN7AR4scRDb2fvtUA7u2DO/C5g0MvgsZ2Q8f.Jp3ZSepfJj0OfFcu"; //password
 const hashedAdminPassword = "$2a$10$tb1ZscEiK9ODOc2FYvMHh.i0Xi4Zp4fqa8LYn8jSuFucBBjw.kRkG" //adminPassword
 
 //Remove after user db implementation
 export const tempUsers = [{ id: 123, username: "user", passwordHash: hashedPassword, email: "user@testing.com", role: "user" }, { id: 124, username: "admin", passwordHash: hashedAdminPassword, email: "admin@testing.com", role: "admin" }];
+*/
 
 export const login = async (req: Request, res: Response) => {
     const { username, password } = req.body;
@@ -20,9 +23,13 @@ export const login = async (req: Request, res: Response) => {
         return;
     }
 
+    /*
     const user = tempUsers.find( //Replace with db lookup once user in db is implemented
         (user) => user.username === username
     );
+ */
+    
+    const user = await repository.findByUsername(username)
 
     if (!user) {
         res.status(401).json({
@@ -31,7 +38,7 @@ export const login = async (req: Request, res: Response) => {
         return;
     }
 
-    const passwordMatches = await bcrypt.compare(password, user.passwordHash);
+    const passwordMatches = await bcrypt.compare(password, user.password_hash);
 
     if (!passwordMatches) {
         res.status(401).json({

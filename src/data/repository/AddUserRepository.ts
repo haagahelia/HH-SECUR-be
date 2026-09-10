@@ -41,5 +41,14 @@ export function AddUserRepository<TBase extends Constructor<BaseRepository>>(
             });
         }
 
+        
+        async findByUsername(username: string) {
+            return User.findOne({
+                where: {
+                    username: username,
+                },
+            });
+        }
+
     }
 }

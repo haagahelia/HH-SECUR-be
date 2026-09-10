@@ -5,4 +5,5 @@ export const createUserRoutes = (app: Express) => {
     app.post("/login", login);
 
     app.get("/users/:id", getUserById);
+
 };

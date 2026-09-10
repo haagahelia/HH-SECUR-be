@@ -5,7 +5,7 @@ Backend and Database for HH-SECUR-i
 
 **/status** - GET
 
-Responds `{ok: true}` if server is running. Doesn't require succesfull database connection.
+Responds `{ok: true}` if server is running. Doesn't require successful database connection.
 
 **/users/{id}** - GET
 
@@ -52,7 +52,8 @@ Fetches user by the id of {id}
 }
 
 ```
-Until user model and repository implementation `user` and `password` are the credentials for testing. After the implementation consult internal documentation.
+
+Credentials for default user and admin are defined in env variables.
 
 **/tokenstatus**
 
