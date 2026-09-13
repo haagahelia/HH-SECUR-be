@@ -7,11 +7,16 @@ export function AddUserRepository<TBase extends Constructor<BaseRepository>>(
     return class extends Base {
         getUsers() {
             return User.findAll({
+                attributes: {
+                    exclude: ["passwordHash"],
+                }
             })
         }
 
         getUser(id: number) {
-            return User.findByPk(id);
+            return User.findByPk(id, {attributes: {
+                    exclude: ["passwordHash"],
+                }});
         }
 
         createUser(userAttributes: { username: string; email: string; password_hash: string; role: string }) {
@@ -22,6 +27,13 @@ export function AddUserRepository<TBase extends Constructor<BaseRepository>>(
             const user = await User.findByPk(id);
             if (user) {
                 await user.destroy();
+            }
+        }
+
+        async updateUser(id: number, userAttributes: { username: string; email: string; password_hash: string;role: string }) {
+            const user = await User.findByPk(id);
+            if (user) {
+                await user.update(userAttributes);
             }
         }
 

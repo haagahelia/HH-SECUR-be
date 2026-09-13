@@ -54,6 +54,13 @@ export const login = async (req: Request, res: Response) => {
     });
 }
 
+export const getUsers = async (req: Request, res: Response) => {
+    const users = await repository.getUsers();
+    res.json({
+        users
+    })
+}
+
 export const getUserById = async (req: Request, res: Response) => {
     const idRaw = (req.params.id);
     const id = parseInt(idRaw as string)
@@ -75,3 +82,49 @@ export const getUserById = async (req: Request, res: Response) => {
 
     }
 }
+
+export const deleteUserbyId = async (req: Request, res: Response) => {
+    const idRaw = (req.params.id);
+    const id = parseInt(idRaw as string)
+    if (Number.isNaN(id)) {
+        res.status(400).json({
+            message: `Requested id ${idRaw} is not a number`
+        })
+    } else {
+        const user = await repository.getUser(id);
+        if (!user) {
+            res.status(404).json({
+                message: `User by the id of ${id} does not exist`
+            })
+        } else {
+            await repository.deleteUser(id);
+            res.json({
+                message: `User with id ${id} has been deleted`
+            })
+        }
+    }
+}
+
+ export const updateUserById = async (req: Request, res: Response) => {
+    const idRaw = (req.params.id);
+    const id = parseInt(idRaw as string)
+    if (Number.isNaN(id)) {
+        res.status(400).json({
+            message: `Requested id ${idRaw} is not a number`
+        })
+    } else {
+        const user = await repository.getUser(id);
+        if (!user) {
+            res.status(404).json({
+                message: `User by the id of ${id} does not exist`
+            })
+        } else {
+            const { username, password_hash, email, role } = req.body;
+            await repository.updateUser(id, { username, email, password_hash, role });
+            res.json({
+                message: `User with id ${id} has been updated`
+            })
+        }
+    }
+}
+
