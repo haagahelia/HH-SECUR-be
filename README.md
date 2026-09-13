@@ -5,7 +5,7 @@ Backend and Database for HH-SECUR-i
 
 **/status** - GET
 
-Responds `{ok: true}` if server is running. Doesn't require succesfull database connection.
+Responds `{ok: true}` if server is running. Doesn't require successful database connection.
 
 **/users/{id}** - GET
 
@@ -52,7 +52,8 @@ Fetches user by the id of {id}
 }
 
 ```
-Until user model and repository implementation `user` and `password` are the credentials for testing. After the implementation consult internal documentation.
+
+Credentials for default user and admin are defined in env variables.
 
 **/tokenstatus**
 
@@ -78,7 +79,7 @@ Checks for token authenticity and if that passes checks for admin role.
 
 **/defaultuser**
 
-Creates default user, first deletes it if email is already present.
+Creates default user. Updates values to default if email is already present.
 
 Requires following env variables set:
 
@@ -86,4 +87,18 @@ Requires following env variables set:
 DEFAULT_USER_USERNAME=username
 DEFAULT_USER_PASSWORD=password
 DEFAULT_USER_EMAIL=email
+DEFAULT_USER_ROLE=user
+```
+
+**/defaultadmin**
+
+Creates default user with admin role. Updates values to default if email is already present.
+
+Requires following env variables set:
+
+```
+DEFAULT_ADMIN_USERNAME=adminUsername
+DEFAULT_ADMIN_PASSWORD=adminPassword
+DEFAULT_ADMIN_EMAIL=email
+DEFAULT_ADMIN_ROLE=admin
 ```

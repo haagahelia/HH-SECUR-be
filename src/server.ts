@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { createRoutes } from "./routes/routes.js";
+import errorHandler from "./middlewares/errorHandler.js";
 
 /*
 const corsOptions = {
@@ -20,6 +21,8 @@ export const createServer = () => {
     });
 
     createRoutes(app);
+
+    app.use(errorHandler);
 
     return app;
 }

@@ -40,8 +40,9 @@ export async function requireAdmin(
     return;
   }
 
-  //const user = await repository.findByEmail(req.user.email);
+  const user = await repository.findByEmail(req.user.email);
 
+  /*
   //change to use db check after db is used on deployed version
   const hashedPassword = "$2a$10$HN7AR4scRDb2fvtUA7u2DO/C5g0MvgsZ2Q8f.Jp3ZSepfJj0OfFcu"; //password
   const hashedAdminPassword = "$2a$10$tb1ZscEiK9ODOc2FYvMHh.i0Xi4Zp4fqa8LYn8jSuFucBBjw.kRkG" //adminPassword
@@ -50,6 +51,8 @@ export async function requireAdmin(
   const user = tempUsers.find( 
     (user) => user.email === email
   );
+*/
+
 
 
   if (!user) {
