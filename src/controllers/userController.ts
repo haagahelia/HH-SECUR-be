@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt"
 import { generateToken } from "../utils/jwt.js";
 import repository from "../data/repository/repository.js";
+import { sanitizeUser } from "../utils/utils.js";
+import User from "../data/models/User.js";
+import { ValidationError } from "sequelize";
 
 
 /* 
@@ -28,7 +31,7 @@ export const login = async (req: Request, res: Response) => {
         (user) => user.username === username
     );
  */
-    
+
     const user = await repository.findByUsername(username)
 
     if (!user) {
@@ -112,7 +115,26 @@ export const deleteUserbyId = async (req: Request, res: Response) => {
     }
 }
 
- export const updateUserById = async (req: Request, res: Response) => {
+export const postUser = async (req: Request, res: Response) => {
+    if (!req.body.password) {
+        res.status(422).json({
+            message: "Password required."
+        })
+    }
+    const hashedPassword = await bcrypt.hash(req.body.password, 10)
+    const userPayLoad = {
+        username: req.body.username,
+        email: req.body.email,
+        password_hash: hashedPassword,
+        role: req.body.role
+    }
+    const user = await repository.createUser(userPayLoad);
+    res.json({
+        user,
+    })
+}
+ 
+export const updateUserById = async (req: Request, res: Response) => {
     const idRaw = (req.params.id);
     const id = parseInt(idRaw as string)
     if (Number.isNaN(id)) {
@@ -127,9 +149,14 @@ export const deleteUserbyId = async (req: Request, res: Response) => {
             })
         } else {
             const { username, password_hash, email, role } = req.body;
-            await repository.updateUser(id, { username, email, password_hash, role });
+            const user = await repository.updateUser(id, { username, email, password_hash, role });
+            let userJson = {};
+            if (user) {
+                userJson = sanitizeUser(user)
+            }
             res.json({
-                message: `User with id ${id} has been updated`
+                message: `User with id ${id} has been updated`,
+                user: userJson
             })
         }
     }

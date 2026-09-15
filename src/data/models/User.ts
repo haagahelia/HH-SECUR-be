@@ -1,5 +1,5 @@
 import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, AutoIncrement, Column, CreatedAt, DataType, Model, NotEmpty, PrimaryKey, Table, Unique, UpdatedAt } from "sequelize-typescript";
+import { AllowNull, AutoIncrement, Column, CreatedAt, DataType, Model, NotEmpty, PrimaryKey, Table, Unique, UpdatedAt, IsEmail } from "sequelize-typescript";
 
 
 @Table({
@@ -27,6 +27,7 @@ export default class User extends Model<
 
     @AllowNull(false)
     @NotEmpty
+    @IsEmail
     @Unique
     @Column({
         type: DataType.STRING

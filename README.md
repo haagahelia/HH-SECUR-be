@@ -55,11 +55,100 @@ Fetches user by the id of {id}
 
 Credentials for default user and admin are defined in env variables.
 
+**/users** - GET
+
+    - Returns list of users with password_hash omitted
+
+    - Requires authentication
+
+Responses:
+
+    - Failures: 401: Auth failure
+
+**/users/{id}** - GET
+
+    - Returns specific user by ID
+
+    - Requires authentication
+
+Responses:
+
+    - Success: 200
+
+    - Failures: 401: Auth failure, 404: user not found
+
+**/users** - POST
+
+    - Create new user
+
+    - Requires authentication and admin role
+
+Request body:
+
+```
+{
+    "username": "Username",
+    "email": "valid@emailformat.com",
+    "password": "password",
+    "role": "role"
+}
+```
+
+Requirements:
+
+    - Not empty / null: username, email, password, role
+
+    - Unique: username, email
+
+    - Valid format: email
+
+Responses:
+
+    - Success: 200 - Json of generated user with password_hash omitted
+
+    - Failures: 401, 403: Auth errors, 422: Validation errors
+
+**/users/{id}** - PATCH
+
+    - Update information of a specific user.
+
+    - Requires authentication and admin role
+
+Request body (attributes can be omitted, only included ones will be updated):
+
+```
+{
+    "username": "Username",
+    "email": "valid@emailformat.com",
+    "password": "password",
+    "role": "role"
+}
+```
+
+Responses:
+
+    - Success: 200 - Success message and updated json of user with password_hash omitted
+
+    - Failures: 401, 403 - Auth failures
+
+**/users/{id}** - DELETE
+
+    - Deletes a specific user
+    
+    - Requires authentication and admin role
+
+Responses:
+
+    - Success: 200 - User has been deleted message
+
+    - Failures: 401, 403 - Auth failures, 404 - User not found
+
+
 **/tokenstatus**
 
-Uses Bearer authentication to look for valid token.
+    - Uses Bearer authentication to look for valid token.
 
-**Responses:**
+Responses:
 
     - Success: {"token": "accepted"}
     
@@ -69,7 +158,7 @@ Uses Bearer authentication to look for valid token.
 
 Checks for token authenticity and if that passes checks for admin role.
 
-**Responses:**
+Responses:
 
     - Authentic token with admin role: {"adminAccess" : true}
 
