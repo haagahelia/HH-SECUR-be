@@ -1,0 +1,14 @@
+{
+    "extends": "@tsconfig/node26/tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "forceConsistentCasingInFileNames": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "moduleResolution": "node16",
+    },
+    "include": [
+        "src/**/*"
+    ]
+}
