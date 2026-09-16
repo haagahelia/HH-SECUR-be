@@ -255,7 +255,7 @@ DEFAULT_USER_ROLE=user
 
 </details>
 
-</details>
+<details>
 
 <summary>
 
