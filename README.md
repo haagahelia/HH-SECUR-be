@@ -191,3 +191,122 @@ DEFAULT_ADMIN_PASSWORD=adminPassword
 DEFAULT_ADMIN_EMAIL=email
 DEFAULT_ADMIN_ROLE=admin
 ```
+
+
+# Docker Compose Guide (HH-SECUR-be)
+
+## 1. Prerequisites
+
+* Docker Desktop running (check with `docker info`, should return no error)
+* `.env` file in the project root, every developer needs their own copy on their own machine. It's in `.gitignore` (`.gitignore:69-70`) and is not version-controlled, since it contains passwords and secrets, share it with the team through some other channel (not via Git).
+
+## 2. `.env` file contents
+
+```env
+# be.env
+PORT=3000
+BE_SERVER_PORT=3000
+
+# db.env, app-side connection settings (config.ts)
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=<your-value>
+DB_PASSWORD=<your-value>
+DB_DATABASE=<your-value>
+
+# db.image.env, MariaDB container's init variables (must be the SAME values as above)
+MARIADB_DATABASE=<same as DB_DATABASE>
+MARIADB_USER=<same as DB_USERNAME>
+MARIADB_PASSWORD=<same as DB_PASSWORD>
+MARIADB_ROOT_PASSWORD=<your-value>
+
+# auth.env
+JWT_SECRET=<your-value>
+
+# default seed credentials (/defaultuser, /defaultadmin)
+DEFAULT_USER_USERNAME=user
+DEFAULT_USER_EMAIL=user@testing.com
+DEFAULT_USER_PASSWORD=<your-value>
+DEFAULT_USER_ROLE=user
+
+DEFAULT_ADMIN_USERNAME=admin
+DEFAULT_ADMIN_EMAIL=admin@testing.com
+DEFAULT_ADMIN_PASSWORD=<your-value>
+DEFAULT_ADMIN_ROLE=admin
+```
+
+> **Note:** `DB_PORT` must be `3306`, containers always talk to each other on MariaDB's internal port, regardless of the host-side port mapping. `DB_USERNAME` / `DB_PASSWORD` / `DB_DATABASE` must exactly match `MARIADB_USER` / `MARIADB_PASSWORD` / `MARIADB_DATABASE`.
+
+## 3. Starting it up
+
+First time, or whenever the code / Dockerfile / package.json has changed:
+
+```bash
+docker compose -f docker-compose-dbbe.yaml up --build
+```
+
+If the image is already built and nothing has changed since, `--build` isn't needed, plain `up` is enough and starts faster:
+
+```bash
+docker compose -f docker-compose-dbbe.yaml up
+```
+
+Both do the same basic sequence:
+
+1. The backend is built from the `Dockerfile` if needed (`npm ci` → `npm run build` → `npm start`)
+2. `hh_secur_db_service` (MariaDB) starts, and it waits until it's healthy (`healthcheck`)
+3. `hh_secur_be_service` starts only once the db is healthy, connecting to it internally via `hh_secur_db_service` (the Docker network's service name, not `localhost`)
+
+Run in the background by adding `-d` (works with either command):
+
+```bash
+docker compose -f docker-compose-dbbe.yaml up -d
+```
+
+Check what already exists:
+
+```bash
+docker compose -f docker-compose-dbbe.yaml ps
+docker images
+```
+
+## 4. Signs of success in the logs
+
+```
+Backend is running
+Succsefully connected to database
+API running on 3000
+```
+
+## 5. Testing
+
+```bash
+curl http://localhost:3000/status
+```
+
+→ `{"ok": true}`
+
+The full test flow (login, tokens, default users), in short:
+
+1. `POST /login` → get a token
+2. `GET /defaultuser` and `GET /defaultadmin` create test users in the DB
+3. `GET /users/{id}` fetches them
+
+## 6. Stopping it
+
+```bash
+docker compose -f docker-compose-dbbe.yaml down
+```
+
+The database persists across restarts via the named volume (`hh_secur_db_data`), including the next `up` without `--build`. Add `-v` if you want a clean/empty database:
+
+```bash
+docker compose -f docker-compose-dbbe.yaml down -v
+```
+
+## 7. Common pitfalls (we already hit these)
+
+* Docker Desktop not running → `npipe` error right away.
+* `.dockerignore` must not exclude `package-lock.json`, already fixed at `.dockerignore:48`, but if the `#` in front is ever removed by accident, `npm ci` will fail during the build.
+* `.env` values don't match (`DB_*` vs `MARIADB_*`) → the database connection fails on startup.
+* Forgetting `--build` after a code change → the container starts with the old code and your changes won't show up.
