@@ -3,7 +3,13 @@ Backend and Database for HH-SECUR-i
 
 ## Endpoints
 
-**/status** - GET
+<details>
+
+<summary>
+
+**/status** - GET: Server status check
+
+</summary>
 
 Responds `{ok: true}` if server is running. Doesn't require successful database connection.
 
@@ -39,9 +45,15 @@ Fetches user by the id of {id}
             message: "User by the id of {id} does not exist"
         }
 
+</details>
 
+<details>
 
-**/login** - POST
+<summary>
+
+**/login** - POST: Login endpoint with username and password payload
+
+</summary>
 
 **Request body format:**
 
@@ -55,7 +67,15 @@ Fetches user by the id of {id}
 
 Credentials for default user and admin are defined in env variables.
 
-**/users** - GET
+</details>
+
+<details>
+
+<summary>
+
+**/users** - GET: List of users with password hash omitted
+
+</summary>
 
     - Returns list of users with password_hash omitted
 
@@ -65,7 +85,15 @@ Responses:
 
     - Failures: 401: Auth failure
 
-**/users/{id}** - GET
+</details>
+
+<details>
+
+<summary>
+
+**/users/{id}** - GET: User by the specific id with password hash omitted
+
+</summary>
 
     - Returns specific user by ID
 
@@ -76,8 +104,16 @@ Responses:
     - Success: 200
 
     - Failures: 401: Auth failure, 404: user not found
+    
+</details>
 
-**/users** - POST
+<details>
+
+<summary>
+
+**/users** - POST: Post a new user with user data in the request body
+
+</summary>
 
     - Create new user
 
@@ -107,8 +143,16 @@ Responses:
     - Success: 200 - Json of generated user with password_hash omitted
 
     - Failures: 401, 403: Auth errors, 422: Validation errors
+    
+</details>
 
-**/users/{id}** - PATCH
+<details>
+
+<summary>
+
+**/users/{id}** - PATCH: Update user values with omitted fields retaining old values
+
+</summary>
 
     - Update information of a specific user.
 
@@ -131,7 +175,15 @@ Responses:
 
     - Failures: 401, 403 - Auth failures
 
-**/users/{id}** - DELETE
+</details>
+
+<details>
+
+<summary>
+
+**/users/{id}** - DELETE: Delete user by id
+
+</summary>
 
     - Deletes a specific user
     
@@ -143,9 +195,15 @@ Responses:
 
     - Failures: 401, 403 - Auth failures, 404 - User not found
 
+</details>
 
-**/tokenstatus**
+<details>
 
+<summary>
+
+**/tokenstatus** - GET: Check auth token validity
+
+</summary>
     - Uses Bearer authentication to look for valid token.
 
 Responses:
@@ -154,7 +212,15 @@ Responses:
     
     - Failed: failure status response from auth middleware
 
-**/tokenstatusadmin**
+</details>
+
+<details>
+
+<summary>
+
+**/tokenstatusadmin** - GET: Check admin auth token validity
+
+</summary>
 
 Checks for token authenticity and if that passes checks for admin role.
 
@@ -166,7 +232,15 @@ Responses:
 
     - Token check failed: failure status response from auth middleware
 
-**/defaultuser**
+</details>
+
+<details>
+
+<summary>
+
+**/defaultuser** - GET: Generates default user or updates it to default values
+
+</summary>
 
 Creates default user. Updates values to default if email is already present.
 
@@ -179,7 +253,15 @@ DEFAULT_USER_EMAIL=email
 DEFAULT_USER_ROLE=user
 ```
 
-**/defaultadmin**
+</details>
+
+</details>
+
+<summary>
+
+**/defaultadmin** - GET: Generates default admin or updates it to default values
+
+</summary>
 
 Creates default user with admin role. Updates values to default if email is already present.
 
@@ -192,6 +274,29 @@ DEFAULT_ADMIN_EMAIL=email
 DEFAULT_ADMIN_ROLE=admin
 ```
 
+</details>
+
+## env variable template
+
+Use .env file locally in the root directory and update values to match your environment.
+
+```
+PORT=3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=YourPassword
+DB_DATABASE=YourDatabaseName
+JWT_SECRET=secretForJWTTokenGeneration
+DEFAULT_USER_USERNAME=usernameForDefaultUser
+DEFAULT_USER_PASSWORD=passwordForDefaultUser
+DEFAULT_USER_EMAIL=emailForDefaultUser
+DEFAULT_USER_ROLE=user
+DEFAULT_ADMIN_USERNAME=usernameForDefaultAdmin
+DEFAULT_ADMIN_PASSWORD=passwordForDefaultAdmin
+DEFAULT_ADMIN_EMAIL=emailForDefaultAdmin
+DEFAULT_ADMIN_ROLE=admin
+```
 
 # Docker Compose Guide (HH-SECUR-be)
 
