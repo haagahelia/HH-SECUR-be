@@ -19,16 +19,18 @@ export default class Organization extends Model<
     @AllowNull(false)
     @NotEmpty
     @Column({
-            type: DataType.STRING
+            type: DataType.STRING,
+            field: "name_fi"
             })
-    declare name_fi: string;
+    declare fi: string;
 
     @AllowNull(false)
     @NotEmpty
     @Column({
-            type: DataType.STRING
+            type: DataType.STRING,
+            field: "name_en"
             })
-    declare name_en: string;
+    declare en: string;
 
     @AllowNull(false)
     @NotEmpty

@@ -28,14 +28,16 @@ export default class HHRole extends Model<
     @AllowNull(false)
     @NotEmpty
     @Column({
-        type: DataType.STRING
+        type: DataType.STRING,
+        field: "name_fi"
     })
     declare fi: string;
 
     @AllowNull(false)
     @NotEmpty
     @Column({
-        type: DataType.STRING
+        type: DataType.STRING,
+        field: "name_en"
     })
     declare en: string;
 
