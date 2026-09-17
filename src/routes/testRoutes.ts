@@ -13,5 +13,5 @@ export const createTestRoutes = (app: Express) => {
 
     app.get("/defaultadmin", addDefaultAdmin);
 
-    app.get("/populatedatabase", populateDatabase);
+    app.get("/populatedatabase", authenticate, requireAdmin, populateDatabase);
 }
