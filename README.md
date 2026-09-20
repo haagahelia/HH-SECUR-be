@@ -169,7 +169,7 @@ Responses:
 
 <summary>
 
-**/dalculaterisk** - POST: Risk calculation endpoint
+**/calculaterisk** - POST: Risk calculation endpoint
 
 </summary>
 
