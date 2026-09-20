@@ -169,6 +169,103 @@ Responses:
 
 <summary>
 
+**/dalculaterisk** - POST: Risk calculation endpoint
+
+</summary>
+
+**Work in progress: features only partially implemented**
+
+
+
+Requires: authentication
+
+Request body:
+
+```
+{
+    "hhrole": "coordinator",
+    "collaborationtype": ["option1", "option2"]
+    "country": "FIN",
+    "organization": "HH",
+    "organizationtype": "university",
+    "history": "yes",
+    "contract": "yes",
+    "funding": "yes",
+    "liability": "0",
+    "personalinformation": "yes",
+    "dualuse": "yes",
+    "ethics": "1",
+    "duration": "1"
+}
+```
+
+Valid values ("" around a number means it's string type):
+
+```
+country: 3 letter country code
+organization: organization string id
+hhrole: coordinator | partner | other
+collaborationtype: [ option1 | option2 | option3 | option4 | option5 | option6 | option7 ]
+organizationtype: university | otherresearch | business | ngo | other
+history: yes | no
+contract: yes | no
+funding: yes | no
+liability: "0" | "20.000" | "50.000"
+personalinformation: yes | no
+dualuse: yes | no | unknown
+ethics: "1" | "2" | "3" | "4" | "5"
+duration: "1" | "2" | "3"
+```
+
+Responses:
+
+    - Success: 200 - Risk report with 0 - 3 range for risk factors
+
+        - 0 for a risk factor means calculation failed likely due to invalid value in the request body
+
+    - Failures: 401 - Auth failure, 422 - Missing fields from request body, missing fields listed
+
+Response body:
+
+```
+{
+    "collaboration": 0-3,
+    "country": {
+        "overall": 0-3,
+        "corruption": 0-3,
+        "security": 0-3,
+        "academicfreedom": 0-3,
+        "politicalstability": 0-3,
+        "development": 0-3,
+        "gdpr": 0-3,
+        "sanctions": 0-3,
+        "ruleoflaw": 0-3,
+    },
+    "organization": 0-3,
+    "financial": {
+        "overall": 0-3,
+        "exchange": 0-3,
+        "scope": 0-3
+    },
+    "dualuse": 0-3,
+    "ethics": 0-3,
+    "realCalculationImpementedFor": [
+        "implemented calculation 1",
+        "implemented calculation 2"
+    ]
+}
+```
+
+`realCalculationImpementedFor` is a placeholder response that will be removed once risk calculation has been fully implemented. Risk categories listed there are ready to replace the old risk source in front end.
+
+
+
+</details>
+
+<details>
+
+<summary>
+
 **/tokenstatus** - GET: Check auth token validity
 
 </summary>
