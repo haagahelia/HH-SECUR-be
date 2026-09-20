@@ -19,7 +19,7 @@ export default class HHRole extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique
+    @Unique({name: "hhrole_code_unique", msg: "code for HH role must be unique"})
     @Column({
         type: DataType.STRING
     })

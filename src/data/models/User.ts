@@ -19,7 +19,7 @@ export default class User extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique
+    @Unique({name: "user_username_unique", msg: "Username must be unique"})
     @Column({
         type: DataType.STRING
     })
@@ -28,7 +28,7 @@ export default class User extends Model<
     @AllowNull(false)
     @NotEmpty
     @IsEmail
-    @Unique
+    @Unique({name: "user_email_unique", msg: "Email must be unique"})
     @Column({
         type: DataType.STRING
     })
