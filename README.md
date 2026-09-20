@@ -229,26 +229,186 @@ Response body:
 
 ```
 {
-    "collaboration": 0-3,
+    "collaboration": {
+        "title": {
+            "fi": "Title in finnish",
+            "en": "Title in english"
+        }
+        "risk": 0-3
+        "description": {
+            "fi": "Description in finnish",
+            "en": "Description in english"
+        }
+        },
     "country": {
-        "overall": 0-3,
-        "corruption": 0-3,
-        "security": 0-3,
-        "academicfreedom": 0-3,
-        "politicalstability": 0-3,
-        "development": 0-3,
-        "gdpr": 0-3,
-        "sanctions": 0-3,
-        "ruleoflaw": 0-3,
+        "overall": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "corruption": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "security": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "academicfreedom": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "politicalstability": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "development": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "gdpr": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "sanctions": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "ruleoflaw": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
     },
-    "organization": 0-3,
+    "organization": {
+        "title": {
+            "fi": "Title in finnish",
+            "en": "Title in english"
+        }
+        "risk": 0-3
+        "description": {
+            "fi": "Description in finnish",
+            "en": "Description in english"
+        }
+        },
     "financial": {
-        "overall": 0-3,
-        "exchange": 0-3,
-        "scope": 0-3
+        "overall": {
+        "title": {
+            "fi": "Title in finnish",
+            "en": "Title in english"
+        }
+        "risk": 0-3
+        "description": {
+            "fi": "Description in finnish",
+            "en": "Description in english"
+        }
+        },
+        "exchange": {
+        "title": {
+            "fi": "Title in finnish",
+            "en": "Title in english"
+        }
+        "risk": 0-3
+        "description": {
+            "fi": "Description in finnish",
+            "en": "Description in english"
+        }
+        },
+        "scope": {
+        "title": {
+            "fi": "Title in finnish",
+            "en": "Title in english"
+        }
+        "risk": 0-3
+        "description": {
+            "fi": "Description in finnish",
+            "en": "Description in english"
+        }
+        },
     },
-    "dualuse": 0-3,
-    "ethics": 0-3,
+    "dualuse": {
+        "title": {
+            "fi": "Title in finnish",
+            "en": "Title in english"
+        }
+        "risk": 0-3
+        "description": {
+            "fi": "Description in finnish",
+            "en": "Description in english"
+        }
+        },
+    "ethics": {
+        "title": {
+            "fi": "Title in finnish",
+            "en": "Title in english"
+        }
+        "risk": 0-3
+        "description": {
+            "fi": "Description in finnish",
+            "en": "Description in english"
+        }
+        },
     "realCalculationImpementedFor": [
         "implemented calculation 1",
         "implemented calculation 2"
