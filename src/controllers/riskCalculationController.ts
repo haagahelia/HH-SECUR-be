@@ -1,11 +1,16 @@
 import { Request, Response } from "express";
-import { parseRiskPayload } from "../utils/riskCalculation";
+import { calculateRisk, parseRiskPayload } from "../utils/riskCalculation";
+
+type Report = {
+    dualUse: 0 | 1 | 2 | 3
+}
 
 
-export const calculateRisk = async (req: Request, res: Response) => {
-    if (parseRiskPayload(req, res)) {
-        res.json({ risk: true })
+export const generateReport = async (req: Request, res: Response) => {
+    if (!parseRiskPayload(req, res)) {
+        return;
     }
-
+    const report = calculateRisk(req);
+    res.json(report);
 }
 
