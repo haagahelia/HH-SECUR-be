@@ -169,6 +169,43 @@ Responses:
 
 <summary>
 
+**/organizations** - GET: List of partner organizations
+
+</summary>
+
+    - Returns list of organizations (id, name:(fi, en), country id)
+
+    - Requires authentication
+
+Response body:
+
+```
+{
+    "organizations": [
+        {
+            "id": "organization-id",
+            "name": {
+                "fi": "Name in Finnish",
+                "en": "Name in English"
+            },
+            "countryId": "XXX"
+        }
+    ]
+}
+```
+
+Responses:
+
+    - Success: 200
+
+    - Failures: 401: Auth failure
+
+</details>
+
+<details>
+
+<summary>
+
 **/calculaterisk** - POST: Risk calculation endpoint
 
 </summary>
