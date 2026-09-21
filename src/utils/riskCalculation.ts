@@ -136,11 +136,11 @@ const calculateDualUseRisk = (dualUse: string): 0 | 1 | 2 | 3 => {
     let dualUseRisk = 0 as 0 | 1 | 2 | 3;
 
     //Add risk calculation logic
-    if (dualUse === "no") {
+    if (dualUse === "option1") {
         dualUseRisk = 1;
-    } else if (dualUse === "unknown") {
+    } else if (dualUse === "option2") {
         dualUseRisk = 2;
-    } else if (dualUse === "yes") {
+    } else if (dualUse === "option3") {
         dualUseRisk = 3;
     }
     return dualUseRisk;

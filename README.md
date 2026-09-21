@@ -236,22 +236,22 @@ Request body:
 }
 ```
 
-Valid values ("" around a number means it's string type):
+Valid values (#descriptions in order):
 
 ```
 country: 3 letter country code
 organization: organization string id
-hhrole: coordinator | partner | other
+hhrole: option1 | option2 | option3
 collaborationtype: [ option1 | option2 | option3 | option4 | option5 | option6 | option7 ]
-organizationtype: university | otherresearch | business | ngo | other
-history: yes | no
-contract: yes | no
-funding: yes | no
-liability: "0" | "20.000" | "50.000"
-personalinformation: yes | no
-dualuse: yes | no | unknown
-ethics: "1" | "2" | "3" | "4" | "5"
-duration: "1" | "2" | "3"
+organizationtype: option1 | option2 | option3 | option4 | option5
+history: option1 | option2
+contract: option1 | option2
+funding: option1 | option2
+liability: option1 | option2 | option3
+personalinformation: option1 | option2
+dualuse: option1 | option2 | option3
+ethics: option1 | option2 | option3 | option4 | option5
+duration: option1 | option2 | option3
 ```
 
 Responses:
