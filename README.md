@@ -262,7 +262,7 @@ organizationtype: option1 | option2 | option3 | option4 | option5
 history: option1 | option2
 contract: option1 | option2
 funding: option1 | option2
-exchange: option1 | option2
+exchange: option1 | option2 | option3
 liability: option1 | option2 | option3
 personalinformation: option1 | option2
 dualuse: option1 | option2 | option3
@@ -472,7 +472,7 @@ Response body:
 }
 ```
 
-`realCalculationImpementedFor` is a placeholder response that will be removed once risk calculation has been fully implemented. Risk categories listed there are ready to replace the old risk source in front end.
+`realCalculationImpementedFor` is a placeholder response that will be removed once risk calculation has been fully implemented. Risk categories listed there are ready to replace the old risk source in front end. **Fully implemented in this means replicating the logic present in frontend, beyond that there risk calculation functions yet to be implemented but those are not in scope for this sprint**
 
 
 
