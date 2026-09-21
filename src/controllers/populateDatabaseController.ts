@@ -76,9 +76,22 @@ export async function addCollaborationTypes() {
             fi: "Muu",
             en: "Other"
         },
-        ]
+    ]
 
+    for (let i = 0; i < collaborationTypes.length; i++) {
+
+        let collaborationType = await repository.findCollaborationTypeByOption(collaborationTypes[i].option)
+        if (collaborationType) {
+            collaborationType.fi = collaborationTypes[i].fi;
+            collaborationType.en = collaborationTypes[i].en;
+            collaborationType.save();
+        } else {
+            repository.createCollaborationType(collaborationTypes[i]);
+        }
+    }
 }
+
+
 
 export async function addOrganizations() {
     const organizations = [
@@ -139,16 +152,4 @@ export async function addOrganizations() {
         }
     }
 
-}
-    for (let i = 0; i < collaborationTypes.length; i++) {
-
-        let collaborationType = await repository.findCollaborationTypeByOption(collaborationTypes[i].option)
-        if (collaborationType) {
-            collaborationType.fi = collaborationTypes[i].fi;
-            collaborationType.en = collaborationTypes[i].en;
-            collaborationType.save();
-        } else {
-            repository.createCollaborationType(collaborationTypes[i]);
-        }
-    }
 }
