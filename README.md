@@ -220,20 +220,35 @@ Request body:
 
 ```
 {
-    "hhrole": "coordinator",
-    "collaborationtype": ["option1", "option2"]
+    "hhrole": "option1",
+    "collaborationtype": ["option1", "option2"]´
     "country": "FIN",
     "organization": "HH",
-    "organizationtype": "university",
-    "history": "yes",
-    "contract": "yes",
-    "funding": "yes",
-    "liability": "0",
-    "personalinformation": "yes",
-    "dualuse": "yes",
-    "ethics": "1",
-    "duration": "1"
+    "organizationtype": "option1",
+    "history": "option1",
+    "contract": "option1",
+    "funding": "option1",
+    "exhange": "option1"
+    "liability": "option1",
+    "personalinformation": "option1",
+    "dualuse": "option1",
+    "ethics": "option1",
+    "duration": "option1",
+    "organizationother": "specify organization",
+    "collaborationtypeother": "specify collaboration type",
+    "additionalinformation": "additional description"
+
 }
+```
+
+Optional fields: 
+
+```
+organizationother - Description for other option in organization, will be ignored if that option is not selected
+
+collaborationtypeother - Description for other option in collaboration type, will be ignored if that option is note selected
+
+additionalinformation - Additional information about project
 ```
 
 Valid values (#descriptions in order):
@@ -247,11 +262,15 @@ organizationtype: option1 | option2 | option3 | option4 | option5
 history: option1 | option2
 contract: option1 | option2
 funding: option1 | option2
+exchange: option1 | option2
 liability: option1 | option2 | option3
 personalinformation: option1 | option2
 dualuse: option1 | option2 | option3
 ethics: option1 | option2 | option3 | option4 | option5
 duration: option1 | option2 | option3
+organizationother: any text
+collaborationother: any text
+additionalinformation: any text
 ```
 
 Responses:

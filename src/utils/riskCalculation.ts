@@ -30,7 +30,7 @@ export const parseRiskPayload = (req: Request, res: Response) => {
 
 
 export const calculateRisk = (req: Request) => {
-    const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration } = req.body;
+    const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, collaborationtypeother, additionalinformation } = req.body;
     const dualUseRisk = calculateDualUseRisk(dualuse);
     const countryRisk = calculateCountryRisk(country);
     const ethicsRisk = calculateEthicsRisk(ethics);
