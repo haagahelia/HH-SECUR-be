@@ -93,7 +93,10 @@ export const calculateRisk = (req: Request) => {
             title: ethicsRisk,
             risk: ethicsRisk,
             description: resultDescriptions.ethics[ethicsRisk]
-        }
+        },
+        realCalculationImpementedFor: [
+            "dualuserisk"
+        ]
     }
 
     return report;
