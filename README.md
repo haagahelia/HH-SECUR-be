@@ -243,15 +243,14 @@ Request body:
 
 Optional fields: 
 
-```
 organizationother - Description for other option in organization, will be ignored if that option is not selected
 
 collaborationtypeother - Description for other option in collaboration type, will be ignored if that option is note selected
 
 additionalinformation - Additional information about project
-```
 
-Valid values (#descriptions in order):
+
+Valid values:
 
 ```
 country: 3 letter country code
