@@ -243,12 +243,13 @@ Request body:
 
 Optional fields: 
 
-organizationother - Description for other option in organization, will be ignored if that option is not selected
+    - organizationother - Description for other option in organization
 
-collaborationtypeother - Description for other option in collaboration type, will be ignored if that option is note selected
+    - collaborationtypeother - Description for other option in collaboration type
 
-additionalinformation - Additional information about project
+    - additionalinformation - Additional information about project
 
+Response will always contain these but left empty if missing from request or condition to include them is not triggered.
 
 Valid values:
 

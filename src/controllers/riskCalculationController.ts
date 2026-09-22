@@ -5,7 +5,7 @@ export const generateReport = async (req: Request, res: Response) => {
     if (!parseRiskPayload(req, res)) {
         return;
     }
-    const report = calculateRisk(req);
+    const report = await calculateRisk(req);
     res.json(report);
 }
 
