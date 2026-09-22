@@ -7,6 +7,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addHHRole();
     await addOrganizations();
     await addCollaborationTypes();
+    await addConsortiumTypes();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -94,6 +95,33 @@ export async function addCollaborationTypes() {
 }
 
 
+
+export async function addConsortiumTypes() {
+    const consortiumTypes = [
+        {
+            option: "bilateral",
+            fi: "Kahdenvälinen",
+            en: "Bilateral"
+        },
+        {
+            option: "multilateral",
+            fi: "Monenkeskeinen",
+            en: "Multilateral"
+        },
+    ]
+
+    for (let i = 0; i < consortiumTypes.length; i++) {
+
+        let consortiumType = await repository.findConsortiumTypeByOption(consortiumTypes[i].option)
+        if (consortiumType) {
+            consortiumType.fi = consortiumTypes[i].fi;
+            consortiumType.en = consortiumTypes[i].en;
+            consortiumType.save();
+        } else {
+            repository.createConsortiumType(consortiumTypes[i]);
+        }
+    }
+}
 
 export async function addOrganizations() {
     const organizations = [
