@@ -3,8 +3,9 @@ import { AddUserRepository } from "./AddUserRepository.js";
 import { AddOrganizationRepository } from "./AddOrganizationRepository.js";
 import { AddHHRoleRepository } from "./AddHHRoleRepository.js";
 import { AddCollaborationTypeRepository } from "./AddCollaborationTypeRepository.js";
+import { AddCountryRepository } from "./AddCountryRepository.js";
 
-const CombinedRepository = AddCollaborationTypeRepository(AddHHRoleRepository(AddOrganizationRepository(AddUserRepository(BaseRepository))));
+const CombinedRepository = AddCountryRepository(AddCollaborationTypeRepository(AddHHRoleRepository(AddOrganizationRepository(AddUserRepository(BaseRepository)))));
 const repository = new CombinedRepository();
 
 //const repository = new BaseRepository();

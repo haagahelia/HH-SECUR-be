@@ -1,7 +1,9 @@
 import e, { Request, Response } from "express";
 import repository from "../data/repository/repository";
+import { addCountryData } from "../utils/countryData.js";
 
 export const populateDatabase = async (req: Request, res: Response) => {
+    await addCountryData();
     await addHHRole();
     await addOrganizations();
     await addCollaborationTypes();
