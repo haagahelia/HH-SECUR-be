@@ -1,5 +1,6 @@
 import { createServer } from "./server.js";
 import repository from "./data/repository/repository.js";
+import { addDataToAllTables } from "./utils/utils.js";
 
 const server = createServer();
 
@@ -15,5 +16,8 @@ server.listen(port, async () => {
         console.log("Database connection failed");
         console.log(error);
     }
+
+    await addDataToAllTables();
+
     console.log(`API running on ${port}`)
 })

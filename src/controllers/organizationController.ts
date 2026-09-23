@@ -10,7 +10,7 @@ export const getOrganizations = async (req: Request, res: Response) => {
                 fi: organization.fi,
                 en: organization.en,
             },
-            countryId: organization.country_id,
+            countryId: organization.country_code,
         })),
     });
 }

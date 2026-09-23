@@ -36,7 +36,6 @@ export const parseRiskPayload = (req: Request, res: Response) => {
     }
 }
 
-
 export const calculateRisk = async (req: Request) => {
     const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, collaborationtypeother, additionalinformation } = req.body;
     const dualUseRisk = calculateDualUseRisk(dualuse);
@@ -59,6 +58,8 @@ export const calculateRisk = async (req: Request) => {
     if (additionalinformation) {
         additionalinformationOptional = additionalinformation;
     }
+
+    const debugCountry = await repository.findCountryByCode(country);
 
     const report = {
         collaboration: {
@@ -101,7 +102,8 @@ export const calculateRisk = async (req: Request) => {
             gdpr: {
                 title: riskResultDescriptions.countryGdpr.title,
                 risk: countryRisk.gdpr,
-                description: riskResultDescriptions.countryGdpr[countryRisk.gdpr]
+                description: riskResultDescriptions.countryGdpr[countryRisk.gdpr],
+                debug: {debugCountry}
             },
             sanctions: {
                 title: riskResultDescriptions.countrySanctions.title,
@@ -189,11 +191,8 @@ const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType:
 }
 
 const calculateCountryRisk = async (countryCode: any, personal: any): Promise<CountryRisk> => {
-    let personalinformation = personal;
-    if (personalinformation != "option1" || personalinformation != "option2") {
-        personalinformation = 0;
-    }
 
+    /*
     //placeholders until database integration
     let countriesPlaceholder = [{
         name: {
@@ -253,10 +252,10 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
     const countryRaw = countriesPlaceholder.find((country) => country.id === countryCode);
     const country = countryRaw?.risk;
     //placeholders end 
-
-   /*
-    const country = await repository.findCountryByCountryId(countryCode);
 */
+
+    const country = await repository.findCountryByCode(countryCode);
+
     let countryRisk =
     {
         "overall": 0 as 0 | 1 | 2 | 3,
@@ -273,6 +272,7 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
     if (!country) {
         return countryRisk;
     }
+
 
     if (country.security == 0 || country.security == 1 || country.security == 2 || country.security == 3) {
         countryRisk.security = country.security;
@@ -310,13 +310,13 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
         countryRisk.development = 3;
     }
 
-    if (personalinformation == 0 && !(country.gdpr === 1)) {
+    if ((personal !== "option1" && personal !== "option2") && country.gdpr !== 1) {
         countryRisk.gdpr = 0;
-    } else if (personalinformation === "option2" || country.gdpr=== 1) {
+    } else if (personal=== "option2" || country.gdpr === 1) {
         countryRisk.gdpr = 1;
-    } else if (personalinformation !== "option2" && country.gdpr === 2) {
+    } else if (personal !== "option2" && country.gdpr === 2) {
         countryRisk.gdpr = 2;
-    } else if (personalinformation !== "option2" && country.gdpr === 3) {
+    } else if (personal !== "option2" && country.gdpr === 3) {
         countryRisk.gdpr = 3
     }
 
