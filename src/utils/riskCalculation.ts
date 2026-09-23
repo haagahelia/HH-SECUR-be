@@ -101,7 +101,7 @@ export const calculateRisk = async (req: Request) => {
             gdpr: {
                 title: riskResultDescriptions.countryGdpr.title,
                 risk: countryRisk.gdpr,
-                descrption: riskResultDescriptions.countryGdpr[countryRisk.gdpr]
+                description: riskResultDescriptions.countryGdpr[countryRisk.gdpr]
             },
             sanctions: {
                 title: riskResultDescriptions.countrySanctions.title,
@@ -126,7 +126,7 @@ export const calculateRisk = async (req: Request) => {
                 risk: financialRisk.overall,
                 description: riskResultDescriptions.financial[financialRisk.overall]
             },
-            exhange: {
+            exchange: {
                 title: riskResultDescriptions.exchangeRate.title,
                 risk: financialRisk.exchange,
                 description: riskResultDescriptions.exchangeRate[financialRisk.exchange]
@@ -311,7 +311,7 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
     }
 
     if (personalinformation == 0 && !(country.gdpr === 1)) {
-        countryRisk.gdpr = 1;
+        countryRisk.gdpr = 0;
     } else if (personalinformation === "option2" || country.gdpr=== 1) {
         countryRisk.gdpr = 1;
     } else if (personalinformation !== "option2" && country.gdpr === 2) {
