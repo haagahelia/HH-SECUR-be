@@ -8,6 +8,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addOrganizations();
     await addCollaborationTypes();
     await addConsortiumTypes();
+    await addOrganizationType();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -182,4 +183,44 @@ export async function addOrganizations() {
         }
     }
 
+}
+export async function addOrganizationType() {
+    const organizationTypes = [
+        {
+            code: "university",
+            fi: "Yliopisto",
+            en: "University"
+        },
+        {
+            code: "otherResearch",
+            fi: "Muu tutkimuslaitos",
+            en: "Other Research Institute"
+        },
+        {
+            code: "business",
+            fi: "Yritys",
+            en: "Company"
+        },
+        {
+            code: "ngo",
+            fi: "Kansalaisjärjestö",
+            en: "Non-Governmental Organization"
+        },
+        {
+            code: "other",
+            fi: "Muu",
+            en: "Other"
+        }
+    ]
+    for (let i = 0; i < organizationTypes.length; i++) {
+
+        let organizationType = await repository.findOrganizationTypeByCode(organizationTypes[i].code)
+        if (organizationType) {
+            organizationType.fi = organizationTypes[i].fi;
+            organizationType.en = organizationTypes[i].en;
+            organizationType.save();
+        } else {
+            repository.createOrganizationType(organizationTypes[i]);
+        }
+    }
 }
