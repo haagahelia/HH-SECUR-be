@@ -588,6 +588,15 @@ DEFAULT_ADMIN_EMAIL=emailForDefaultAdmin
 DEFAULT_ADMIN_ROLE=admin
 ```
 
+## Default users (Rahti)
+
+| Role  | Username            | Email                           | Password    |
+|-------|---------------------|---------------------------------|-------------|
+| user  | `pekka13`           | `pekka13@example.com`           | `Aamukahv!` |
+| admin | `highsupervisor200` | `highsupervisor200@example.com` | `Yllapit0!` |
+
+
+
 # Docker Compose Guide (HH-SECUR-be)
 
 ## 1. Prerequisites
