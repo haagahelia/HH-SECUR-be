@@ -66,7 +66,7 @@ export const calculateRisk = async (req: Request) => {
             risk: collaborationRisk,
             description: riskResultDescriptions.collaboration[collaborationRisk]
         },
-        countryrisk: {
+        country: {
             overall: {
                 title: riskResultDescriptions.countryOverall.title,
                 risk: countryRisk.overall,
@@ -92,15 +92,35 @@ export const calculateRisk = async (req: Request) => {
                 title: riskResultDescriptions.countryPolitical.title,
                 risk: countryRisk.politicalstability,
                 description: riskResultDescriptions.countryPolitical[countryRisk.politicalstability]
+            }, 
+            development: {
+                title: riskResultDescriptions.countryDevelopment.title,
+                risk: countryRisk.development,
+                description: riskResultDescriptions.countryDevelopment[countryRisk.development]
+            },
+            gdpr: {
+                title: riskResultDescriptions.countryGdpr.title,
+                risk: countryRisk.gdpr,
+                descrption: riskResultDescriptions.countryGdpr[countryRisk.gdpr]
+            },
+            sanctions: {
+                title: riskResultDescriptions.countrySanctions.title,
+                risk: countryRisk.sanctions,
+                description: riskResultDescriptions.countrySanctions[countryRisk.sanctions]
+            },
+            ruleoflaw: {
+                title: riskResultDescriptions.countryLaw.title,
+                risk: countryRisk.ruleoflaw,
+                description: riskResultDescriptions.countryLaw[countryRisk.ruleoflaw]
             }
 
         },
-        organizationrisk: {
+        organization: {
             title: riskResultDescriptions.organization.title,
             risk: organizationRisk,
             description: riskResultDescriptions.organization[organizationRisk]
         },
-        financialrisk: {
+        financial: {
             overall: {
                 title: riskResultDescriptions.financial.title,
                 risk: financialRisk.overall,
@@ -118,12 +138,12 @@ export const calculateRisk = async (req: Request) => {
             }
 
         },
-        dualuserisk: {
+        dualuse: {
             title: riskResultDescriptions.dualUse.title,
             risk: dualUseRisk,
             description: riskResultDescriptions.dualUse[dualUseRisk]
         },
-        ethicsrisk: {
+        ethics: {
             title: ethicsRisk,
             risk: ethicsRisk,
             description: riskResultDescriptions.ethics[ethicsRisk]
@@ -291,7 +311,7 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
     }
 
     if (personalinformation == 0 && !(country.gdpr === 1)) {
-        countryRisk.gdpr = 0;
+        countryRisk.gdpr = 1;
     } else if (personalinformation === "option2" || country.gdpr=== 1) {
         countryRisk.gdpr = 1;
     } else if (personalinformation !== "option2" && country.gdpr === 2) {
