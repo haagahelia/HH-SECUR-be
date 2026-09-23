@@ -24,7 +24,7 @@ export default class CollaborationType extends Model<
     @Column({
         type: DataType.STRING
     })
-    declare option: string;
+    declare code: string;
 
     @AllowNull(false)
     @NotEmpty

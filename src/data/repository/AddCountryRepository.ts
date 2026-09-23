@@ -8,12 +8,12 @@ export function AddCountryRepository<TBase extends Constructor<BaseRepository>>(
 ) {
     return class extends Base {
     
-        async createCountry(countryAttributes: {country_id: string; fi: string; en: string; dataYear: number; corruption: number; security: number; academicFreedom: number; politicalStability: number; development: number; gdpr: number; sanctions: number; ruleOfLaw: number; }) {
+        async createCountry(countryAttributes: {code: string; fi: string; en: string; dataYear: number; corruption: number; security: number; academicFreedom: number; politicalStability: number; development: number; gdpr: number; sanctions: number; ruleOfLaw: number; }) {
             return await Country.create(countryAttributes);
         }
 
-        async findCountryByCountryId(country_id: string) {
-            return await Country.findOne({ where: { country_id } });
+        async findCountryByCode(code: string) {
+            return await Country.findOne({ where: { code } });
         }
     
     }

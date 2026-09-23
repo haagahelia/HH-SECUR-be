@@ -14,6 +14,12 @@ type CountryRisk = {
     "ruleoflaw": 0 | 1 | 2 | 3,
 }
 
+type FinancialRisk = {
+    "overall": 0 | 1 | 2 | 3,
+    "scope": 0 | 1 | 2 | 3,
+    "exchange": 0 | 1 | 2 | 3
+}
+
 export const parseRiskPayload = (req: Request, res: Response) => {
     const requiredFields = ["country", "organization", "organizationtype", "hhrole", "collaborationtype", "history", "contract", "funding", "liability", "exchange", "personalinformation", "dualuse", "ethics", "duration"]
     let missingFields: string[] = [];
@@ -34,7 +40,7 @@ export const parseRiskPayload = (req: Request, res: Response) => {
 export const calculateRisk = async (req: Request) => {
     const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, collaborationtypeother, additionalinformation } = req.body;
     const dualUseRisk = calculateDualUseRisk(dualuse);
-    const countryRisk = calculateCountryRisk(country, personalinformation);
+    const countryRisk = await calculateCountryRisk(country, personalinformation);
     const ethicsRisk = calculateEthicsRisk(ethics);
     const financialRisk = calculateFinancialRisk(liability, funding, exchange);
     const collaborationRisk = calculateCollaborationRIsk(countryRisk, collaborationtype)
@@ -60,7 +66,7 @@ export const calculateRisk = async (req: Request) => {
             risk: collaborationRisk,
             description: riskResultDescriptions.collaboration[collaborationRisk]
         },
-        countryrisk: {
+        country: {
             overall: {
                 title: riskResultDescriptions.countryOverall.title,
                 risk: countryRisk.overall,
@@ -86,24 +92,58 @@ export const calculateRisk = async (req: Request) => {
                 title: riskResultDescriptions.countryPolitical.title,
                 risk: countryRisk.politicalstability,
                 description: riskResultDescriptions.countryPolitical[countryRisk.politicalstability]
+            }, 
+            development: {
+                title: riskResultDescriptions.countryDevelopment.title,
+                risk: countryRisk.development,
+                description: riskResultDescriptions.countryDevelopment[countryRisk.development]
+            },
+            gdpr: {
+                title: riskResultDescriptions.countryGdpr.title,
+                risk: countryRisk.gdpr,
+                description: riskResultDescriptions.countryGdpr[countryRisk.gdpr]
+            },
+            sanctions: {
+                title: riskResultDescriptions.countrySanctions.title,
+                risk: countryRisk.sanctions,
+                description: riskResultDescriptions.countrySanctions[countryRisk.sanctions]
+            },
+            ruleoflaw: {
+                title: riskResultDescriptions.countryLaw.title,
+                risk: countryRisk.ruleoflaw,
+                description: riskResultDescriptions.countryLaw[countryRisk.ruleoflaw]
             }
 
         },
-        organizationrisk: {
+        organization: {
             title: riskResultDescriptions.organization.title,
             risk: organizationRisk,
             description: riskResultDescriptions.organization[organizationRisk]
         },
-        financialrisk: {
-            title: riskResultDescriptions.financial.title,
-            risk: financialRisk
+        financial: {
+            overall: {
+                title: riskResultDescriptions.financial.title,
+                risk: financialRisk.overall,
+                description: riskResultDescriptions.financial[financialRisk.overall]
+            },
+            exchange: {
+                title: riskResultDescriptions.exchangeRate.title,
+                risk: financialRisk.exchange,
+                description: riskResultDescriptions.exchangeRate[financialRisk.exchange]
+            },
+            scope: {
+                title: riskResultDescriptions.economicScope.title,
+                risk: financialRisk.scope,
+                description: riskResultDescriptions.economicScope[financialRisk.scope]
+            }
+
         },
-        dualuserisk: {
+        dualuse: {
             title: riskResultDescriptions.dualUse.title,
             risk: dualUseRisk,
             description: riskResultDescriptions.dualUse[dualUseRisk]
         },
-        ethicsrisk: {
+        ethics: {
             title: ethicsRisk,
             risk: ethicsRisk,
             description: riskResultDescriptions.ethics[ethicsRisk]
@@ -148,7 +188,7 @@ const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType:
     return roundedAverage;
 }
 
-const calculateCountryRisk = (countryCode: any, personal: any): CountryRisk => {
+const calculateCountryRisk = async (countryCode: any, personal: any): Promise<CountryRisk> => {
     let personalinformation = personal;
     if (personalinformation != "option1" || personalinformation != "option2") {
         personalinformation = 0;
@@ -168,7 +208,7 @@ const calculateCountryRisk = (countryCode: any, personal: any): CountryRisk => {
             academicFreedom: 0.397,
             politicalStability: 47.39,
             development: -1,
-            GDPR: 2,
+            gdpr: 2,
             sanctions: 1,
             ruleOfLaw: 0.67977332
         }
@@ -186,7 +226,7 @@ const calculateCountryRisk = (countryCode: any, personal: any): CountryRisk => {
             academicFreedom: 0.934,
             politicalStability: 73.46,
             development: 5,
-            GDPR: 1,
+            gdpr: 1,
             sanctions: 1,
             ruleOfLaw: 0.85227449
         }
@@ -204,15 +244,19 @@ const calculateCountryRisk = (countryCode: any, personal: any): CountryRisk => {
             academicFreedom: 0.071,
             politicalStability: 25.12,
             development: 78,
-            GDPR: 3,
+            gdpr: 3,
             sanctions: 3,
             ruleOfLaw: 0.47709017
         }
     }
     ]
-    const country = countriesPlaceholder.find((country) => country.id === countryCode);
-    //placeholders end
+    const countryRaw = countriesPlaceholder.find((country) => country.id === countryCode);
+    const country = countryRaw?.risk;
+    //placeholders end 
 
+   /*
+    const country = await repository.findCountryByCountryId(countryCode);
+*/
     let countryRisk =
     {
         "overall": 0 as 0 | 1 | 2 | 3,
@@ -230,68 +274,68 @@ const calculateCountryRisk = (countryCode: any, personal: any): CountryRisk => {
         return countryRisk;
     }
 
-    if (country.risk.security == 0 || country.risk.security == 1 || country.risk.security == 2 || country.risk.security == 3) {
-        countryRisk.security = country.risk.security;
+    if (country.security == 0 || country.security == 1 || country.security == 2 || country.security == 3) {
+        countryRisk.security = country.security;
     }
 
-    if (country.risk.corruption > 66.666) {
+    if (country.corruption > 66.666) {
         countryRisk.corruption = 1;
-    } else if (country.risk.corruption <= 66.666 && country.risk.corruption > 33.333) {
+    } else if (country.corruption <= 66.666 && country.corruption > 33.333) {
         countryRisk.corruption = 2;
-    } else if (country.risk.corruption <= 33.333) {
+    } else if (country.corruption <= 33.333) {
         countryRisk.corruption = 3;
     }
 
-    if (country.risk.academicFreedom > 0.66) {
+    if (country.academicFreedom > 0.66) {
         countryRisk.academicfreedom = 1;
-    } else if (country.risk.academicFreedom > 0.33 && country.risk.academicFreedom <= 0.66) {
+    } else if (country.academicFreedom > 0.33 && country.academicFreedom <= 0.66) {
         countryRisk.academicfreedom = 2;
-    } else if (country.risk.academicFreedom <= 0.33) {
+    } else if (country.academicFreedom <= 0.33) {
         countryRisk.academicfreedom = 3;
     }
 
-    if (country.risk.politicalStability > 66.666) {
+    if (country.politicalStability > 66.666) {
         countryRisk.politicalstability = 1;
-    } else if (country.risk.politicalStability <= 66.666 && country.risk.politicalStability > 33.333) {
+    } else if (country.politicalStability <= 66.666 && country.politicalStability > 33.333) {
         countryRisk.politicalstability = 2;
-    } else if (country.risk.politicalStability <= 33.333) {
+    } else if (country.politicalStability <= 33.333) {
         countryRisk.politicalstability = 3;
     }
 
-    if (country.risk.development >= 1 && country.risk.development <= 64) {
+    if (country.development >= 1 && country.development <= 64) {
         countryRisk.development = 1;
-    } else if (country.risk.development >= 65 && country.risk.development <= 128) {
+    } else if (country.development >= 65 && country.development <= 128) {
         countryRisk.development = 2;
-    } else if (country.risk.development >= 129) {
+    } else if (country.development >= 129) {
         countryRisk.development = 3;
     }
 
-    if (personalinformation == 0 && !(country.risk.GDPR === 1)) {
+    if (personalinformation == 0 && !(country.gdpr === 1)) {
         countryRisk.gdpr = 0;
-    } else if (personalinformation === "option2" || country.risk.GDPR === 1) {
+    } else if (personalinformation === "option2" || country.gdpr=== 1) {
         countryRisk.gdpr = 1;
-    } else if (personalinformation !== "option2" && country.risk.GDPR === 2) {
+    } else if (personalinformation !== "option2" && country.gdpr === 2) {
         countryRisk.gdpr = 2;
-    } else if (personalinformation !== "option2" && country.risk.GDPR === 3) {
+    } else if (personalinformation !== "option2" && country.gdpr === 3) {
         countryRisk.gdpr = 3
     }
 
-    if (country.risk.sanctions == 1) {
+    if (country.sanctions == 1) {
         countryRisk.sanctions = 1;
-    } else if (country.risk.sanctions == 3) {
+    } else if (country.sanctions == 3) {
         countryRisk.sanctions = 3;
     }
 
-    if (country.risk.ruleOfLaw >= 0.7) {
+    if (country.ruleOfLaw >= 0.7) {
         countryRisk.ruleoflaw = 1;
-    } else if (country.risk.ruleOfLaw >= 0.45 && country.risk.ruleOfLaw < 0.7) {
+    } else if (country.ruleOfLaw >= 0.45 && country.ruleOfLaw < 0.7) {
         countryRisk.ruleoflaw = 2;
-    } else if (country.risk.ruleOfLaw < 0.45) {
+    } else if (country.ruleOfLaw < 0.45) {
         countryRisk.ruleoflaw = 3;
     }
 
     if (countryRisk.ruleoflaw != 0 || countryRisk.development != 0 || countryRisk.politicalstability != 0 || countryRisk.academicfreedom != 0 || countryRisk.corruption != 0) {
-        const roundedAverage = Math.round((countryRisk.corruption + country.risk.security + countryRisk.academicfreedom + countryRisk.politicalstability + countryRisk.development + countryRisk.gdpr + countryRisk.sanctions + countryRisk.ruleoflaw) / 8)
+        const roundedAverage = Math.round((countryRisk.corruption + country.security + countryRisk.academicfreedom + countryRisk.politicalstability + countryRisk.development + countryRisk.gdpr + countryRisk.sanctions + countryRisk.ruleoflaw) / 8)
         if (roundedAverage === 1 || roundedAverage === 2 || roundedAverage === 3) {
             countryRisk.overall = roundedAverage;
         }
@@ -337,11 +381,11 @@ const calculateEthicsRisk = (ethics: any): 0 | 1 | 2 | 3 => {
     return ethicsRisk;
 }
 
-const calculateFinancialRisk = (liability: any, funding: any, exchange: any) => {
+const calculateFinancialRisk = (liability: any, funding: any, exchange: any): FinancialRisk => {
     let financialRisk = {
-        "overall": 0,
-        "exchange": 0,
-        "scope": 0
+        "overall": 0 as 0 | 1 | 2 | 3,
+        "exchange": 0 as 0 | 1 | 2 | 3,
+        "scope": 0 as 0 | 1 | 2 | 3
     }
 
     if (liability && funding && exchange) {

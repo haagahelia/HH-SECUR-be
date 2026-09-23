@@ -1,14 +1,14 @@
-import e, { Request, Response } from "express";
+import { Request, Response } from "express";
 import repository from "../data/repository/repository";
 import { addCountryData } from "../utils/countryData.js";
 
 export const populateDatabase = async (req: Request, res: Response) => {
-    await addCountryData();
     await addHHRole();
     await addOrganizations();
     await addCollaborationTypes();
     await addConsortiumTypes();
     await addOrganizationType();
+    await addCountryData();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -46,37 +46,37 @@ export async function addHHRole() {
 export async function addCollaborationTypes() {
     const collaborationTypes = [
         {
-            option: "option1",
+            code: "option1",
             fi: "TKI-yhteistyö",
             en: "Research Collaboration"
         },
         {
-            option: "option2",
+            code: "option2",
             fi: "Koulutus/opetusyhteistyö",
             en: "Education/Teaching Collaboration"
         },
         {
-            option: "option3",
+            code: "option3",
             fi: "Koulutusvienti",
             en: "Export of Education"
         },
         {
-            option: "option4",
+            code: "option4",
             fi: "Kansainvälinen opiskelijaliikkuvuus",
             en: "International Student Mobility"
         },
         {
-            option: "option5",
+            code: "option5",
             fi: "Kansainvälinen henkilöstöliikkuvuus",
             en: "International Staff Mobility"
         },
         {
-            option: "option6",
+            code: "option6",
             fi: "Yhteistutkintoyhteistyö",
             en: "Joint Degree Collaboration"
         },
         {
-            option: "option7",
+            code: "option7",
             fi: "Muu",
             en: "Other"
         },
@@ -84,7 +84,7 @@ export async function addCollaborationTypes() {
 
     for (let i = 0; i < collaborationTypes.length; i++) {
 
-        let collaborationType = await repository.findCollaborationTypeByOption(collaborationTypes[i].option)
+        let collaborationType = await repository.findCollaborationTypeByCode(collaborationTypes[i].code)
         if (collaborationType) {
             collaborationType.fi = collaborationTypes[i].fi;
             collaborationType.en = collaborationTypes[i].en;
@@ -100,12 +100,12 @@ export async function addCollaborationTypes() {
 export async function addConsortiumTypes() {
     const consortiumTypes = [
         {
-            option: "bilateral",
+            code: "option1",
             fi: "Kahdenvälinen",
             en: "Bilateral"
         },
         {
-            option: "multilateral",
+            code: "option2",
             fi: "Monenkeskeinen",
             en: "Multilateral"
         },
@@ -113,7 +113,7 @@ export async function addConsortiumTypes() {
 
     for (let i = 0; i < consortiumTypes.length; i++) {
 
-        let consortiumType = await repository.findConsortiumTypeByOption(consortiumTypes[i].option)
+        let consortiumType = await repository.findConsortiumTypeByCode(consortiumTypes[i].code)
         if (consortiumType) {
             consortiumType.fi = consortiumTypes[i].fi;
             consortiumType.en = consortiumTypes[i].en;
@@ -127,44 +127,44 @@ export async function addConsortiumTypes() {
 export async function addOrganizations() {
     const organizations = [
         {
-            id: "halmstad",
-            country_id: "SWE",
+            code: "halmstad",
+            country_code: "SWE",
             fi: "Halmstadin yliopisto",
             en: "Halmstad University"
         },
         {
-            id: "stockholm",
-            country_id: "SWE",
+            code: "stockholm",
+            country_code: "SWE",
             fi: "Tukholman yliopisto",
             en: "Stockholm University"
         },
         {
-            id: "harvard",
-            country_id: "USA",
+            code: "harvard",
+            country_code: "USA",
             fi: "Harvardin yliopisto",
             en: "Harvard University"
         },
         {
-            id: "mit",
-            country_id: "USA",
+            code: "mit",
+            country_code: "USA",
             fi: "MIT",
             en: "MIT"
         },
         {
-            id: "moldova-state",
-            country_id: "MDA",
+            code: "moldova-state",
+            country_code: "MDA",
             fi: "Moldovan valtionyliopisto",
             en: "Moldova State University"
         },
         {
-            id: "peking",
-            country_id: "CHN",
+            code: "peking",
+            country_code: "CHN",
             fi: "Pekingin yliopisto",
             en: "Peking University"
         },
         {
-            id: "tsinghua",
-            country_id: "CHN",
+            code: "tsinghua",
+            country_code: "CHN",
             fi: "Tsinghuan yliopisto",
             en: "Tsinghua University"
         }
@@ -172,11 +172,11 @@ export async function addOrganizations() {
 
     for (let i = 0; i < organizations.length; i++) {
 
-        let organization = await repository.findOrganizationById(organizations[i].id)
+        let organization = await repository.findOrganizationById(organizations[i].code)
         if (organization) {
             organization.fi = organizations[i].fi;
             organization.en = organizations[i].en;
-            organization.country_id = organizations[i].country_id;
+            organization.country_code = organizations[i].country_code;
             organization.save();
         } else {
             repository.createOrganization(organizations[i]);

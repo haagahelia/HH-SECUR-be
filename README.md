@@ -410,37 +410,37 @@ Response body:
         },
     "financial": {
         "overall": {
-        "title": {
-            "fi": "Title in finnish",
-            "en": "Title in english"
-        }
-        "risk": 0-3
-        "description": {
-            "fi": "Description in finnish",
-            "en": "Description in english"
-        }
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
         },
         "exchange": {
-        "title": {
-            "fi": "Title in finnish",
-            "en": "Title in english"
-        }
-        "risk": 0-3
-        "description": {
-            "fi": "Description in finnish",
-            "en": "Description in english"
-        }
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
         },
-        "scope": {
-        "title": {
-            "fi": "Title in finnish",
-            "en": "Title in english"
-        }
-        "risk": 0-3
-        "description": {
-            "fi": "Description in finnish",
-            "en": "Description in english"
-        }
+            "scope": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
         },
     },
     "dualuse": {
@@ -453,7 +453,7 @@ Response body:
             "fi": "Description in finnish",
             "en": "Description in english"
         }
-        },
+    },
     "ethics": {
         "title": {
             "fi": "Title in finnish",
@@ -464,7 +464,16 @@ Response body:
             "fi": "Description in finnish",
             "en": "Description in english"
         }
-        },
+    },
+    "organizationother": {
+        "organizationOptional": "Contains Should only appear if organizationtype is option5"
+    },
+    "collaborationtypeother": {
+        "collaborationtypeOptional": "Should only appear if option7 is included in collaboration types"
+    },
+    "additionalinformation": {
+        "additionalinformation": "Additional information about project"
+    },
     "realCalculationImpementedFor": [
         "implemented calculation 1",
         "implemented calculation 2"
@@ -578,6 +587,15 @@ DEFAULT_ADMIN_PASSWORD=passwordForDefaultAdmin
 DEFAULT_ADMIN_EMAIL=emailForDefaultAdmin
 DEFAULT_ADMIN_ROLE=admin
 ```
+
+## Default users (Rahti)
+
+| Role  | Username            | Email                           | Password    |
+|-------|---------------------|---------------------------------|-------------|
+| user  | `pekka13`           | `pekka13@example.com`           | `Aamukahv!` |
+| admin | `highsupervisor200` | `highsupervisor200@example.com` | `Yllapit0!` |
+
+
 
 # Docker Compose Guide (HH-SECUR-be)
 
