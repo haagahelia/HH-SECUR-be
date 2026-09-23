@@ -65,7 +65,7 @@ export default class Country extends Model<
     @AllowNull(false)
     @NotEmpty
     @Column({
-        type: DataType.DECIMAL(3 , 2),
+        type: DataType.DECIMAL(4 , 2),
         field: "political_stability",
     })
     declare politicalStability: number;
