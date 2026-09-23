@@ -11,18 +11,25 @@ export default class Country extends Model<
     InferAttributes<Country>,
     InferCreationAttributes<Country>
 > {
-    @AllowNull(false)
-    @NotEmpty
-    @Unique({name: "country_id_unique", msg: "Country ID must be unique"})
     @Column({
-        type: DataType.STRING,
-        field: "country_id",
+        primaryKey: true,
+        type: DataType.BIGINT,
+        autoIncrement: true,
     })
-    declare country_id: string;
+    declare id: CreationOptional<number>
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "country_name_fi_unique", msg: "Country name in Finnish must be unique"})
+    @Unique({ name: "country_code_unique", msg: "Country code must be unique" })
+    @Column({
+        type: DataType.STRING,
+        field: "code",
+    })
+    declare code: string;
+
+    @AllowNull(false)
+    @NotEmpty
+    @Unique({ name: "country_name_fi_unique", msg: "Country name in Finnish must be unique" })
     @Column({
         type: DataType.STRING,
         field: "name_fi",
@@ -31,7 +38,7 @@ export default class Country extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "country_name_en_unique", msg: "Country name in English must be unique"})
+    @Unique({ name: "country_name_en_unique", msg: "Country name in English must be unique" })
     @Column({
         type: DataType.STRING,
         field: "name_en",
@@ -49,7 +56,7 @@ export default class Country extends Model<
     @AllowNull(false)
     @NotEmpty
     @Column({
-        type: DataType.DECIMAL(5 , 2),
+        type: DataType.DECIMAL(5, 2),
         field: "corruption",
     })
     declare corruption: number;
@@ -65,7 +72,7 @@ export default class Country extends Model<
     @AllowNull(false)
     @NotEmpty
     @Column({
-        type: DataType.DECIMAL(4 , 2),
+        type: DataType.DECIMAL(4, 2),
         field: "political_stability",
     })
     declare politicalStability: number;
@@ -73,7 +80,7 @@ export default class Country extends Model<
     @AllowNull(false)
     @NotEmpty
     @Column({
-        type: DataType.DECIMAL(4 , 3),
+        type: DataType.DECIMAL(4, 3),
         field: "academic_freedom",
     })
     declare academicFreedom: number;

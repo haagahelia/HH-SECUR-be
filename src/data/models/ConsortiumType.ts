@@ -20,11 +20,11 @@ export default class ConsortiumType extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "consortium_type_option_unique", msg: "Option for consortium type must be unique"})
+    @Unique({name: "consortium_type_code_unique", msg: "Code for consortium type must be unique"})
     @Column({
         type: DataType.STRING
     })
-    declare option: string;
+    declare code: string;
 
     @AllowNull(false)
     @NotEmpty

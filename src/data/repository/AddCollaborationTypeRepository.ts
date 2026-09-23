@@ -7,12 +7,12 @@ export function AddCollaborationTypeRepository<TBase extends Constructor<BaseRep
 ) {
     return class extends Base {
 
-        async createCollaborationType(collaborationTypeAttributes: { option: string; fi: string; en: string; }) {
+        async createCollaborationType(collaborationTypeAttributes: { code: string; fi: string; en: string; }) {
             return await CollaborationType.create(collaborationTypeAttributes);
         }
 
-        async findCollaborationTypeByOption(option: string) {
-            return await CollaborationType.findOne({ where: { option } });
+        async findCollaborationTypeByCode(code: string) {
+            return await CollaborationType.findOne({ where: { code } });
         }
     }
 }

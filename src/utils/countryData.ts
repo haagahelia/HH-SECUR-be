@@ -10,7 +10,7 @@ export async function addCountryData() {
 {
     en: "Afghanistan",
     fi: "Afganistan",
-    country_id: "AFG",
+    code: "AFG",
     dataYear: 2025,
     corruption: 13.68,
     security: 3,
@@ -24,7 +24,7 @@ export async function addCountryData() {
 {
     en: "Albania",
     fi: "Albania",
-    country_id: "ALB",
+    code: "ALB",
     dataYear: 2025,
     corruption: 43.4,
     security: 3,
@@ -36,10 +36,11 @@ export async function addCountryData() {
     ruleOfLaw: 0.48877582
     
 },
+
 {
     en: "Algeria",
     fi: "Algeria",
-    country_id: "DZA",
+    code: "DZA",
     dataYear: 2025,
     corruption: 30.19,
     security: 3,
@@ -53,7 +54,7 @@ export async function addCountryData() {
 {
     en: "Angola",
     fi: "Angola",
-    country_id: "AGO",
+    code: "AGO",
     dataYear: 2025,
     corruption: 29.25,
     security: 3,
@@ -68,7 +69,7 @@ export async function addCountryData() {
 {
     en: "Argentina",
     fi: "Argentiina",
-    country_id: "ARG",
+    code: "ARG",
     dataYear: 2025,
     corruption: 41.98,
     security: 3,
@@ -83,7 +84,7 @@ export async function addCountryData() {
 {
     en: "Armenia",
     fi: "Armenia",
-    country_id: "ARM",
+    code: "ARM",
     dataYear: 2025,
     corruption: 57.08,
     security: 3,
@@ -98,7 +99,7 @@ export async function addCountryData() {
 {
     en: "Australia",
     fi: "Australia",
-    country_id: "AUS",
+    code: "AUS",
     dataYear: 2025,
     corruption: 95.75,
     security: 3,
@@ -113,7 +114,7 @@ export async function addCountryData() {
 {
     en: "Austria",
     fi: "Itävalta",
-    country_id: "AUT",
+    code: "AUT",
     dataYear: 2025,
     corruption: 83.49,
     security: 3,
@@ -128,7 +129,7 @@ export async function addCountryData() {
 {
     en: "Azerbaijan",
     fi: "Azerbaidžan",
-    country_id: "AZE",
+    code: "AZE",
     dataYear: 2025,
     corruption: 12.26,
     security: 3,
@@ -143,7 +144,7 @@ export async function addCountryData() {
 {
     en: "Bahrain",
     fi: "Bahrain",
-    country_id: "BHR",
+    code: "BHR",
     dataYear: 2025,
     corruption: 59.43,
     security: 3,
@@ -158,7 +159,7 @@ export async function addCountryData() {
 {
     en: "Bangladesh",
     fi: "Bangladesh",
-    country_id: "BGD",
+    code: "BGD",
     dataYear: 2025,
     corruption: 14.62,
     security: 3,
@@ -173,7 +174,7 @@ export async function addCountryData() {
 {
     en: "Barbados",
     fi: "Barbados",
-    country_id: "BRB",
+    code: "BRB",
     dataYear: 2025,
     corruption: 89.62,
     security: 3,
@@ -188,7 +189,7 @@ export async function addCountryData() {
 {
     en: "Belarus",
     fi: "Valkovenäjä",
-    country_id: "BLR",
+    code: "BLR",
     dataYear: 2025,
     corruption: 26.89,
     security: 3,
@@ -203,7 +204,7 @@ export async function addCountryData() {
 {
     en: "Belgium",
     fi: "Belgia",
-    country_id: "BEL",
+    code: "BEL",
     dataYear: 2025,
     corruption: 89.15,
     security: 3,
@@ -218,7 +219,7 @@ export async function addCountryData() {
 {
     en: "Benin",
     fi: "Benin",
-    country_id: "BEN",
+    code: "BEN",
     dataYear: 2025,
     corruption: 52.83,
     security: 3,
@@ -233,7 +234,7 @@ export async function addCountryData() {
 {
     en: "Bhutan",
     fi: "Bhutan",
-    country_id: "BTN",
+    code: "BTN",
     dataYear: 2025,
     corruption: 91.04,
     security: 3,
@@ -248,7 +249,7 @@ export async function addCountryData() {
 {
     en: "Bolivia",
     fi: "Bolivia",
-    country_id: "BOL",
+    code: "BOL",
     dataYear: 2025,
     corruption: 21.7,
     security: 3,
@@ -263,7 +264,7 @@ export async function addCountryData() {
 {
     en: "Bosnia and Herzegovina",
     fi: "Bosnia ja Hertsegovina",
-    country_id: "BIH",
+    code: "BIH",
     dataYear: 2025,
     corruption: 30.66,
     security: 3,
@@ -278,7 +279,7 @@ export async function addCountryData() {
 {
     en: "Botswana",
     fi: "Botswana",
-    country_id: "BWA",
+    code: "BWA",
     dataYear: 2025,
     corruption: 73.58,
     security: 3,
@@ -293,7 +294,7 @@ export async function addCountryData() {
 {
     en: "Brazil",
     fi: "Brasilia",
-    country_id: "BRA",
+    code: "BRA",
     dataYear: 2025,
     corruption: 34.43,
     security: 3,
@@ -308,7 +309,7 @@ export async function addCountryData() {
 {
     en: "Bulgaria",
     fi: "Bulgaria",
-    country_id: "BGR",
+    code: "BGR",
     dataYear: 2025,
     corruption: 50.0,
     security: 3,
@@ -323,7 +324,7 @@ export async function addCountryData() {
 {
     en: "Burkina Faso",
     fi: "Burkina Faso",
-    country_id: "BFA",
+    code: "BFA",
     dataYear: 2025,
     corruption: 49.53,
     security: 3,
@@ -338,7 +339,7 @@ export async function addCountryData() {
 {
     en: "Burma/Myanmar",
     fi: "Myanmar",
-    country_id: "MMR",
+    code: "MMR",
     dataYear: 2025,
     corruption: 11.79,
     security: 3,
@@ -353,7 +354,7 @@ export async function addCountryData() {
 {
     en: "Burundi",
     fi: "Burundi",
-    country_id: "BDI",
+    code: "BDI",
     dataYear: 2025,
     corruption: 3.3,
     security: 3,
@@ -368,7 +369,7 @@ export async function addCountryData() {
 {
     en: "Cambodia",
     fi: "Kambodža",
-    country_id: "KHM",
+    code: "KHM",
     dataYear: 2025,
     corruption: 9.43,
     security: 3,
@@ -383,7 +384,7 @@ export async function addCountryData() {
 {
     en: "Cameroon",
     fi: "Kamerun",
-    country_id: "CMR",
+    code: "CMR",
     dataYear: 2025,
     corruption: 13.21,
     security: 3,
@@ -398,7 +399,7 @@ export async function addCountryData() {
 {
     en: "Canada",
     fi: "Kanada",
-    country_id: "CAN",
+    code: "CAN",
     dataYear: 2025,
     corruption: 94.81,
     security: 3,
@@ -413,7 +414,7 @@ export async function addCountryData() {
 {
     en: "Cape Verde",
     fi: "Kap Verde",
-    country_id: "CPV",
+    code: "CPV",
     dataYear: 2025,
     corruption: 81.13,
     security: 3,
@@ -428,7 +429,7 @@ export async function addCountryData() {
 {
     en: "Central African Republic",
     fi: "Keski-Afrikan tasavalta",
-    country_id: "CAF",
+    code: "CAF",
     dataYear: 2025,
     corruption: 8.96,
     security: 3,
@@ -443,7 +444,7 @@ export async function addCountryData() {
 {
     en: "Chad",
     fi: "Tšad",
-    country_id: "TCD",
+    code: "TCD",
     dataYear: 2025,
     corruption: 4.72,
     security: 3,
@@ -458,7 +459,7 @@ export async function addCountryData() {
 {
     en: "Chile",
     fi: "Chile",
-    country_id: "CHL",
+    code: "CHL",
     dataYear: 2025,
     corruption: 80.66,
     security: 3,
@@ -473,7 +474,7 @@ export async function addCountryData() {
 {
     en: "China",
     fi: "Kiina",
-    country_id: "CHN",
+    code: "CHN",
     dataYear: 2025,
     corruption: 54.25,
     security: 1,
@@ -488,7 +489,7 @@ export async function addCountryData() {
 {
     en: "Colombia",
     fi: "Kolumbia",
-    country_id: "COL",
+    code: "COL",
     dataYear: 2025,
     corruption: 44.81,
     security: 3,
@@ -503,7 +504,7 @@ export async function addCountryData() {
 {
     en: "Comoros",
     fi: "Komorit",
-    country_id: "COM",
+    code: "COM",
     dataYear: 2025,
     corruption: 19.34,
     security: 3,
@@ -518,7 +519,7 @@ export async function addCountryData() {
 {
     en: "Costa Rica",
     fi: "Costa Rica",
-    country_id: "CRI",
+    code: "CRI",
     dataYear: 2025,
     corruption: 72.64,
     security: 3,
@@ -533,7 +534,7 @@ export async function addCountryData() {
 {
     en: "Croatia",
     fi: "Kroatia",
-    country_id: "HRV",
+    code: "HRV",
     dataYear: 2025,
     corruption: 59.91,
     security: 3,
@@ -548,7 +549,7 @@ export async function addCountryData() {
 {
     en: "Cuba",
     fi: "Kuuba",
-    country_id: "CUB",
+    code: "CUB",
     dataYear: 2025,
     corruption: 52.36,
     security: 3,
@@ -563,7 +564,7 @@ export async function addCountryData() {
 {
     en: "Cyprus",
     fi: "Kypros",
-    country_id: "CYP",
+    code: "CYP",
     dataYear: 2025,
     corruption: 62.74,
     security: 3,
@@ -578,7 +579,7 @@ export async function addCountryData() {
 {
     en: "Czechia",
     fi: "Tšekki",
-    country_id: "CZE",
+    code: "CZE",
     dataYear: 2025,
     corruption: 76.89,
     security: 3,
@@ -593,7 +594,7 @@ export async function addCountryData() {
 {
     en: "Democratic Republic of the Congo",
     fi: "Kongon demokraattinen tasavalta",
-    country_id: "COD",
+    code: "COD",
     dataYear: 2025,
     corruption: 5.19,
     security: 3,
@@ -608,7 +609,7 @@ export async function addCountryData() {
 {
     en: "Denmark",
     fi: "Tanska",
-    country_id: "DNK",
+    code: "DNK",
     dataYear: 2025,
     corruption: 100.0,
     security: 3,
@@ -623,7 +624,7 @@ export async function addCountryData() {
 {
     en: "Djibouti",
     fi: "Djibouti",
-    country_id: "DJI",
+    code: "DJI",
     dataYear: 2025,
     corruption: 23.58,
     security: 3,
@@ -638,7 +639,7 @@ export async function addCountryData() {
 {
     en: "Dominican Republic",
     fi: "Dominikaaninen tasavalta",
-    country_id: "DOM",
+    code: "DOM",
     dataYear: 2025,
     corruption: 37.74,
     security: 3,
@@ -653,7 +654,7 @@ export async function addCountryData() {
 {
     en: "Ecuador",
     fi: "Ecuador",
-    country_id: "ECU",
+    code: "ECU",
     dataYear: 2025,
     corruption: 27.83,
     security: 3,
@@ -668,7 +669,7 @@ export async function addCountryData() {
 {
     en: "Egypt",
     fi: "Egypti",
-    country_id: "EGY",
+    code: "EGY",
     dataYear: 2025,
     corruption: 24.53,
     security: 3,
@@ -683,7 +684,7 @@ export async function addCountryData() {
 {
     en: "El Salvador",
     fi: "El Salvador",
-    country_id: "SLV",
+    code: "SLV",
     dataYear: 2025,
     corruption: 32.08,
     security: 3,
@@ -698,7 +699,7 @@ export async function addCountryData() {
 {
     en: "Equatorial Guinea",
     fi: "Päiväntasaajan Guinea",
-    country_id: "GNQ",
+    code: "GNQ",
     dataYear: 2025,
     corruption: 2.83,
     security: 3,
@@ -713,7 +714,7 @@ export async function addCountryData() {
 {
     en: "Eritrea",
     fi: "Eritrea",
-    country_id: "ERI",
+    code: "ERI",
     dataYear: 2025,
     corruption: 5.66,
     security: 3,
@@ -728,7 +729,7 @@ export async function addCountryData() {
 {
     en: "Estonia",
     fi: "Viro",
-    country_id: "EST",
+    code: "EST",
     dataYear: 2025,
     corruption: 91.51,
     security: 3,
@@ -743,7 +744,7 @@ export async function addCountryData() {
 {
     en: "Eswatini",
     fi: "Swazimaa",
-    country_id: "SWZ",
+    code: "SWZ",
     dataYear: 2025,
     corruption: 25.0,
     security: 3,
@@ -758,7 +759,7 @@ export async function addCountryData() {
 {
     en: "Ethiopia",
     fi: "Etiopia",
-    country_id: "ETH",
+    code: "ETH",
     dataYear: 2025,
     corruption: 37.26,
     security: 3,
@@ -773,7 +774,7 @@ export async function addCountryData() {
 {
     en: "Fiji",
     fi: "Fidži",
-    country_id: "FJI",
+    code: "FJI",
     dataYear: 2025,
     corruption: 66.04,
     security: 3,
@@ -788,7 +789,7 @@ export async function addCountryData() {
 {
     en: "Finland",
     fi: "Suomi",
-    country_id: "FIN",
+    code: "FIN",
     dataYear: 2025,
     corruption: 99.53,
     security: 1,
@@ -803,7 +804,7 @@ export async function addCountryData() {
 {
     en: "France",
     fi: "Ranska",
-    country_id: "FRA",
+    code: "FRA",
     dataYear: 2025,
     corruption: 83.96,
     security: 3,
@@ -818,7 +819,7 @@ export async function addCountryData() {
 {
     en: "Gabon",
     fi: "Gabon",
-    country_id: "GAB",
+    code: "GAB",
     dataYear: 2025,
     corruption: 17.92,
     security: 3,
@@ -833,7 +834,7 @@ export async function addCountryData() {
 {
     en: "Georgia",
     fi: "Georgia",
-    country_id: "GEO",
+    code: "GEO",
     dataYear: 2025,
     corruption: 71.23,
     security: 3,
@@ -848,7 +849,7 @@ export async function addCountryData() {
 {
     en: "Germany",
     fi: "Saksa",
-    country_id: "DEU",
+    code: "DEU",
     dataYear: 2025,
     corruption: 94.34,
     security: 3,
@@ -863,7 +864,7 @@ export async function addCountryData() {
 {
     en: "Ghana",
     fi: "Ghana",
-    country_id: "GHA",
+    code: "GHA",
     dataYear: 2025,
     corruption: 51.42,
     security: 3,
@@ -878,7 +879,7 @@ export async function addCountryData() {
 {
     en: "Greece",
     fi: "Kreikka",
-    country_id: "GRC",
+    code: "GRC",
     dataYear: 2025,
     corruption: 58.02,
     security: 3,
@@ -893,7 +894,7 @@ export async function addCountryData() {
 {
     en: "Guatemala",
     fi: "Guatemala",
-    country_id: "GTM",
+    code: "GTM",
     dataYear: 2025,
     corruption: 14.15,
     security: 3,
@@ -908,7 +909,7 @@ export async function addCountryData() {
 {
     en: "Guinea",
     fi: "Guinea",
-    country_id: "GIN",
+    code: "GIN",
     dataYear: 2025,
     corruption: 20.28,
     security: 3,
@@ -923,7 +924,7 @@ export async function addCountryData() {
 {
     en: "Guinea-Bissau",
     fi: "Guinea-Bissau",
-    country_id: "GNB",
+    code: "GNB",
     dataYear: 2025,
     corruption: 12.74,
     security: 3,
@@ -938,7 +939,7 @@ export async function addCountryData() {
 {
     en: "Guyana",
     fi: "Guyana",
-    country_id: "GUY",
+    code: "GUY",
     dataYear: 2025,
     corruption: 40.57,
     security: 3,
@@ -953,7 +954,7 @@ export async function addCountryData() {
 {
     en: "Haiti",
     fi: "Haiti",
-    country_id: "HTI",
+    code: "HTI",
     dataYear: 2025,
     corruption: 6.13,
     security: 3,
@@ -968,7 +969,7 @@ export async function addCountryData() {
 {
     en: "Honduras",
     fi: "Honduras",
-    country_id: "HND",
+    code: "HND",
     dataYear: 2025,
     corruption: 15.09,
     security: 3,
@@ -983,7 +984,7 @@ export async function addCountryData() {
 {
     en: "Hong Kong",
     fi: "Hongkong",
-    country_id: "HKG",
+    code: "HKG",
     dataYear: 2025,
     corruption: 93.4,
     security: 3,
@@ -998,7 +999,7 @@ export async function addCountryData() {
 {
     en: "Hungary",
     fi: "Unkari",
-    country_id: "HUN",
+    code: "HUN",
     dataYear: 2025,
     corruption: 54.72,
     security: 3,
@@ -1013,7 +1014,7 @@ export async function addCountryData() {
 {
     en: "Iceland",
     fi: "Islanti",
-    country_id: "ISL",
+    code: "ISL",
     dataYear: 2025,
     corruption: 91.98,
     security: 3,
@@ -1028,7 +1029,7 @@ export async function addCountryData() {
 {
     en: "India",
     fi: "Intia",
-    country_id: "IND",
+    code: "IND",
     dataYear: 2025,
     corruption: 41.51,
     security: 3,
@@ -1043,7 +1044,7 @@ export async function addCountryData() {
 {
     en: "Indonesia",
     fi: "Indonesia",
-    country_id: "IDN",
+    code: "IDN",
     dataYear: 2025,
     corruption: 36.32,
     security: 3,
@@ -1058,7 +1059,7 @@ export async function addCountryData() {
 {
     en: "Iran",
     fi: "Iran",
-    country_id: "IRN",
+    code: "IRN",
     dataYear: 2025,
     corruption: 10.38,
     security: 3,
@@ -1073,7 +1074,7 @@ export async function addCountryData() {
 {
     en: "Iraq",
     fi: "Irak",
-    country_id: "IRQ",
+    code: "IRQ",
     dataYear: 2025,
     corruption: 8.49,
     security: 3,
@@ -1088,7 +1089,7 @@ export async function addCountryData() {
 {
     en: "Ireland",
     fi: "Irlanti",
-    country_id: "IRL",
+    code: "IRL",
     dataYear: 2025,
     corruption: 92.92,
     security: 3,
@@ -1103,7 +1104,7 @@ export async function addCountryData() {
 {
     en: "Israel",
     fi: "Israel",
-    country_id: "ISR",
+    code: "ISR",
     dataYear: 2025,
     corruption: 78.77,
     security: 3,
@@ -1118,7 +1119,7 @@ export async function addCountryData() {
 {
     en: "Italy",
     fi: "Italia",
-    country_id: "ITA",
+    code: "ITA",
     dataYear: 2025,
     corruption: 67.92,
     security: 3,
@@ -1133,7 +1134,7 @@ export async function addCountryData() {
 {
     en: "Ivory Coast",
     fi: "Norsunluurannikko",
-    country_id: "CIV",
+    code: "CIV",
     dataYear: 2025,
     corruption: 44.34,
     security: 3,
@@ -1148,7 +1149,7 @@ export async function addCountryData() {
 {
     en: "Jamaica",
     fi: "Jamaika",
-    country_id: "JAM",
+    code: "JAM",
     dataYear: 2025,
     corruption: 50.94,
     security: 3,
@@ -1163,7 +1164,7 @@ export async function addCountryData() {
 {
     en: "Japan",
     fi: "Japani",
-    country_id: "JPN",
+    code: "JPN",
     dataYear: 2025,
     corruption: 90.09,
     security: 3,
@@ -1178,7 +1179,7 @@ export async function addCountryData() {
 {
     en: "Jordan",
     fi: "Jordania",
-    country_id: "JOR",
+    code: "JOR",
     dataYear: 2025,
     corruption: 57.55,
     security: 3,
@@ -1193,7 +1194,7 @@ export async function addCountryData() {
 {
     en: "Kazakhstan",
     fi: "Kazakstan",
-    country_id: "KAZ",
+    code: "KAZ",
     dataYear: 2025,
     corruption: 47.17,
     security: 3,
@@ -1208,7 +1209,7 @@ export async function addCountryData() {
 {
     en: "Kenya",
     fi: "Kenia",
-    country_id: "KEN",
+    code: "KEN",
     dataYear: 2025,
     corruption: 24.06,
     security: 3,
@@ -1223,7 +1224,7 @@ export async function addCountryData() {
 {
     en: "Kosovo",
     fi: "Kosovo",
-    country_id: "XKX",
+    code: "XKX",
     dataYear: 2025,
     corruption: 48.58,
     security: 3,
@@ -1238,7 +1239,7 @@ export async function addCountryData() {
 {
     en: "Kuwait",
     fi: "Kuwait",
-    country_id: "KWT",
+    code: "KWT",
     dataYear: 2025,
     corruption: 60.38,
     security: 3,
@@ -1253,7 +1254,7 @@ export async function addCountryData() {
 {
     en: "Kyrgyzstan",
     fi: "Kirgiisi",
-    country_id: "KGZ",
+    code: "KGZ",
     dataYear: 2025,
     corruption: 11.32,
     security: 3,
@@ -1268,7 +1269,7 @@ export async function addCountryData() {
 {
     en: "Laos",
     fi: "Lao",
-    country_id: "LAO",
+    code: "LAO",
     dataYear: 2025,
     corruption: 19.81,
     security: 3,
@@ -1283,7 +1284,7 @@ export async function addCountryData() {
 {
     en: "Latvia",
     fi: "Latvia",
-    country_id: "LVA",
+    code: "LVA",
     dataYear: 2025,
     corruption: 74.53,
     security: 3,
@@ -1298,7 +1299,7 @@ export async function addCountryData() {
 {
     en: "Lebanon",
     fi: "Libanon",
-    country_id: "LBN",
+    code: "LBN",
     dataYear: 2025,
     corruption: 10.85,
     security: 3,
@@ -1313,7 +1314,7 @@ export async function addCountryData() {
 {
     en: "Lesotho",
     fi: "Lesotho",
-    country_id: "LSO",
+    code: "LSO",
     dataYear: 2025,
     corruption: 33.49,
     security: 3,
@@ -1328,7 +1329,7 @@ export async function addCountryData() {
 {
     en: "Liberia",
     fi: "Liberia",
-    country_id: "LBR",
+    code: "LBR",
     dataYear: 2025,
     corruption: 20.75,
     security: 3,
@@ -1343,7 +1344,7 @@ export async function addCountryData() {
 {
     en: "Libya",
     fi: "Libya",
-    country_id: "LBY",
+    code: "LBY",
     dataYear: 2025,
     corruption: 3.77,
     security: 3,
@@ -1358,7 +1359,7 @@ export async function addCountryData() {
 {
     en: "Lithuania",
     fi: "Liettua",
-    country_id: "LTU",
+    code: "LTU",
     dataYear: 2025,
     corruption: 77.83,
     security: 3,
@@ -1373,7 +1374,7 @@ export async function addCountryData() {
 {
     en: "Luxembourg",
     fi: "Luxemburg",
-    country_id: "LUX",
+    code: "LUX",
     dataYear: 2025,
     corruption: 96.7,
     security: 3,
@@ -1388,7 +1389,7 @@ export async function addCountryData() {
 {
     en: "Madagascar",
     fi: "Madagaskar",
-    country_id: "MDG",
+    code: "MDG",
     dataYear: 2025,
     corruption: 18.4,
     security: 3,
@@ -1403,7 +1404,7 @@ export async function addCountryData() {
 {
     en: "Malawi",
     fi: "Malawi",
-    country_id: "MWI",
+    code: "MWI",
     dataYear: 2025,
     corruption: 29.72,
     security: 3,
@@ -1418,7 +1419,7 @@ export async function addCountryData() {
 {
     en: "Malaysia",
     fi: "Malesia",
-    country_id: "MYS",
+    code: "MYS",
     dataYear: 2025,
     corruption: 61.79,
     security: 3,
@@ -1433,7 +1434,7 @@ export async function addCountryData() {
 {
     en: "Maldives",
     fi: "Malediivit",
-    country_id: "MDV",
+    code: "MDV",
     dataYear: 2025,
     corruption: 39.62,
     security: 3,
@@ -1448,7 +1449,7 @@ export async function addCountryData() {
 {
     en: "Mali",
     fi: "Mali",
-    country_id: "MLI",
+    code: "MLI",
     dataYear: 2025,
     corruption: 21.23,
     security: 3,
@@ -1463,7 +1464,7 @@ export async function addCountryData() {
 {
     en: "Malta",
     fi: "Malta",
-    country_id: "MLT",
+    code: "MLT",
     dataYear: 2025,
     corruption: 58.49,
     security: 3,
@@ -1478,7 +1479,7 @@ export async function addCountryData() {
 {
     en: "Mauritania",
     fi: "Mauritania",
-    country_id: "MRT",
+    code: "MRT",
     dataYear: 2025,
     corruption: 22.64,
     security: 3,
@@ -1493,7 +1494,7 @@ export async function addCountryData() {
 {
     en: "Mauritius",
     fi: "Mauritius",
-    country_id: "MUS",
+    code: "MUS",
     dataYear: 2025,
     corruption: 65.57,
     security: 3,
@@ -1508,7 +1509,7 @@ export async function addCountryData() {
 {
     en: "Mexico",
     fi: "Meksiko",
-    country_id: "MEX",
+    code: "MEX",
     dataYear: 2025,
     corruption: 17.45,
     security: 3,
@@ -1523,7 +1524,7 @@ export async function addCountryData() {
 {
     en: "Moldova",
     fi: "Moldova",
-    country_id: "MDA",
+    code: "MDA",
     dataYear: 2025,
     corruption: 46.7,
     security: 2,
@@ -1538,7 +1539,7 @@ export async function addCountryData() {
 {
     en: "Mongolia",
     fi: "Mongolia",
-    country_id: "MNG",
+    code: "MNG",
     dataYear: 2025,
     corruption: 35.38,
     security: 3,
@@ -1553,7 +1554,7 @@ export async function addCountryData() {
 {
     en: "Montenegro",
     fi: "Montenegro",
-    country_id: "MNE",
+    code: "MNE",
     dataYear: 2025,
     corruption: 51.89,
     security: 3,
@@ -1568,7 +1569,7 @@ export async function addCountryData() {
 {
     en: "Morocco",
     fi: "Marokko",
-    country_id: "MAR",
+    code: "MAR",
     dataYear: 2025,
     corruption: 33.02,
     security: 3,
@@ -1583,7 +1584,7 @@ export async function addCountryData() {
 {
     en: "Mozambique",
     fi: "Mosambik",
-    country_id: "MOZ",
+    code: "MOZ",
     dataYear: 2025,
     corruption: 22.17,
     security: 3,
@@ -1598,7 +1599,7 @@ export async function addCountryData() {
 {
     en: "Namibia",
     fi: "Namibia",
-    country_id: "NAM",
+    code: "NAM",
     dataYear: 2025,
     corruption: 58.96,
     security: 3,
@@ -1613,7 +1614,7 @@ export async function addCountryData() {
 {
     en: "Nepal",
     fi: "Nepal",
-    country_id: "NPL",
+    code: "NPL",
     dataYear: 2025,
     corruption: 33.96,
     security: 3,
@@ -1628,7 +1629,7 @@ export async function addCountryData() {
 {
     en: "Netherlands",
     fi: "Alankomaat",
-    country_id: "NLD",
+    code: "NLD",
     dataYear: 2025,
     corruption: 96.23,
     security: 3,
@@ -1643,7 +1644,7 @@ export async function addCountryData() {
 {
     en: "New Zealand",
     fi: "Uusi-Seelanti",
-    country_id: "NZL",
+    code: "NZL",
     dataYear: 2025,
     corruption: 98.58,
     security: 3,
@@ -1658,7 +1659,7 @@ export async function addCountryData() {
 {
     en: "Nicaragua",
     fi: "Nicaragua",
-    country_id: "NIC",
+    code: "NIC",
     dataYear: 2025,
     corruption: 7.08,
     security: 3,
@@ -1673,7 +1674,7 @@ export async function addCountryData() {
 {
     en: "Niger",
     fi: "Niger",
-    country_id: "NER",
+    code: "NER",
     dataYear: 2025,
     corruption: 31.6,
     security: 3,
@@ -1688,7 +1689,7 @@ export async function addCountryData() {
 {
     en: "Nigeria",
     fi: "Nigeria",
-    country_id: "NGA",
+    code: "NGA",
     dataYear: 2025,
     corruption: 16.98,
     security: 3,
@@ -1703,7 +1704,7 @@ export async function addCountryData() {
 {
     en: "North Korea",
     fi: "Pohjois-Korea",
-    country_id: "PRK",
+    code: "PRK",
     dataYear: 2025,
     corruption: 2.36,
     security: 3,
@@ -1718,7 +1719,7 @@ export async function addCountryData() {
 {
     en: "North Macedonia",
     fi: "Pohjois-Makedonian tasavalta",
-    country_id: "MKD",
+    code: "MKD",
     dataYear: 2025,
     corruption: 42.45,
     security: 3,
@@ -1733,7 +1734,7 @@ export async function addCountryData() {
 {
     en: "Norway",
     fi: "Norja",
-    country_id: "NOR",
+    code: "NOR",
     dataYear: 2025,
     corruption: 99.06,
     security: 3,
@@ -1748,7 +1749,7 @@ export async function addCountryData() {
 {
     en: "Oman",
     fi: "Oman",
-    country_id: "OMN",
+    code: "OMN",
     dataYear: 2025,
     corruption: 60.85,
     security: 3,
@@ -1763,7 +1764,7 @@ export async function addCountryData() {
 {
     en: "Pakistan",
     fi: "Pakistan",
-    country_id: "PAK",
+    code: "PAK",
     dataYear: 2025,
     corruption: 18.87,
     security: 3,
@@ -1778,7 +1779,7 @@ export async function addCountryData() {
 {
     en: "Palestine/Gaza",
     fi: "Palestiina/Gaza",
-    country_id: "PSG",
+    code: "PSG",
     dataYear: 2025,
     corruption: 26.42,
     security: 3,
@@ -1793,7 +1794,7 @@ export async function addCountryData() {
 {
     en: "Palestine/West Bank",
     fi: "Palestiina/Länsiranta",
-    country_id: "PSE",
+    code: "PSE",
     dataYear: 2025,
     corruption: 26.42,
     security: 3,
@@ -1808,7 +1809,7 @@ export async function addCountryData() {
 {
     en: "Panama",
     fi: "Panama",
-    country_id: "PAN",
+    code: "PAN",
     dataYear: 2025,
     corruption: 28.3,
     security: 3,
@@ -1823,7 +1824,7 @@ export async function addCountryData() {
 {
     en: "Papua New Guinea",
     fi: "Papua-Uusi-Guinea",
-    country_id: "PNG",
+    code: "PNG",
     dataYear: 2025,
     corruption: 27.36,
     security: 3,
@@ -1838,7 +1839,7 @@ export async function addCountryData() {
 {
     en: "Paraguay",
     fi: "Paraguay"      ,
-    country_id: "PRY",
+    code: "PRY",
     dataYear: 2025,
     corruption: 16.04,
     security: 3,
@@ -1853,7 +1854,7 @@ export async function addCountryData() {
 {
     en: "Peru",
     fi: "Peru",
-    country_id: "PER",
+    code: "PER",
     dataYear: 2025,
     corruption: 25.47,
     security: 3,
@@ -1868,7 +1869,7 @@ export async function addCountryData() {
 {
     en: "Philippines",
     fi: "Filippiinit",
-    country_id: "PHL",
+    code: "PHL",
     dataYear: 2025,
     corruption: 32.55,
     security: 3,
@@ -1883,7 +1884,7 @@ export async function addCountryData() {
 {
     en: "Poland",
     fi: "Puola",
-    country_id: "POL",
+    code: "POL",
     dataYear: 2025,
     corruption: 68.87,
     security: 3,
@@ -1898,7 +1899,7 @@ export async function addCountryData() {
 {
     en: "Portugal",
     fi: "Portugali",
-    country_id: "PRT",
+    code: "PRT",
     dataYear: 2025,
     corruption: 74.06,
     security: 3,
@@ -1913,7 +1914,7 @@ export async function addCountryData() {
 {
     en: "Qatar",
     fi: "Qatar",
-    country_id: "QAT",
+    code: "QAT",
     dataYear: 2025,
     corruption: 75.0,
     security: 3,
@@ -1928,7 +1929,7 @@ export async function addCountryData() {
 {
     en: "Republic of the Congo",
     fi: "Kongon Tasavalta",
-    country_id: "COG",
+    code: "COG",
     dataYear: 2025,
     corruption: 8.02,
     security: 3,
@@ -1943,7 +1944,7 @@ export async function addCountryData() {
 {
     en: "Romania",
     fi: "Romania",
-    country_id: "ROU",
+    code: "ROU",
     dataYear: 2025,
     corruption: 56.13,
     security: 3,
@@ -1958,7 +1959,7 @@ export async function addCountryData() {
 {
     en: "Russia",
     fi: "Venäjä",
-    country_id: "RUS",
+    code: "RUS",
     dataYear: 2025,
     corruption: 15.57,
     security: 3,
@@ -1973,7 +1974,7 @@ export async function addCountryData() {
 {
     en: "Rwanda",
     fi: "Ruanda",
-    country_id: "RWA",
+    code: "RWA",
     dataYear: 2025,
     corruption: 73.11,
     security: 3,
@@ -1988,7 +1989,7 @@ export async function addCountryData() {
 {
     en: "Sao Tome and Principe",
     fi: "São Tomé ja Príncipe",
-    country_id: "STP",
+    code: "STP",
     dataYear: 2025,
     corruption: -1.0,
     security: 3,
@@ -2003,7 +2004,7 @@ export async function addCountryData() {
 {
     en: "Saudi Arabia",
     fi: "Saudi-Arabia",
-    country_id: "SAU",
+    code: "SAU",
     dataYear: 2025,
     corruption: 66.51,
     security: 3,
@@ -2018,7 +2019,7 @@ export async function addCountryData() {
 {
     en: "Senegal",
     fi: "Senegal",
-    country_id: "SEN",
+    code: "SEN",
     dataYear: 2025,
     corruption: 56.6,
     security: 3,
@@ -2033,7 +2034,7 @@ export async function addCountryData() {
 {
     en: "Serbia",
     fi: "Serbia",
-    country_id: "SRB",
+    code: "SRB",
     dataYear: 2025,
     corruption: 38.21,
     security: 3,
@@ -2048,7 +2049,7 @@ export async function addCountryData() {
 {
     en: "Seychelles",
     fi: "Seychellit",
-    country_id: "SYC",
+    code: "SYC",
     dataYear: 2025,
     corruption: 93.87,
     security: 3,
@@ -2063,7 +2064,7 @@ export async function addCountryData() {
 {
     en: "Sierra Leone",
     fi: "Sierra Leone",
-    country_id: "SLE",
+    code: "SLE",
     dataYear: 2025,
     corruption: 31.13,
     security: 3,
@@ -2078,7 +2079,7 @@ export async function addCountryData() {
 {
     en: "Singapore",
     fi: "Singapore",
-    country_id: "SGP",
+    code: "SGP",
     dataYear: 2025,
     corruption: 98.11,
     security: 3,
@@ -2093,7 +2094,7 @@ export async function addCountryData() {
 {
     en: "Slovakia",
     fi: "Slovakia",
-    country_id: "SVK",
+    code: "SVK",
     dataYear: 2025,
     corruption: 61.32,
     security: 3,
@@ -2108,7 +2109,7 @@ export async function addCountryData() {
 {
     en: "Slovenia",
     fi: "Slovenia",
-    country_id: "SVN",
+    code: "SVN",
     dataYear: 2025,
     corruption: 77.36,
     security: 3,
@@ -2123,7 +2124,7 @@ export async function addCountryData() {
 {
     en: "Solomon Islands",
     fi: "Salomonsaaret",
-    country_id: "SLB",
+    code: "SLB",
     dataYear: 2025,
     corruption: 50.47,
     security: 3,
@@ -2138,7 +2139,7 @@ export async function addCountryData() {
 {
     en: "Somalia",
     fi: "Somalia",
-    country_id: "SOM",
+    code: "SOM",
     dataYear: 2025,
     corruption: 0.94,
     security: 3,
@@ -2153,7 +2154,7 @@ export async function addCountryData() {
 {
     en: "Somaliland",
     fi: "Somalimaa",
-    country_id: "SML",
+    code: "SML",
     dataYear: 2025,
     corruption: -1.0,
     security: 3,
@@ -2168,7 +2169,7 @@ export async function addCountryData() {
 {
     en: "South Africa",
     fi: "Etelä-Afrikka",
-    country_id: "ZAF",
+    code: "ZAF",
     dataYear: 2025,
     corruption: 45.75,
     security: 3,
@@ -2183,7 +2184,7 @@ export async function addCountryData() {
 {
     en: "South Korea",
     fi: "Etelä-Korea",
-    country_id: "KOR",
+    code: "KOR",
     dataYear: 2025,
     corruption: 79.72,
     security: 3,
@@ -2198,7 +2199,7 @@ export async function addCountryData() {
 {
     en: "South Sudan",
     fi: "Etelä-Sudan",
-    country_id: "SSD",
+    code: "SSD",
     dataYear: 2025,
     corruption: 0.0,
     security: 3,
@@ -2213,7 +2214,7 @@ export async function addCountryData() {
 {
     en: "Spain",
     fi: "Espanja",
-    country_id: "ESP",
+    code: "ESP",
     dataYear: 2025,
     corruption: 71.7,
     security: 3,
@@ -2228,7 +2229,7 @@ export async function addCountryData() {
 {
     en: "Sri Lanka",
     fi: "Sri Lanka",
-    country_id: "LKA",
+    code: "LKA",
     dataYear: 2025,
     corruption: 40.09,
     security: 3,
@@ -2243,7 +2244,7 @@ export async function addCountryData() {
 {
     en: "Sudan",
     fi: "Sudan",
-    country_id: "SDN",
+    code: "SDN",
     dataYear: 2025,
     corruption: 4.25,
     security: 3,
@@ -2258,7 +2259,7 @@ export async function addCountryData() {
 {
     en: "Suriname",
     fi: "Suriname",
-    country_id: "SUR",
+    code: "SUR",
     dataYear: 2025,
     corruption: 39.15,
     security: 3,
@@ -2273,7 +2274,7 @@ export async function addCountryData() {
 {
     en: "Sweden",
     fi: "Ruotsi",
-    country_id: "SWE",
+    code: "SWE",
     dataYear: 2025,
     corruption: 97.64,
     security: 1,
@@ -2288,7 +2289,7 @@ export async function addCountryData() {
 {
     en: "Switzerland",
     fi: "Sveitsi",
-    country_id: "CHE",
+    code: "CHE",
     dataYear: 2025,
     corruption: 97.17,
     security: 3,
@@ -2303,7 +2304,7 @@ export async function addCountryData() {
 {
     en: "Syria",
     fi: "Syyria",
-    country_id: "SYR",
+    code: "SYR",
     dataYear: 2025,
     corruption: 0.47,
     security: 3,
@@ -2318,7 +2319,7 @@ export async function addCountryData() {
 {
     en: "Taiwan",
     fi: "Taiwan",
-    country_id: "TWN",
+    code: "TWN",
     dataYear: 2025,
     corruption: -1.0,
     security: 3,
@@ -2333,7 +2334,7 @@ export async function addCountryData() {
 {
     en: "Tajikistan",
     fi: "Tadžikistan",
-    country_id: "TJK",
+    code: "TJK",
     dataYear: 2025,
     corruption: 7.55,
     security: 3,
@@ -2348,7 +2349,7 @@ export async function addCountryData() {
 {
     en: "Tanzania",
     fi: "Tansania",
-    country_id: "TZA",
+    code: "TZA",
     dataYear: 2025,
     corruption: 43.87,
     security: 3,
@@ -2363,7 +2364,7 @@ export async function addCountryData() {
 {
     en: "Thailand",
     fi: "Thaimaa",
-    country_id: "THA",
+    code: "THA",
     dataYear: 2025,
     corruption: 35.85,
     security: 3,
@@ -2378,7 +2379,7 @@ export async function addCountryData() {
 {
     en: "The Gambia",
     fi: "Gambia",
-    country_id: "GMB",
+    code: "GMB",
     dataYear: 2025,
     corruption: 46.23,
     security: 3,
@@ -2393,7 +2394,7 @@ export async function addCountryData() {
 {
     en: "Timor-Leste",
     fi: "Itä-Timor",
-    country_id: "TLS",
+    code: "TLS",
     dataYear: 2025,
     corruption: 47.64,
     security: 3,
@@ -2408,7 +2409,7 @@ export async function addCountryData() {
 {
     en: "Togo",
     fi: "Togo",
-    country_id: "TGO",
+    code: "TGO",
     dataYear: 2025,
     corruption: 28.77,
     security: 3,
@@ -2423,7 +2424,7 @@ export async function addCountryData() {
 {
     en: "Trinidad and Tobago",
     fi: "Trinidad ja Tobago",
-    country_id: "TTO",
+    code: "TTO",
     dataYear: 2025,
     corruption: 41.04,
     security: 3,
@@ -2438,7 +2439,7 @@ export async function addCountryData() {
 {
     en: "Tunisia",
     fi: "Tunisia",
-    country_id: "TUN",
+    code: "TUN",
     dataYear: 2025,
     corruption: 42.92,
     security: 3,
@@ -2453,7 +2454,7 @@ export async function addCountryData() {
 {
     en: "Turkmenistan",
     fi: "Turkmenistan",
-    country_id: "TKM",
+    code: "TKM",
     dataYear: 2025,
     corruption: 6.6,
     security: 3,
@@ -2468,7 +2469,7 @@ export async function addCountryData() {
 {
     en: "Türkiye",
     fi: "Turkki",
-    country_id: "TUR",
+    code: "TUR",
     dataYear: 2025,
     corruption: 34.91,
     security: 3,
@@ -2483,7 +2484,7 @@ export async function addCountryData() {
 {
     en: "Uganda",
     fi: "Uganda",
-    country_id: "UGA",
+    code: "UGA",
     dataYear: 2025,
     corruption: 16.51,
     security: 3,
@@ -2498,7 +2499,7 @@ export async function addCountryData() {
 {
     en: "Ukraine",
     fi: "Ukraina",
-    country_id: "UKR",
+    code: "UKR",
     dataYear: 2025,
     corruption: 25.94,
     security: 3,
@@ -2513,7 +2514,7 @@ export async function addCountryData() {
 {
     en: "United Arab Emirates",
     fi: "Yhdistyneet arabiemiirikunnat",
-    country_id: "ARE",
+    code: "ARE",
     dataYear: 2025,
     corruption: 82.55,
     security: 3,
@@ -2528,7 +2529,7 @@ export async function addCountryData() {
 {
     en: "United Kingdom",
     fi: "Yhdistynyt kuningaskunta",
-    country_id: "GBR",
+    code: "GBR",
     dataYear: 2025,
     corruption: 90.57,
     security: 3,
@@ -2543,7 +2544,7 @@ export async function addCountryData() {
 {
     en: "United States of America",
     fi: "Yhdysvallat",
-    country_id: "USA",
+    code: "USA",
     dataYear: 2025,
     corruption: 83.02,
     security: 1,
@@ -2558,7 +2559,7 @@ export async function addCountryData() {
 {
     en: "Uruguay",
     fi: "Uruguay",
-    country_id: "URY",
+    code: "URY",
     dataYear: 2025,
     corruption: 92.45,
     security: 3,
@@ -2573,7 +2574,7 @@ export async function addCountryData() {
 {
     en: "Uzbekistan",
     fi: "Uzbekistan",
-    country_id: "UZB",
+    code: "UZB",
     dataYear: 2025,
     corruption: 23.11,
     security: 3,
@@ -2588,7 +2589,7 @@ export async function addCountryData() {
 {
     en: "Vanuatu",
     fi: "Vanuatu",
-    country_id: "VUT",
+    code: "VUT",
     dataYear: 2025,
     corruption: 53.77,
     security: 3,
@@ -2603,7 +2604,7 @@ export async function addCountryData() {
 {
     en: "Venezuela",
     fi: "Venezuela",
-    country_id: "VEN",
+    code: "VEN",
     dataYear: 2025,
     corruption: 1.42,
     security: 3,
@@ -2618,7 +2619,7 @@ export async function addCountryData() {
 {
     en: "Vietnam",
     fi: "Vietnam",
-    country_id: "VNM",
+    code: "VNM",
     dataYear: 2025,
     corruption: 38.68,
     security: 3,
@@ -2633,7 +2634,7 @@ export async function addCountryData() {
 {
     en: "Yemen",
     fi: "Jemen",
-    country_id: "YEM",
+    code: "YEM",
     dataYear: 2025,
     corruption: 1.89,
     security: 3,
@@ -2648,7 +2649,7 @@ export async function addCountryData() {
 {
     en: "Zambia",
     fi: "Sambia",
-    country_id: "ZMB",
+    code: "ZMB",
     dataYear: 2025,
     corruption: 36.79,
     security: 3,
@@ -2663,7 +2664,7 @@ export async function addCountryData() {
 {
     en: "Zanzibar",
     fi: "Sansibar",
-    country_id: "ZZB",
+    code: "ZZB",
     dataYear: 2025,
     corruption: -1.0,
     security: 3,
@@ -2678,7 +2679,7 @@ export async function addCountryData() {
 {
     en: "Zimbabwe",
     fi: "Zimbabwe",
-    country_id: "ZWE",
+    code: "ZWE",
     dataYear: 2025,
     corruption: 9.91,
     security: 3,
@@ -2690,11 +2691,12 @@ export async function addCountryData() {
     ruleOfLaw: -1.0
 
 }
+    
 ]
 
     for (let i = 0; i < countries.length; i++) {
         
-        let country = await repository.findCountryByCountryId(countries[i].country_id);
+        let country = await repository.findCountryByCode(countries[i].code);
         if (country) {
             country.en = countries[i].en;
             country.fi = countries[i].fi;
