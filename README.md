@@ -191,3 +191,47 @@ DEFAULT_ADMIN_PASSWORD=adminPassword
 DEFAULT_ADMIN_EMAIL=email
 DEFAULT_ADMIN_ROLE=admin
 ```
+
+## Testing
+
+API tests are written with [Playwright](https://playwright.dev/) (`@playwright/test`) and cover `/login`, `/tokenstatus`, `/tokenstatusadmin`, `/defaultuser` and `/defaultadmin`. Test files live in `tests/api/`.
+
+### Requirements
+
+- The backend API must be running and reachable (default: `http://localhost:3000`).
+- The database must be running and reachable by the API.
+- The `.env` file must be set up (see variables referenced throughout this README), especially `JWT_SECRET`, `DB_*` and `DEFAULT_USER_*` / `DEFAULT_ADMIN_*`.
+
+Start the API and database with Docker Compose:
+
+```
+docker compose -f docker-compose-dbbe.yaml up -d
+```
+
+Or run them locally instead (requires a running MariaDB instance matching the `DB_*` env variables):
+
+```
+npm run dev
+```
+
+Test data (the default user and admin) is created/reset automatically before the test run via a Playwright `globalSetup` that calls `/defaultuser` and `/defaultadmin` — no manual seeding needed.
+
+### Running the tests
+
+```
+npm test
+```
+
+Runs the full Playwright suite headlessly against the API.
+
+```
+npm run test:ui
+```
+
+Opens Playwright's UI mode for interactively running and debugging individual tests.
+
+By default tests target `http://localhost:3000` (or `PORT` from `.env`). To point tests at a different URL, set `API_BASE_URL`:
+
+```
+API_BASE_URL=http://localhost:4000 npm test
+```
