@@ -59,8 +59,6 @@ export const calculateRisk = async (req: Request) => {
         additionalinformationOptional = additionalinformation;
     }
 
-    const debugCountry = await repository.findCountryByCode(country);
-
     const report = {
         collaboration: {
             title: riskResultDescriptions.collaboration.title,
@@ -102,8 +100,7 @@ export const calculateRisk = async (req: Request) => {
             gdpr: {
                 title: riskResultDescriptions.countryGdpr.title,
                 risk: countryRisk.gdpr,
-                description: riskResultDescriptions.countryGdpr[countryRisk.gdpr],
-                debug: {debugCountry}
+                description: riskResultDescriptions.countryGdpr[countryRisk.gdpr]
             },
             sanctions: {
                 title: riskResultDescriptions.countrySanctions.title,
