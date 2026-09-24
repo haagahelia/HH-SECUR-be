@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import repository from "../data/repository/repository";
 import { addCountryData } from "../utils/countryData.js";
+import Duration from "../data/models/Duration";
 
 export const populateDatabase = async (req: Request, res: Response) => {
     await addHHRole();
@@ -9,6 +10,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addConsortiumTypes();
     await addOrganizationType();
     await addCountryData();
+    await addDuration();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -221,6 +223,35 @@ export async function addOrganizationType() {
             organizationType.save();
         } else {
             repository.createOrganizationType(organizationTypes[i]);
+        }
+    }
+}
+export async function addDuration(){
+    const durations= [
+        {
+            code:"1",
+            fi:"0-24 kk",
+            en:"0-24 months"
+        },
+        {
+            code:"2",
+            fi:"24-60 kk",
+            en:"24-60 months"
+        },
+        {
+            code:"3",
+            fi:"yli 60 kk",
+            en:"Over 60 months"
+        }
+    ]
+    for (let i=0; i<durations.length; i++){
+        let duration= await repository.findDurationByCode(durations[i].code)
+        if (duration){
+            duration.fi= durations[i].fi;
+            duration.en= durations[i].en;
+            duration.save();
+        } else {
+            repository.createDuration(durations[i]);
         }
     }
 }
