@@ -3,12 +3,12 @@ import { AllowNull, AutoIncrement, Column, CreatedAt, DataType, Model, NotEmpty,
 
 
 @Table({
-    tableName: "user",
-    modelName: "User",
+    tableName: "hh_role",
+    modelName: "HHRole ",
 })
-export default class User extends Model<
-    InferAttributes<User>,
-    InferCreationAttributes<User>
+export default class HHRole extends Model<
+    InferAttributes<HHRole>,
+    InferCreationAttributes<HHRole>
 > {
     @Column({
         primaryKey: true,
@@ -19,35 +19,27 @@ export default class User extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "user_username_unique", msg: "Username must be unique"})
+    @Unique({name: "hhrole_code_unique", msg: "code for HH role must be unique"})
     @Column({
         type: DataType.STRING
     })
-    declare username: string;
-
-    @AllowNull(false)
-    @NotEmpty
-    @IsEmail
-    @Unique({name: "user_email_unique", msg: "Email must be unique"})
-    @Column({
-        type: DataType.STRING
-    })
-    declare email: string;
-
+    declare code: string;
 
     @AllowNull(false)
     @NotEmpty
     @Column({
-        type: DataType.STRING
+        type: DataType.STRING,
+        field: "name_fi"
     })
-    declare password_hash: string;
+    declare fi: string;
 
     @AllowNull(false)
     @NotEmpty
     @Column({
-        type: DataType.STRING
+        type: DataType.STRING,
+        field: "name_en"
     })
-    declare role: string;
+    declare en: string;
 
     @CreatedAt
     declare created_at: CreationOptional<Date>;
