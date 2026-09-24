@@ -3,45 +3,25 @@ Backend and Database for HH-SECUR-i
 
 ## Endpoints
 
-**/status** - GET
+<details>
+
+<summary>
+
+**/status** - GET: Server status check
+
+</summary>
 
 Responds `{ok: true}` if server is running. Doesn't require successful database connection.
 
-**/users/{id}** - GET
+</details>
 
-Fetches user by the id of {id}
+<details>
 
-**Responses:**
+<summary>
 
-    - Success: 200
+**/login** - POST: Login endpoint with username and password payload
 
-        {
-            user: {
-                id: number,
-                username: string,
-                email: string,
-                password_hash: string,
-                role: string,
-                created_at: DATE,
-                updated_at: DATE
-            }
-        }
-
-    - Not a number failure: 400
-
-        {
-            message: "Requested id {id} is not a number
-        }
-
-    - User not found failure: 404
-
-        {
-            message: "User by the id of {id} does not exist"
-        }
-
-
-
-**/login** - POST
+</summary>
 
 **Request body format:**
 
@@ -55,7 +35,15 @@ Fetches user by the id of {id}
 
 Credentials for default user and admin are defined in env variables.
 
-**/users** - GET
+</details>
+
+<details>
+
+<summary>
+
+**/users** - GET: List of users with password hash omitted
+
+</summary>
 
     - Returns list of users with password_hash omitted
 
@@ -65,7 +53,15 @@ Responses:
 
     - Failures: 401: Auth failure
 
-**/users/{id}** - GET
+</details>
+
+<details>
+
+<summary>
+
+**/users/{id}** - GET: User by the specific id with password hash omitted
+
+</summary>
 
     - Returns specific user by ID
 
@@ -76,8 +72,16 @@ Responses:
     - Success: 200
 
     - Failures: 401: Auth failure, 404: user not found
+    
+</details>
 
-**/users** - POST
+<details>
+
+<summary>
+
+**/users** - POST: Post a new user with user data in the request body
+
+</summary>
 
     - Create new user
 
@@ -107,8 +111,16 @@ Responses:
     - Success: 200 - Json of generated user with password_hash omitted
 
     - Failures: 401, 403: Auth errors, 422: Validation errors
+    
+</details>
 
-**/users/{id}** - PATCH
+<details>
+
+<summary>
+
+**/users/{id}** - PATCH: Update user values with omitted fields retaining old values
+
+</summary>
 
     - Update information of a specific user.
 
@@ -131,7 +143,15 @@ Responses:
 
     - Failures: 401, 403 - Auth failures
 
-**/users/{id}** - DELETE
+</details>
+
+<details>
+
+<summary>
+
+**/users/{id}** - DELETE: Delete user by id
+
+</summary>
 
     - Deletes a specific user
     
@@ -143,9 +163,337 @@ Responses:
 
     - Failures: 401, 403 - Auth failures, 404 - User not found
 
+</details>
 
-**/tokenstatus**
+<details>
 
+<summary>
+
+**/organizations** - GET: List of partner organizations
+
+</summary>
+
+    - Returns list of organizations (id, name:(fi, en), country id)
+
+    - Requires authentication
+
+Response body:
+
+```
+{
+    "organizations": [
+        {
+            "id": "organization-id",
+            "name": {
+                "fi": "Name in Finnish",
+                "en": "Name in English"
+            },
+            "countryId": "XXX"
+        }
+    ]
+}
+```
+
+Responses:
+
+    - Success: 200
+
+    - Failures: 401: Auth failure
+
+</details>
+
+<details>
+
+<summary>
+
+**/calculaterisk** - POST: Risk calculation endpoint
+
+</summary>
+
+**Work in progress: features only partially implemented**
+
+
+
+Requires: authentication
+
+Request body:
+
+```
+{
+    "hhrole": "option1",
+    "collaborationtype": ["option1", "option2"]´
+    "country": "FIN",
+    "organization": "HH",
+    "organizationtype": "option1",
+    "history": "option1",
+    "contract": "option1",
+    "funding": "option1",
+    "exhange": "option1"
+    "liability": "option1",
+    "personalinformation": "option1",
+    "dualuse": "option1",
+    "ethics": "option1",
+    "duration": "option1",
+    "organizationother": "specify organization",
+    "collaborationtypeother": "specify collaboration type",
+    "additionalinformation": "additional description"
+
+}
+```
+
+Optional fields: 
+
+    - organizationother - Description for other option in organization
+
+    - collaborationtypeother - Description for other option in collaboration type
+
+    - additionalinformation - Additional information about project
+
+Response will always contain these but left empty if missing from request or condition to include them is not triggered.
+
+Valid values:
+
+```
+country: 3 letter country code
+organization: organization string id
+hhrole: option1 | option2 | option3
+collaborationtype: [ option1 | option2 | option3 | option4 | option5 | option6 | option7 ]
+organizationtype: option1 | option2 | option3 | option4 | option5
+history: option1 | option2
+contract: option1 | option2
+funding: option1 | option2
+exchange: option1 | option2 | option3
+liability: option1 | option2 | option3
+personalinformation: option1 | option2
+dualuse: option1 | option2 | option3
+ethics: option1 | option2 | option3 | option4 | option5
+duration: option1 | option2 | option3
+organizationother: any text
+collaborationother: any text
+additionalinformation: any text
+```
+
+Responses:
+
+    - Success: 200 - Risk report with 0 - 3 range for risk factors
+
+        - 0 for a risk factor means calculation failed likely due to invalid value in the request body
+
+    - Failures: 401 - Auth failure, 422 - Missing fields from request body, missing fields listed
+
+Response body:
+
+```
+{
+    "collaboration": {
+        "title": {
+            "fi": "Title in finnish",
+            "en": "Title in english"
+        }
+        "risk": 0-3
+        "description": {
+            "fi": "Description in finnish",
+            "en": "Description in english"
+        }
+        },
+    "country": {
+        "overall": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "corruption": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "security": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "academicfreedom": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "politicalstability": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "development": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "gdpr": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "sanctions": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "ruleoflaw": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+    },
+    "organization": {
+        "title": {
+            "fi": "Title in finnish",
+            "en": "Title in english"
+        }
+        "risk": 0-3
+        "description": {
+            "fi": "Description in finnish",
+            "en": "Description in english"
+        }
+        },
+    "financial": {
+        "overall": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+        "exchange": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+            "scope": {
+            "title": {
+                "fi": "Title in finnish",
+                "en": "Title in english"
+            }
+            "risk": 0-3
+            "description": {
+                "fi": "Description in finnish",
+                "en": "Description in english"
+            }
+        },
+    },
+    "dualuse": {
+        "title": {
+            "fi": "Title in finnish",
+            "en": "Title in english"
+        }
+        "risk": 0-3
+        "description": {
+            "fi": "Description in finnish",
+            "en": "Description in english"
+        }
+    },
+    "ethics": {
+        "title": {
+            "fi": "Title in finnish",
+            "en": "Title in english"
+        }
+        "risk": 0-3
+        "description": {
+            "fi": "Description in finnish",
+            "en": "Description in english"
+        }
+    },
+    "organizationother": {
+        "organizationOptional": "Contains Should only appear if organizationtype is option5"
+    },
+    "collaborationtypeother": {
+        "collaborationtypeOptional": "Should only appear if option7 is included in collaboration types"
+    },
+    "additionalinformation": {
+        "additionalinformation": "Additional information about project"
+    },
+    "realCalculationImpementedFor": [
+        "implemented calculation 1",
+        "implemented calculation 2"
+    ]
+}
+```
+
+`realCalculationImpementedFor` is a placeholder response that will be removed once risk calculation has been fully implemented. Risk categories listed there are ready to replace the old risk source in front end. **Fully implemented in this case means replicating the logic present in frontend, beyond that there are risk calculation functions yet to be implemented but those are not in scope for this sprint**
+
+
+
+</details>
+
+<details>
+
+<summary>
+
+**/tokenstatus** - GET: Check auth token validity
+
+</summary>
     - Uses Bearer authentication to look for valid token.
 
 Responses:
@@ -154,7 +502,15 @@ Responses:
     
     - Failed: failure status response from auth middleware
 
-**/tokenstatusadmin**
+</details>
+
+<details>
+
+<summary>
+
+**/tokenstatusadmin** - GET: Check admin auth token validity
+
+</summary>
 
 Checks for token authenticity and if that passes checks for admin role.
 
@@ -166,7 +522,15 @@ Responses:
 
     - Token check failed: failure status response from auth middleware
 
-**/defaultuser**
+</details>
+
+<details>
+
+<summary>
+
+**/defaultuser** - GET: Generates default user or updates it to default values
+
+</summary>
 
 Creates default user. Updates values to default if email is already present.
 
@@ -179,7 +543,15 @@ DEFAULT_USER_EMAIL=email
 DEFAULT_USER_ROLE=user
 ```
 
-**/defaultadmin**
+</details>
+
+<details>
+
+<summary>
+
+**/defaultadmin** - GET: Generates default admin or updates it to default values
+
+</summary>
 
 Creates default user with admin role. Updates values to default if email is already present.
 
@@ -191,6 +563,158 @@ DEFAULT_ADMIN_PASSWORD=adminPassword
 DEFAULT_ADMIN_EMAIL=email
 DEFAULT_ADMIN_ROLE=admin
 ```
+
+</details>
+
+## env variable template
+
+Use .env file locally in the root directory and update values to match your environment.
+
+```
+PORT=3000
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=YourPassword
+DB_DATABASE=YourDatabaseName
+JWT_SECRET=secretForJWTTokenGeneration
+DEFAULT_USER_USERNAME=usernameForDefaultUser
+DEFAULT_USER_PASSWORD=passwordForDefaultUser
+DEFAULT_USER_EMAIL=emailForDefaultUser
+DEFAULT_USER_ROLE=user
+DEFAULT_ADMIN_USERNAME=usernameForDefaultAdmin
+DEFAULT_ADMIN_PASSWORD=passwordForDefaultAdmin
+DEFAULT_ADMIN_EMAIL=emailForDefaultAdmin
+DEFAULT_ADMIN_ROLE=admin
+```
+
+## Default users (Rahti)
+
+| Role  | Username            | Email                           | Password    |
+|-------|---------------------|---------------------------------|-------------|
+| user  | `pekka13`           | `pekka13@example.com`           | `Aamukahv!` |
+| admin | `highsupervisor200` | `highsupervisor200@example.com` | `Yllapit0!` |
+
+
+
+# Docker Compose Guide (HH-SECUR-be)
+
+## 1. Prerequisites
+
+* Docker Desktop running (check with `docker info`, should return no error)
+* `.env` file in the project root, every developer needs their own copy on their own machine. It's in `.gitignore` (`.gitignore:69-70`) and is not version-controlled, since it contains passwords and secrets, share it with the team through some other channel (not via Git).
+
+## 2. `.env` file contents
+
+```env
+# be.env
+PORT=3000
+BE_SERVER_PORT=3000
+
+# db.env, app-side connection settings (config.ts)
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=<your-value>
+DB_PASSWORD=<your-value>
+DB_DATABASE=<your-value>
+
+# db.image.env, MariaDB container's init variables (must be the SAME values as above)
+MARIADB_DATABASE=<same as DB_DATABASE>
+MARIADB_USER=<same as DB_USERNAME>
+MARIADB_PASSWORD=<same as DB_PASSWORD>
+MARIADB_ROOT_PASSWORD=<your-value>
+
+# auth.env
+JWT_SECRET=<your-value>
+
+# default seed credentials (/defaultuser, /defaultadmin)
+DEFAULT_USER_USERNAME=user
+DEFAULT_USER_EMAIL=user@testing.com
+DEFAULT_USER_PASSWORD=<your-value>
+DEFAULT_USER_ROLE=user
+
+DEFAULT_ADMIN_USERNAME=admin
+DEFAULT_ADMIN_EMAIL=admin@testing.com
+DEFAULT_ADMIN_PASSWORD=<your-value>
+DEFAULT_ADMIN_ROLE=admin
+```
+
+> **Note:** `DB_PORT` must be `3306`, containers always talk to each other on MariaDB's internal port, regardless of the host-side port mapping. `DB_USERNAME` / `DB_PASSWORD` / `DB_DATABASE` must exactly match `MARIADB_USER` / `MARIADB_PASSWORD` / `MARIADB_DATABASE`.
+
+## 3. Starting it up
+
+First time, or whenever the code / Dockerfile / package.json has changed:
+
+```bash
+docker compose -f docker-compose-dbbe.yaml up --build
+```
+
+If the image is already built and nothing has changed since, `--build` isn't needed, plain `up` is enough and starts faster:
+
+```bash
+docker compose -f docker-compose-dbbe.yaml up
+```
+
+Both do the same basic sequence:
+
+1. The backend is built from the `Dockerfile` if needed (`npm ci` → `npm run build` → `npm start`)
+2. `hh_secur_db_service` (MariaDB) starts, and it waits until it's healthy (`healthcheck`)
+3. `hh_secur_be_service` starts only once the db is healthy, connecting to it internally via `hh_secur_db_service` (the Docker network's service name, not `localhost`)
+
+Run in the background by adding `-d` (works with either command):
+
+```bash
+docker compose -f docker-compose-dbbe.yaml up -d
+```
+
+Check what already exists:
+
+```bash
+docker compose -f docker-compose-dbbe.yaml ps
+docker images
+```
+
+## 4. Signs of success in the logs
+
+```
+Backend is running
+Succsefully connected to database
+API running on 3000
+```
+
+## 5. Testing
+
+```bash
+curl http://localhost:3000/status
+```
+
+→ `{"ok": true}`
+
+The full test flow (login, tokens, default users), in short:
+
+1. `POST /login` → get a token
+2. `GET /defaultuser` and `GET /defaultadmin` create test users in the DB
+3. `GET /users/{id}` fetches them
+
+## 6. Stopping it
+
+```bash
+docker compose -f docker-compose-dbbe.yaml down
+```
+
+The database persists across restarts via the named volume (`hh_secur_db_data`), including the next `up` without `--build`. Add `-v` if you want a clean/empty database:
+
+```bash
+docker compose -f docker-compose-dbbe.yaml down -v
+```
+
+## 7. Common pitfalls (we already hit these)
+
+* Docker Desktop not running → `npipe` error right away.
+* `.dockerignore` must not exclude `package-lock.json`, already fixed at `.dockerignore:48`, but if the `#` in front is ever removed by accident, `npm ci` will fail during the build.
+* `.env` values don't match (`DB_*` vs `MARIADB_*`) → the database connection fails on startup.
+* Forgetting `--build` after a code change → the container starts with the old code and your changes won't show up.
+
 
 ## Testing
 
