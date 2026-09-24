@@ -143,7 +143,7 @@ export const calculateRisk = async (req: Request) => {
             description: riskResultDescriptions.dualUse[dualUseRisk]
         },
         ethics: {
-            title: ethicsRisk,
+            title: riskResultDescriptions.ethics.title,
             risk: ethicsRisk,
             description: riskResultDescriptions.ethics[ethicsRisk]
         },
