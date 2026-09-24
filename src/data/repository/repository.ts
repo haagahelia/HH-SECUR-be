@@ -6,8 +6,9 @@ import { AddCollaborationTypeRepository } from "./AddCollaborationTypeRepository
 import { AddCountryRepository } from "./AddCountryRepository.js";
 import { AddConsortiumTypeRepository } from "./AddConsortiumTypeRepository.js";
 import { AddOrganizationTypeRepository } from "./AddOrganizationTypeRepository.js";
+import { AddDurationRepository } from "./AddDurationRepository.js";
 
-const CombinedRepository = AddOrganizationTypeRepository(AddConsortiumTypeRepository(AddCountryRepository(AddCollaborationTypeRepository(AddHHRoleRepository(AddOrganizationRepository(AddUserRepository(BaseRepository)))))));
+const CombinedRepository = AddDurationRepository(AddOrganizationTypeRepository(AddConsortiumTypeRepository(AddCountryRepository(AddCollaborationTypeRepository(AddHHRoleRepository(AddOrganizationRepository(AddUserRepository(BaseRepository))))))));
 const repository = new CombinedRepository();
 
 //const repository = new BaseRepository();
