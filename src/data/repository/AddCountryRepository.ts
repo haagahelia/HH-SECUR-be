@@ -15,6 +15,10 @@ export function AddCountryRepository<TBase extends Constructor<BaseRepository>>(
         async findCountryByCode(code: string) {
             return await Country.findOne({ where: { code } });
         }
+
+        async getCountries() {
+            return await Country.findAll();
+        }
     
     }
 }
