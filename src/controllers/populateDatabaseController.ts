@@ -174,7 +174,7 @@ export async function addOrganizations() {
 
     for (let i = 0; i < organizations.length; i++) {
 
-        let organization = await repository.findOrganizationById(organizations[i].code)
+        let organization = await repository.findOrganizationByCode(organizations[i].code)
         if (organization) {
             organization.fi = organizations[i].fi;
             organization.en = organizations[i].en;

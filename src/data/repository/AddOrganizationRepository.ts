@@ -11,10 +11,18 @@ export function AddOrganizationRepository<TBase extends Constructor<BaseReposito
 
         }
 
-        async findOrganizationById(id: string) {
+        async findOrganizationById(id: number) {
             return Organization.findOne({
                 where: {
                     id: id,
+                },
+            });
+        }
+
+        async findOrganizationByCode(code: string) {
+            return Organization.findOne({
+                where: {
+                    code: code,
                 },
             });
         }
