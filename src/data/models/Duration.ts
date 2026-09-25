@@ -40,4 +40,17 @@ export default class Duration extends Model<
         field: "name_en"
     })
     declare en: string;
+    
+    @AllowNull(true)
+    @Column({
+        type:DataType.BIGINT,
+    })
+    declare lowerlimit:number | null
+
+    @AllowNull(true)
+    @Column({
+        type:DataType.BIGINT,
+    })
+    declare upperlimit:number | null
+
 }
