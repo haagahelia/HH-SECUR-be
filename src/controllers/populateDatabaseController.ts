@@ -231,17 +231,23 @@ export async function addDuration(){
         {
             code:"1",
             fi:"0-24 kk",
-            en:"0-24 months"
+            en:"0-24 months",
+            lowerlimit:0,
+            upperlimit:24
         },
         {
             code:"2",
             fi:"24-60 kk",
-            en:"24-60 months"
+            en:"24-60 months",
+            lowerlimit:24,
+            upperlimit:60
         },
         {
             code:"3",
             fi:"yli 60 kk",
-            en:"Over 60 months"
+            en:"Over 60 months",
+            lowerlimit:60,
+            upperlimit:null
         }
     ]
     for (let i=0; i<durations.length; i++){
@@ -249,6 +255,8 @@ export async function addDuration(){
         if (duration){
             duration.fi= durations[i].fi;
             duration.en= durations[i].en;
+            duration.lowerlimit= durations[i].lowerlimit;
+            duration.upperlimit=durations[i].upperlimit;
             duration.save();
         } else {
             repository.createDuration(durations[i]);
