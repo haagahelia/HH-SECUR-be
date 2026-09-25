@@ -590,10 +590,7 @@ DEFAULT_ADMIN_ROLE=admin
 
 ## Default users (Rahti)
 
-| Role  | Username            | Email                           | Password    |
-|-------|---------------------|---------------------------------|-------------|
-| user  | `pekka13`           | `pekka13@example.com`           | `Aamukahv!` |
-| admin | `highsupervisor200` | `highsupervisor200@example.com` | `Yllapit0!` |
+The usernames and passwords are now in Teams → DevOps channel → Shared → usernames_passwords.docx.
 
 
 
