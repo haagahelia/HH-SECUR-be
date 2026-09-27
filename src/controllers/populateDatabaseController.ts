@@ -11,6 +11,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addOrganizationType();
     await addCountryData();
     await addDuration();
+    await addCollaborationHistory();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -260,6 +261,31 @@ export async function addDuration(){
             duration.save();
         } else {
             repository.createDuration(durations[i]);
+        }
+    }
+}
+export async function addCollaborationHistory() {
+    const collaborationHistories = [
+        {
+            code: "option1",
+            fi: "Kyllä",
+            en: "Yes"
+        },
+        {
+            code: "option2",
+            fi: "Ei",
+            en: "No"
+        }
+    ]
+    for (let i = 0; i < collaborationHistories.length; i++) {
+
+        let collaborationHistory = await repository.findCollaborationHistoryByCode(collaborationHistories[i].code)
+        if (collaborationHistory) {
+            collaborationHistory.fi = collaborationHistories[i].fi;
+            collaborationHistory.en = collaborationHistories[i].en;
+            collaborationHistory.save();
+        } else {
+            repository.createCollaborationHistory(collaborationHistories[i]);
         }
     }
 }

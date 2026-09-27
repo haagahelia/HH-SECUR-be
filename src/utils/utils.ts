@@ -1,4 +1,4 @@
-import { addCollaborationTypes, addConsortiumTypes, addDuration, addHHRole, addOrganizations, addOrganizationType } from "../controllers/populateDatabaseController";
+import { addCollaborationHistory, addCollaborationTypes, addConsortiumTypes, addDuration, addHHRole, addOrganizations, addOrganizationType } from "../controllers/populateDatabaseController";
 import User from "../data/models/User";
 import { addCountryData } from "./countryData";
 import { internalAddDefaultAdmin, internalAddDefaultUser } from "./tempUtils";
@@ -31,4 +31,5 @@ export const addDataToAllTables = async () => {
     await addCountryData();
     await addOrganizationType();
     await addDuration();
+    await addCollaborationHistory();
 }
