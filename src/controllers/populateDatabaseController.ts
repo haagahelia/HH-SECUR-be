@@ -12,6 +12,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addCountryData();
     await addDuration();
     await addCollaborationHistory();
+    await addLiability();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -286,6 +287,41 @@ export async function addCollaborationHistory() {
             collaborationHistory.save();
         } else {
             repository.createCollaborationHistory(collaborationHistories[i]);
+        }
+    }
+}
+
+export async function addLiability() {
+
+    const liabilities = [
+        {
+            code: "option1",
+            fi: "0-20.000",
+            en: "0-20.000"
+        },
+
+        {
+            code: "option2",
+            fi: "20.000-50.000",
+            en: "20.000-50.000"
+        },
+
+        {
+            code: "option3",
+            fi: "Yli 50.000",
+            en: "Over 50.000"
+        }
+
+    ]
+    for (let i = 0; i < liabilities.length; i++) {
+
+        let liability = await repository.findLiabilityByCode(liabilities[i].code)
+        if (liability) {
+            liability.fi = liabilities[i].fi;
+            liability.en = liabilities[i].en;
+            liability.save();
+        } else {
+            repository.createLiability(liabilities[i]);
         }
     }
 }
