@@ -14,6 +14,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addCollaborationHistory();
     await addEthicsAssessment();
     await addLiability();
+    await addDualUse();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -363,6 +364,38 @@ export async function addLiability() {
             liability.save();
         } else {
             repository.createLiability(liabilities[i]);
+        }
+    }
+}
+
+export async function addDualUse() {
+    const dualUses = [
+        {
+            code: "option1",
+            fi: "Kyllä",
+            en: "Yes"
+        },
+        {
+            code: "option2",
+            fi: "Ei",
+            en: "No"
+        },
+        {
+            code: "option3",
+            fi: "Ei tiedossa",
+            en: "Unknown"
+        },
+    ]
+
+    for (let i = 0; i < dualUses.length; i++) {
+
+        let dualUse = await repository.findDualUseByCode(dualUses[i].code)
+        if (dualUse) {
+            dualUse.fi = dualUses[i].fi;
+            dualUse.en = dualUses[i].en;
+            dualUse.save();
+        } else {
+            repository.createDualUse(dualUses[i]);
         }
     }
 }
