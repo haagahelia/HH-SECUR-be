@@ -345,7 +345,7 @@ const calculateOrganizationRisk = async (code: string): Promise<0 | 1 | 2 | 3> =
     if (!code) {
         return 0;
     }
-    const organization = await repository.findOrganizationById(code)
+    const organization = await repository.findOrganizationByCode(code)
     if (!organization) {
         return 3;
     }
