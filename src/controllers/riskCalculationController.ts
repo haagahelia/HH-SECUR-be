@@ -3,28 +3,30 @@ import { calculateRisk, parseRiskPayload } from "../utils/riskCalculation";
 import repository from "../data/repository/repository";
 
 type ReportSnapshot = {
-            reportId: number,
-            name: string,
-            additionalInformation: string,
-            organizationOther: string,
-            collaborationOther: string,
-            collaboration: number,
-            countryOverall: number,
-            countryCorruption: number,
-            countrySecurity: number,
-            countryAcademicFreedom: number,
-            countryPoliticalStability: number,
-            countryDevelopment: number,
-            countryGdpr: number,
-            countrySanctions: number,
-            countryRuleOfLaw: number,
-            organization: number,
-            financialOverall: number,
-            financialExchange: number,
-            financialScope: number,
-            dualUse: number,
-            ethics: number,
+    reportId: number,
+    name: string,
+    additionalInformation: string,
+    organizationOther: string,
+    collaborationOther: string,
+    collaboration: number,
+    countryOverall: number,
+    countryCorruption: number,
+    countrySecurity: number,
+    countryAcademicFreedom: number,
+    countryPoliticalStability: number,
+    countryDevelopment: number,
+    countryGdpr: number,
+    countrySanctions: number,
+    countryRuleOfLaw: number,
+    organization: number,
+    financialOverall: number,
+    financialExchange: number,
+    financialScope: number,
+    dualUse: number,
+    ethics: number,
 }
+
+
 
 export const generateReport = async (req: Request, res: Response) => {
     if (!parseRiskPayload(req, res)) {
@@ -38,10 +40,24 @@ export const saveReport = async (req: Request, res: Response) => {
     if (!parseRiskPayload(req, res)) {
         return;
     }
+
+    let reportId = req.body.reportid;
+
+    if (!reportId) {
+        const newReport = await repository.createReport({});
+        reportId = newReport.id;
+    }
+
+    const oldReport = await repository.findReportById(reportId);
+
+    if (!oldReport) {
+        res.status(404).json({ message: `Failed to add snapshot since report by the id of ${reportId} does not exists` })
+    }
+
     const report = await calculateRisk(req);
-    
+
     const reportSnapshot: ReportSnapshot = {
-        reportId: 123,
+        reportId: reportId,
         name: "Placeholder",
         additionalInformation: report.additionalinformation,
         organizationOther: report.organizationother,
@@ -72,27 +88,70 @@ export const saveReport = async (req: Request, res: Response) => {
     })
 }
 
+export const getReportById = async (req: Request, res: Response) => {
+    const idRaw = (req.params.id);
+    const id = parseInt(idRaw as string);
+    if (Number.isNaN(id)) {
+        res.status(400).json({
+            message: `Requested id ${idRaw} is not a number`
+        })
+    } else {
+        const report = await repository.findReportById(id);
+        if (!report) {
+            res.status(404).json({
+                message: `Report by the id of ${id} does not exist`
+            })
+        } else {
+            res.json({
+                report,
+            })
+        }
+    }
+}
+
+export const deleteReportById = async (req: Request, res: Response) => {
+    const idRaw = (req.params.id);
+    const id = parseInt(idRaw as string)
+    if (Number.isNaN(id)) {
+        res.status(400).json({
+            message: `Requested id ${idRaw} is not a number`
+        })
+    } else {
+        const report = await repository.findReportById(id);
+        if (!report) {
+            res.status(404).json({
+                message: `Report by the id of ${id} does not exist`
+            })
+        } else {
+            await repository.deleteReportById(id);
+            res.json({
+                message: `Report with the id ${id} has been deleted`
+            })
+        }
+    }
+}
+
 /*
-            reportId: number;
-            name: string;
-            additionalInformation: string;
-            organizationOther: string;
-            collaborationOther: string;
-            collaboration: number;
-            countryOverall: number;
-            countryCorruption: number;
-            countrySecurity: number;
-            countryAcademicFreedom: number;
-            countryPoliticalStability: number;
-            countryDevelopment: number;
-            countryGdpr: number;
-            countrySanctions: number;
-            countryRuleOfLaw: number;
-            organization: number;
-            financialOverall: number;
-            financialExchange: number;
-            financialScope: number;
-            dualUse: number;
-            ethics: number;
+export const getUserById = async (req: Request, res: Response) => {
+    const idRaw = (req.params.id);
+    const id = parseInt(idRaw as string)
+    if (Number.isNaN(id)) {
+        res.status(400).json({
+            message: `Requested id ${idRaw} is not a number`
+        })
+    } else {
+        const user = await repository.getUser(id);
+        if (!user) {
+            res.status(404).json({
+                message: `User by the id of ${id} does not exist`
+            })
+        } else {
+            res.json({
+                user,
+            })
+        }
+
+    }
+}
 */
 

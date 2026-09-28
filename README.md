@@ -491,6 +491,18 @@ Response body:
 
 <summary>
 
+**/reports/** - Details to be added once implementation is more complete
+
+</summary>
+
+
+</details>
+
+
+<details>
+
+<summary>
+
 **/tokenstatus** - GET: Check auth token validity
 
 </summary>

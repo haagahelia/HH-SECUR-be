@@ -1,5 +1,6 @@
 import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, Column, CreatedAt, DataType, Model, NotEmpty, Table, Unique, UpdatedAt, } from "sequelize-typescript";
+import { AllowNull, BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, NotEmpty, Table, Unique, UpdatedAt, } from "sequelize-typescript";
+import Report from "./Report";
 
 
 @Table({
@@ -18,6 +19,7 @@ export default class ReportSnapshot extends Model<
     })
     declare id: CreationOptional<number>
 
+    @ForeignKey(() => Report)
     @AllowNull(false)
     @Unique({name: "report_id_must_be_unique", msg: "reportId has to be unique"})
     @Column({
@@ -252,6 +254,9 @@ export default class ReportSnapshot extends Model<
 
     @UpdatedAt
     declare updated_at: CreationOptional<Date>;
+
+    @BelongsTo(() => Report)
+    declare report?: InferAttributes<Report>
     
 }
 
