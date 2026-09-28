@@ -12,6 +12,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addCountryData();
     await addDuration();
     await addCollaborationHistory();
+    await addEthicsAssessment();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -286,6 +287,46 @@ export async function addCollaborationHistory() {
             collaborationHistory.save();
         } else {
             repository.createCollaborationHistory(collaborationHistories[i]);
+        }
+    }
+}
+export async function addEthicsAssessment() {
+    const ethicsAssessments = [
+        {
+            code: "option1",
+            fi: "Ei missään tapauksessa",
+            en: "Absolutely not"
+        },
+        {
+            code: "option2",
+            fi: "Melko varmasti ei",
+            en: "Most likely not"
+        },
+        {
+            code: "option3",
+            fi: "Ehkä",
+            en: "Possibly"
+        },
+        {
+            code: "option4",
+            fi: "Melko varmasti",
+            en: "Very likely"
+        },
+        {
+            code: "option5",
+            fi: "Varmasti",
+            en: "Definitely"
+        }
+    ]
+    for (let i = 0; i < ethicsAssessments.length; i++) {
+
+        let ethicsAssessment = await repository.findEthicsAssessmentByCode(ethicsAssessments[i].code)
+        if (ethicsAssessment) {
+            ethicsAssessment.fi = ethicsAssessments[i].fi;
+            ethicsAssessment.en = ethicsAssessments[i].en;
+            ethicsAssessment.save();
+        } else {
+            repository.createEthicsAssessment(ethicsAssessments[i]);
         }
     }
 }
