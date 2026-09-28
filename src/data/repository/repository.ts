@@ -11,9 +11,10 @@ import { AddCollaborationHistoryRepository } from "./AddCollaborationHistoryRepo
 import { AddEthicsAssessmentRepository } from "./AddEthicsAssessmentRepoitory.js";
 import { AddLiabilityRepository } from "./addLiabilityRepository.js";
 import { AddDualUseRepository } from "./AddDualUseRepository.js";
+import { AddReportSnapshotRepository} from "./AddReportSnapshotRepository.js"
+import { AddReportRepository } from "./AddReportRepository.js";
 
-
-const CombinedRepository = AddDualUseRepository(AddLiabilityRepository(AddEthicsAssessmentRepository(AddCollaborationHistoryRepository(AddDurationRepository(AddOrganizationTypeRepository(AddConsortiumTypeRepository(AddCountryRepository(AddCollaborationTypeRepository(AddHHRoleRepository(AddOrganizationRepository(AddUserRepository(BaseRepository))))))))))));
+const CombinedRepository = AddDualUseRepository(AddReportRepository(AddReportSnapshotRepository(AddLiabilityRepository(AddEthicsAssessmentRepository(AddCollaborationHistoryRepository(AddDurationRepository(AddOrganizationTypeRepository(AddConsortiumTypeRepository(AddCountryRepository(AddCollaborationTypeRepository(AddHHRoleRepository(AddOrganizationRepository(AddUserRepository(BaseRepository))))))))))))));
 const repository = new CombinedRepository();
 
 //const repository = new BaseRepository();
