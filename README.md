@@ -491,13 +491,104 @@ Response body:
 
 <summary>
 
-**/reports/** - Details to be added once implementation is more complete
+**/reports/** - GET: fetch all reports
 
 </summary>
 
 
 </details>
 
+<details>
+
+<summary>
+
+**/reports/** - POST: Save reports to database
+
+</summary>
+
+</details>
+
+Request body:
+
+```
+
+{
+    "reportid": "1",
+    "name": "test",
+    "email": "user@testing.com",
+    "hhrole": "option1",
+    "collaborationtype": [
+        "option1",
+        "option2",
+        "option3"
+    ],
+    "country": "CHN",
+    "consortium": "option1",
+    "organization": 1,
+    "organizationtype": "option5",
+    "history": "option1",
+    "contract": "option1",
+    "funding": "option1",
+    "liability": "option1",
+    "exchange": "option1",
+    "personalinformation": "option1",
+    "dualuse": "option1",
+    "ethics": "option1",
+    "duration": "option1",
+    "organizationother": "This message is added to response if option5 is selected for organizationtype",
+    "collaborationtypeother": "This message is added to response if option7 is included in collaboration types",
+    "additionalinformation": "Additional information about project"
+}
+
+```
+
+Valid values:
+
+```
+
+reportid: valid report id number | empty
+name: any text
+email: email of a valid user
+hhrole: option1 | option2 | option3
+collaborationtype: [ option1 | option2 | option3 | option4 | option5 | option6 | option7 ]
+country: 3 letter country code
+consortium: option1 | option1
+organization: valid organization number id
+organizationtype: option1 | option2 | option3 | option4 | option5
+history: option1 | option2
+contract: option1 | option2
+funding: option1 | option2
+liability: option1 | option2 | option3
+exchange: option1 | option2 | option3
+personalinformation: option1 | option2
+dualuse: option1 | option2 | option3
+ethics: option1 | option2 | option3 | option4 | option5
+duration: option1 | option2 | option3
+organizationother: any text
+collaborationother: any text
+additionalinformation: any text
+
+```
+
+<details>
+
+<summary>
+
+**/reports/{id}** - GET: Fetch specific report
+
+</summary>
+
+</details>
+
+<details>
+
+<summary>
+
+**/reports/{id}** - DELETE: Delete specific report
+
+</summary>
+
+</details>
 
 <details>
 

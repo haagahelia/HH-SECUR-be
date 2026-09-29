@@ -22,17 +22,17 @@ export const populateDatabase = async (req: Request, res: Response) => {
 export async function addHHRole() {
     const hhRoles = [
         {
-            code: "coordinator",
+            code: "option1",
             fi: "Yhteistyön koordinaattori",
             en: "Collaboration Coordnator"
         },
         {
-            code: "partner",
+            code: "option2",
             fi: "Kumppani tai tasaveroinen partner",
             en: "Partner"
         },
         {
-            code: "other",
+            code: "option3",
             fi: "Muu",
             en: "Other"
         }
@@ -194,27 +194,27 @@ export async function addOrganizations() {
 export async function addOrganizationType() {
     const organizationTypes = [
         {
-            code: "university",
+            code: "option1",
             fi: "Yliopisto",
             en: "University"
         },
         {
-            code: "otherResearch",
+            code: "option2",
             fi: "Muu tutkimuslaitos",
             en: "Other Research Institute"
         },
         {
-            code: "business",
+            code: "option3",
             fi: "Yritys",
             en: "Company"
         },
         {
-            code: "ngo",
+            code: "option4",
             fi: "Kansalaisjärjestö",
             en: "Non-Governmental Organization"
         },
         {
-            code: "other",
+            code: "option5",
             fi: "Muu",
             en: "Other"
         }

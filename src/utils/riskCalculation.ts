@@ -160,7 +160,7 @@ export const calculateRisk = async (req: Request) => {
 const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType: any, duration: any, hhrole: any, contract: any, history: any): 0 | 1 | 2 | 3 => {
     if (!countryRisk) {
         return 0;
-    } else if (countryRisk.sanctions === 3) {
+    } else if (countryRisk.sanctions === 3) { //All project to sanctioned countries have risk of 3
         return 3;
     }
     let roleMultiplier = 1;
@@ -182,7 +182,7 @@ const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType:
     let durationRisk = 0;
 
     if (duration !== "option1" && duration !== "option2" && duration !== "option3") {
-        //return 0; //uncomment once front end functionality has been implemented
+        return 0;
     } else if (duration === "option1") {
         durationRisk = 1;
     } else if (duration === "option2") {
@@ -228,7 +228,7 @@ const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType:
             highRisks++;
         }
     }
-    if (highRisks >= 3) {
+    if (highRisks >= 3) { //3 or more high risks trigger automatic overall risk of 3
         return 3;
     }
 
