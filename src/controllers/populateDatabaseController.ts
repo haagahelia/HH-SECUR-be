@@ -12,6 +12,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addCountryData();
     await addDuration();
     await addCollaborationHistory();
+    await addContractInfo();
     await addEthicsAssessment();
     await addLiability();
     await addDualUse();
@@ -290,6 +291,31 @@ export async function addCollaborationHistory() {
             collaborationHistory.save();
         } else {
             repository.createCollaborationHistory(collaborationHistories[i]);
+        }
+    }
+}
+export async function addContractInfo() {
+    const contractInfos = [
+        {
+            code: "option1",
+            fi: "Kyllä",
+            en: "Yes"
+        },
+        {
+            code: "option2",
+            fi: "Ei",
+            en: "No"
+        }
+    ]
+    for (let i = 0; i < contractInfos.length; i++) {
+
+        let contractInfo = await repository.findContractInfoByCode(contractInfos[i].code)
+        if (contractInfo) {
+            contractInfo.fi = contractInfos[i].fi;
+            contractInfo.en = contractInfos[i].en;
+            await contractInfo.save();
+        } else {
+            await repository.createContractInfo(contractInfos[i]);
         }
     }
 }

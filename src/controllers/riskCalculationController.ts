@@ -30,6 +30,7 @@ type ReportCreationAttributes = {
     name: string,
     collaborationHistoryId: number,
     consortiumTypeId: number,
+    contractInfoId: number,
     countryId: number,
     dualUseId: number,
     durationId: number,
@@ -83,6 +84,13 @@ export const saveReport = async (req: Request, res: Response) => {
     const consortiumType = await repository.findConsortiumTypeByCode(consortiumTypeCode);
     if (!consortiumType) {
         res.status(404).json({ message: `Code ${consortiumTypeCode} is invalid for field consortium` })
+        return;
+    }
+
+    const contractInfoCode = req.body.contract;
+    const contractInfo = await repository.findContractInfoByCode(contractInfoCode);
+    if (!contractInfo) {
+        res.status(404).json({ message: `Code ${contractInfoCode} is invalid for field contract` })
         return;
     }
 
@@ -166,6 +174,7 @@ export const saveReport = async (req: Request, res: Response) => {
         name: name,
         collaborationHistoryId: collaborationHistory.id,
         consortiumTypeId: consortiumType.id,
+        contractInfoId: contractInfo.id,
         countryId: country.id,
         dualUseId: dualUse.id,
         durationId: duration.id,

@@ -5,6 +5,7 @@ import CollaborationHistory from "./CollaborationHistory";
 import CollaborationType from "./CollaborationType";
 import ReportCollaborationType from "./ReportCollaborationType";
 import ConsortiumType from "./ConsortiumType";
+import ContractInfo from "./ContractInfo";
 import Country from "./Country";
 import DualUse from "./DualUse";
 import Duration from "./Duration";
@@ -57,6 +58,14 @@ export default class Report extends Model<
         field: "consortium_type_id",
     })
     declare consortiumTypeId: number;
+
+    @ForeignKey(() => ContractInfo)
+    @AllowNull(true)
+    @Column({
+        type: DataType.BIGINT,
+        field: "contract_info_id",
+    })
+    declare contractInfoId: number;
 
     @ForeignKey(() => Country)
     @AllowNull(true)
@@ -152,6 +161,9 @@ export default class Report extends Model<
 
     @BelongsTo(() => ConsortiumType)
     declare consortiumType?: NonAttribute<ConsortiumType>;
+
+    @BelongsTo(() => ContractInfo)
+    declare contractInfo?: NonAttribute<ContractInfo>;
 
     @BelongsTo(() => Country)
     declare country?: NonAttribute<Country>;
