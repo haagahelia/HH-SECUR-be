@@ -32,5 +32,14 @@ export function AddReportSnapshotRepository<TBase extends Constructor<BaseReposi
             }) {
             return await ReportSnapshot.create(reportSnapshotAttributes);
         }
+
+        async deleteReportSnapshot(id: number) {
+            const reportSnapshot = await ReportSnapshot.findByPk(id);
+            if (reportSnapshot) {
+                await reportSnapshot.destroy();
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
 import { AllowNull, BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, NotEmpty, Table, Unique, UpdatedAt, } from "sequelize-typescript";
 import Report from "./Report";
 
@@ -26,9 +26,6 @@ export default class ReportSnapshot extends Model<
         field: "report_id",
     })
     declare reportId: number;
-
-    @BelongsTo(() => Report)
-    declare report?: InferAttributes<Report>
 
     @AllowNull(false)
     @NotEmpty
@@ -256,6 +253,9 @@ export default class ReportSnapshot extends Model<
 
     @UpdatedAt
     declare updated_at: CreationOptional<Date>;
+
+    @BelongsTo(() => Report)
+    declare report?: NonAttribute<Report>
 
 }
 

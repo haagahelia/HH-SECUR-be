@@ -1,11 +1,11 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
 import { AllowNull, Column, CreatedAt, DataType, HasMany, Model, NotEmpty, Table, Unique, UpdatedAt, } from "sequelize-typescript";
 import ReportSnapshot from "./ReportSnapshot";
 
 
 @Table({
     tableName: "report",
-    modelName: "ReportS",
+    modelName: "Report",
 })
 
 export default class Report extends Model<
@@ -26,6 +26,6 @@ export default class Report extends Model<
     declare updated_at: CreationOptional<Date>;
 
     @HasMany(() => ReportSnapshot)
-    declare reportSnapshots?: InferAttributes<ReportSnapshot>;
+    declare reportSnapshots?: NonAttribute<ReportSnapshot>[];
     
 }

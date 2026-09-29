@@ -1,4 +1,5 @@
 import Report from "../models/Report.js";
+import ReportSnapshot from "../models/ReportSnapshot.js";
 import BaseRepository, { Constructor } from "./BaseRepository.js";
 
 
@@ -13,7 +14,10 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
         }
 
         async findReportById(id: number) {
-            return await Report.findByPk(id);
+            return await Report.findByPk(id, {
+                include: [{ model: ReportSnapshot}],
+                raw: false
+            });
         }
 
         async deleteReportById(id: number) {
