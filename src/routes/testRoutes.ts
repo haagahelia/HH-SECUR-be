@@ -2,6 +2,7 @@ import { Express} from "express";
 import { addDefaultAdmin, addDefaultUser, tokenStatus, tokenStatusAdmin } from "../controllers/testController.js";
 import { authenticate } from "../middlewares/authMiddleware.js";
 import { requireAdmin } from "../utils/jwt.js";
+import { populateDatabase } from "../controllers/populateDatabaseController.js";
 
 export const createTestRoutes = (app: Express) => {
     app.get("/tokenstatus", authenticate, tokenStatus);
@@ -11,4 +12,6 @@ export const createTestRoutes = (app: Express) => {
     app.get("/defaultuser", addDefaultUser);
 
     app.get("/defaultadmin", addDefaultAdmin);
+
+    app.get("/populatedatabase", authenticate, requireAdmin, populateDatabase);
 }

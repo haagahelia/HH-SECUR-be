@@ -1,7 +1,21 @@
 import BaseRepository from "./BaseRepository.js";
 import { AddUserRepository } from "./AddUserRepository.js";
+import { AddOrganizationRepository } from "./AddOrganizationRepository.js";
+import { AddHHRoleRepository } from "./AddHHRoleRepository.js";
+import { AddCollaborationTypeRepository } from "./AddCollaborationTypeRepository.js";
+import { AddCountryRepository } from "./AddCountryRepository.js";
+import { AddConsortiumTypeRepository } from "./AddConsortiumTypeRepository.js";
+import { AddOrganizationTypeRepository } from "./AddOrganizationTypeRepository.js";
+import { AddDurationRepository } from "./AddDurationRepository.js";
+import { AddCollaborationHistoryRepository } from "./AddCollaborationHistoryRepository.js";
+import { AddEthicsAssessmentRepository } from "./AddEthicsAssessmentRepoitory.js";
+import { AddLiabilityRepository } from "./addLiabilityRepository.js";
+import { AddDualUseRepository } from "./AddDualUseRepository.js";
+import { AddReportSnapshotRepository} from "./AddReportSnapshotRepository.js"
+import { AddReportRepository } from "./AddReportRepository.js";
+import { AddPersonalInformationRepository } from "./AddPersonalInformationRepository.js";
 
-const CombinedRepository = AddUserRepository(BaseRepository);
+const CombinedRepository = AddPersonalInformationRepository (AddDualUseRepository(AddReportRepository(AddReportSnapshotRepository(AddLiabilityRepository(AddEthicsAssessmentRepository(AddCollaborationHistoryRepository(AddDurationRepository(AddOrganizationTypeRepository(AddConsortiumTypeRepository(AddCountryRepository(AddCollaborationTypeRepository(AddHHRoleRepository(AddOrganizationRepository(AddUserRepository(BaseRepository)))))))))))))));
 const repository = new CombinedRepository();
 
 //const repository = new BaseRepository();
