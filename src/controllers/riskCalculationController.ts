@@ -26,6 +26,10 @@ type ReportSnapshot = {
     ethics: number,
 }
 
+type ReportCreationAttributes = {
+    collaborationHistoryId: number
+}
+
 
 
 export const generateReport = async (req: Request, res: Response) => {
@@ -41,43 +45,73 @@ export const saveReport = async (req: Request, res: Response) => {
         return;
     }
 
-    let reportId = req.body.reportid;
-
-    if (!reportId) {
-        const newReport = await repository.createReport({});
-        reportId = newReport.id;
+    const collaborationHistoryCode = req.body.history;
+    const collaborationHistory = await repository.findCollaborationHistoryByCode(collaborationHistoryCode);
+    if (!collaborationHistory) {
+        res.status(404).json({ message: `Code ${collaborationHistoryCode} is invalid for field history` })
+        return;
     }
 
-    const oldReport = await repository.findReportById(reportId);
+    const collaborationTypeCodes = req.body.collaborationtype;
+    if (!collaborationTypeCodes) {
+        res.status(404).json({ message: `Collaborationtype codes required` })
+        return;
+    }
+    let collaborationTypes = [];
+    for (let i = 0; i < collaborationTypeCodes.length; i++) {
+        const collaborationType = await repository.findCollaborationTypeByCode(collaborationTypeCodes[i]);
+        if (!collaborationType) {
+            res.status(404).json({ message: `Code ${collaborationTypeCodes[i]} is not a valid code for collaboration type` })
+            return;
+        }
+        collaborationTypes.push(collaborationType);
+    }
 
-    if (!oldReport) {
+    let reportCreationAttrbiutes: ReportCreationAttributes = {
+        collaborationHistoryId: collaborationHistory.id
+    }
+
+    let reportId = req.body.reportid;
+
+    let report;
+
+    if (reportId) {
+        report = await repository.findReportById(reportId);
+    } else {
+        report = await repository.createReport(reportCreationAttrbiutes);
+        reportId = report.id;
+    }
+
+    if (!report) {
         res.status(404).json({ message: `Failed to add snapshot since report by the id of ${reportId} does not exists` })
     }
 
-    const report = await calculateRisk(req);
+    await report?.$set("collaborationTypes", collaborationTypes);
+
+    const reportRisks = await calculateRisk(req);
 
     const reportSnapshot: ReportSnapshot = {
         reportId: reportId,
         name: "Placeholder",
-        additionalInformation: report.additionalinformation,
-        organizationOther: report.organizationother,
-        collaborationOther: report.collaborationtypeother,
-        collaboration: report.collaboration.risk,
-        countryOverall: report.country.overall.risk,
-        countryCorruption: report.country.corruption.risk,
-        countrySecurity: report.country.security.risk,
-        countryAcademicFreedom: report.country.academicfreedom.risk,
-        countryPoliticalStability: report.country.politicalstability.risk,
-        countryDevelopment: report.country.development.risk,
-        countryGdpr: report.country.gdpr.risk,
-        countrySanctions: report.country.sanctions.risk,
-        countryRuleOfLaw: report.country.ruleoflaw.risk,
-        organization: report.organization.risk,
-        financialOverall: report.financial.overall.risk,
-        financialExchange: report.financial.exchange.risk,
-        financialScope: report.financial.scope.risk,
-        dualUse: report.dualuse.risk,
-        ethics: report.ethics.risk,
+        additionalInformation: reportRisks.additionalinformation,
+        organizationOther: reportRisks.organizationother,
+        collaborationOther: reportRisks.collaborationtypeother,
+        collaboration: reportRisks.collaboration.risk,
+        countryOverall: reportRisks.country.overall.risk,
+        countryCorruption: reportRisks.country.corruption.risk,
+        countrySecurity: reportRisks.country.security.risk,
+        countryAcademicFreedom: reportRisks.country.academicfreedom.risk,
+        countryPoliticalStability: reportRisks.country.politicalstability.risk,
+        countryDevelopment: reportRisks.country.development.risk,
+        countryGdpr: reportRisks.country.gdpr.risk,
+        countrySanctions: reportRisks.country.sanctions.risk,
+        countryRuleOfLaw: reportRisks.country.ruleoflaw.risk,
+        organization: reportRisks.organization.risk,
+        financialOverall: reportRisks.financial.overall.risk,
+        financialExchange: reportRisks.financial.exchange.risk,
+        financialScope: reportRisks.financial.scope.risk,
+        dualUse: reportRisks.dualuse.risk,
+        ethics: reportRisks.ethics.risk,
     }
 
     const savedReport = await repository.createReportSnapshot(reportSnapshot);
