@@ -491,7 +491,7 @@ Response body:
 
 <summary>
 
-**/reports/** - GET: fetch all reports
+**/reports** - GET: fetch all reports
 
 </summary>
 
@@ -502,7 +502,7 @@ Response body:
 
 <summary>
 
-**/reports/** - POST: Save reports to database
+**/reports** - POST: Save reports to database
 
 </summary>
 
