@@ -15,6 +15,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addEthicsAssessment();
     await addLiability();
     await addDualUse();
+    await addPersonalInformation();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -233,21 +234,21 @@ export async function addOrganizationType() {
 export async function addDuration(){
     const durations= [
         {
-            code:"1",
+            code:"option1",
             fi:"0-24 kk",
             en:"0-24 months",
             lowerlimit:0,
             upperlimit:24
         },
         {
-            code:"2",
+            code:"option2",
             fi:"24-60 kk",
             en:"24-60 months",
             lowerlimit:24,
             upperlimit:60
         },
         {
-            code:"3",
+            code:"option3",
             fi:"yli 60 kk",
             en:"Over 60 months",
             lowerlimit:60,
@@ -396,6 +397,37 @@ export async function addDualUse() {
             dualUse.save();
         } else {
             repository.createDualUse(dualUses[i]);
+        }
+    }
+}
+export async function addPersonalInformation() {
+    const personalInformations = [
+        {
+            code: "option1",
+            fi: "Kyllä",
+            en: "Yes"
+        },
+        {
+            code: "option2",
+            fi: "Ei",
+            en: "No"
+        },
+        {
+            code: "option3",
+            fi: "Ei tiedossa",
+            en: "Unknown"
+        },
+    ]
+
+    for (let i = 0; i < personalInformations.length; i++) {
+
+        let personalInformation = await repository.findPersonalInformationByCode(personalInformations[i].code)
+        if (personalInformation) {
+            personalInformation.fi = personalInformations[i].fi;
+            personalInformation.en = personalInformations[i].en;
+            personalInformation.save();
+        } else {
+            repository.createPersonalInformation(personalInformations[i]);
         }
     }
 }
