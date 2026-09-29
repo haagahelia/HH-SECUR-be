@@ -1,6 +1,7 @@
 import CollaborationHistory from "../models/CollaborationHistory.js";
 import CollaborationType from "../models/CollaborationType.js";
 import ConsortiumType from "../models/ConsortiumType.js";
+import ContractInfo from "../models/ContractInfo.js";
 import Country from "../models/Country.js";
 import DualUse from "../models/DualUse.js";
 import Duration from "../models/Duration.js";
@@ -25,6 +26,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
             name: string,
             collaborationHistoryId: number,
             consortiumTypeId: number,
+            contractInfoId: number,
             countryId: number,
             dualUseId: number,
             durationId: number,
@@ -53,6 +55,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
                     { model: CollaborationHistory },
                     { model: CollaborationType },
                     { model: ConsortiumType },
+                    { model: ContractInfo },
                     { model: Country },
                     { model: DualUse },
                     { model: Duration},
