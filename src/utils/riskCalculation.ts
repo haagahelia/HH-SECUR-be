@@ -37,12 +37,12 @@ export const parseRiskPayload = (req: Request, res: Response) => {
 }
 
 export const calculateRisk = async (req: Request) => {
-    const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, collaborationtypeother, additionalinformation } = req.body;
+    const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, collaborationtypeother, additionalinformation, name, fundinghistory, fundingsource, consortium } = req.body;
     const dualUseRisk = calculateDualUseRisk(dualuse);
     const countryRisk = await calculateCountryRisk(country, personalinformation);
     const ethicsRisk = calculateEthicsRisk(ethics);
-    const financialRisk = calculateFinancialRisk(liability, funding, exchange);
-    const collaborationRisk = calculateCollaborationRIsk(countryRisk, collaborationtype)
+    const financialRisk = calculateFinancialRisk(liability, funding, exchange, fundinghistory, fundingsource);
+    const collaborationRisk = calculateCollaborationRIsk(countryRisk, collaborationtype, duration, hhrole, contract, history)
     const organizationRisk = await calculateOrganizationRisk(organization);
 
     let collaborationtypeOptional = "";
@@ -91,7 +91,7 @@ export const calculateRisk = async (req: Request) => {
                 title: riskResultDescriptions.countryPolitical.title,
                 risk: countryRisk.politicalstability,
                 description: riskResultDescriptions.countryPolitical[countryRisk.politicalstability]
-            }, 
+            },
             development: {
                 title: riskResultDescriptions.countryDevelopment.title,
                 risk: countryRisk.development,
@@ -157,18 +157,56 @@ export const calculateRisk = async (req: Request) => {
     return report;
 }
 
-const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType: any): 0 | 1 | 2 | 3 => {
+const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType: any, duration: any, hhrole: any, contract: any, history: any): 0 | 1 | 2 | 3 => {
     if (!countryRisk) {
         return 0;
     } else if (countryRisk.sanctions === 3) {
         return 3;
     }
-
+    let roleMultiplier = 1;
+    let durationMultiplier = 1;
+    let contractMultiplier = 1;
+    let historyMultiplier = 1;
     let securityMultiplier = 1;
     let sanctionsMultiplier = 1;
+
+    if (hhrole !== "option1" && hhrole !== "option2" && hhrole !== "option3") {
+        return 0;
+    } else if (hhrole === "option1") {
+        roleMultiplier = 1.2;
+    }
+
+
+    let consortiumRisk = 0; //implement calculation once risk calculation for consortiums is supported
+
+    let durationRisk = 0;
+
+    if (duration !== "option1" && duration !== "option2" && duration !== "option3") {
+        //return 0; //uncomment once front end functionality has been implemented
+    } else if (duration === "option1") {
+        durationRisk = 1;
+    } else if (duration === "option2") {
+        durationRisk = 2;
+    } else if (duration === "option3") {
+        durationRisk = 3;
+        durationMultiplier = 1.2;
+    }
+
+    if (contract !== "option1" && contract !== "option2") {
+        return 0;
+    } else if (contract === "option2") {
+        contractMultiplier = 1.2;
+    }
+
+    if (history !== "option1" && history !== "option2") {
+        return 0;
+    } else if (history === "option2") {
+        historyMultiplier = 1.2;
+    }
+
     for (let i = 0; i < collaborationType.length; i++) {
         if (collaborationType[i] === "option1") {
-            sanctionsMultiplier = 1.5;
+            //sanctionsMultiplier = 1.5; //Sanctions mean automatic risk of 3, implement multiplier if this is changed
         }
         if (collaborationType[i] === "option4" || collaborationType[i] === "option5" && countryRisk.security > 1) {
             securityMultiplier = 1.5;
@@ -178,14 +216,34 @@ const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType:
     const sanctions = countryRisk.sanctions * sanctionsMultiplier;
     const security = countryRisk.security * securityMultiplier;
 
-    const average = (sanctions + security + countryRisk.corruption + countryRisk.academicfreedom + countryRisk.politicalstability + countryRisk.development + countryRisk.gdpr + countryRisk.ruleoflaw) / 8;
-    let roundedAverage = Math.round(average) as 0 | 1 | 2 | 3;
+    const risks = [sanctions, security, countryRisk.corruption, countryRisk.academicfreedom, countryRisk.politicalstability, countryRisk.development, countryRisk.gdpr, countryRisk.ruleoflaw, durationRisk]
+    const risksSum = risks.reduce((acc, e) => acc + e, 0);
+    let validRisks = 0;
+    let highRisks = 0;
+    for (let i = 0; i < risks.length; i++) {
+        if (risks[i] != 0) {
+            validRisks++;
+        }
+        if (risks[i] == 3) {
+            highRisks++;
+        }
+    }
+    if (highRisks >= 3) {
+        return 3;
+    }
+
+    const average = risksSum / validRisks;
+    const multipliedAverage = average * roleMultiplier * durationMultiplier * contractMultiplier;
+
+    let roundedAverage = Math.round(multipliedAverage) as 0 | 1 | 2 | 3;
 
     if (average > 3) roundedAverage = 3;
     if (average < 1) roundedAverage = 0;
 
     return roundedAverage;
+
 }
+
 
 const calculateCountryRisk = async (countryCode: any, personal: any): Promise<CountryRisk> => {
 
@@ -309,7 +367,7 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
 
     if ((personal !== "option1" && personal !== "option2") && country.gdpr !== 1) {
         countryRisk.gdpr = 0;
-    } else if (personal=== "option2" || country.gdpr === 1) {
+    } else if (personal === "option2" || country.gdpr === 1) {
         countryRisk.gdpr = 1;
     } else if (personal !== "option2" && country.gdpr === 2) {
         countryRisk.gdpr = 2;
@@ -341,11 +399,15 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
     return countryRisk;
 }
 
-const calculateOrganizationRisk = async (code: string): Promise<0 | 1 | 2 | 3> => {
-    if (!code) {
+const calculateOrganizationRisk = async (id: string): Promise<0 | 1 | 2 | 3> => {
+    if (!id) {
         return 0;
     }
-    const organization = await repository.findOrganizationByCode(code)
+    const idNumber = Number.parseInt(id);
+    if (Number.isNaN(idNumber)) {
+        return 0;
+    }
+    const organization = await repository.findOrganizationById(idNumber)
     if (!organization) {
         return 3;
     }
@@ -378,15 +440,11 @@ const calculateEthicsRisk = (ethics: any): 0 | 1 | 2 | 3 => {
     return ethicsRisk;
 }
 
-const calculateFinancialRisk = (liability: any, funding: any, exchange: any): FinancialRisk => {
+const calculateFinancialRisk = (liability: any, funding: any, exchange: any, fundinghistory: any, fundingsource: any): FinancialRisk => {
     let financialRisk = {
         "overall": 0 as 0 | 1 | 2 | 3,
         "exchange": 0 as 0 | 1 | 2 | 3,
         "scope": 0 as 0 | 1 | 2 | 3
-    }
-
-    if (liability && funding && exchange) {
-        financialRisk.overall = 3;
     }
 
     if (liability === "option1") {
@@ -405,17 +463,31 @@ const calculateFinancialRisk = (liability: any, funding: any, exchange: any): Fi
         financialRisk.exchange = 3;
     }
 
-    financialRisk.overall = calculateFinancialRiskOverall(financialRisk.scope, financialRisk.exchange);
+    financialRisk.overall = calculateFinancialRiskOverall(financialRisk.scope, financialRisk.exchange, funding, fundinghistory, fundingsource);
 
     return financialRisk;
 }
 
-const calculateFinancialRiskOverall = (scope: number, exchange: number): 0 | 1 | 2 | 3 => {
+const calculateFinancialRiskOverall = (scope: number, exchange: number, funding: any, fundinghistory: any, fundingsource: any): 0 | 1 | 2 | 3 => {
+    let additionalRisk = 0;
+    if (!funding || (funding && (!fundinghistory || !fundingsource))) {
+        //return 0; //remove comment once front end side has been implemented
+    } else if (funding === "option2") {
+        additionalRisk = 0;
+    } else if (fundinghistory === "option1") {
+        additionalRisk = 0;
+    } else if (fundingsource === "option3" || fundingsource === "option7") {
+        additionalRisk = 1;
+    } else {
+        return 0;
+    }
+
 
     if (scope == 0 || exchange == 0) {
         return 0;
     }
-    let overall = (scope + exchange) / 2;
+
+    let overall = (scope + exchange + additionalRisk) / 2;
     if (overall < 1) {
         overall = 0;
     } else if (overall > 3) {

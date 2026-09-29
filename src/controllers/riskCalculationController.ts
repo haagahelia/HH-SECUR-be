@@ -131,27 +131,3 @@ export const deleteReportById = async (req: Request, res: Response) => {
     }
 }
 
-/*
-export const getUserById = async (req: Request, res: Response) => {
-    const idRaw = (req.params.id);
-    const id = parseInt(idRaw as string)
-    if (Number.isNaN(id)) {
-        res.status(400).json({
-            message: `Requested id ${idRaw} is not a number`
-        })
-    } else {
-        const user = await repository.getUser(id);
-        if (!user) {
-            res.status(404).json({
-                message: `User by the id of ${id} does not exist`
-            })
-        } else {
-            res.json({
-                user,
-            })
-        }
-
-    }
-}
-*/
-
