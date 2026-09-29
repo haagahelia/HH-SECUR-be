@@ -21,12 +21,14 @@ export default class ReportSnapshot extends Model<
 
     @ForeignKey(() => Report)
     @AllowNull(false)
-    @Unique({name: "report_id_must_be_unique", msg: "reportId has to be unique"})
     @Column({
         type: DataType.BIGINT,
         field: "report_id",
     })
     declare reportId: number;
+
+    @BelongsTo(() => Report)
+    declare report?: InferAttributes<Report>
 
     @AllowNull(false)
     @NotEmpty
@@ -255,8 +257,5 @@ export default class ReportSnapshot extends Model<
     @UpdatedAt
     declare updated_at: CreationOptional<Date>;
 
-    @BelongsTo(() => Report)
-    declare report?: InferAttributes<Report>
-    
 }
 
