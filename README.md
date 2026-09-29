@@ -506,8 +506,6 @@ Response body:
 
 </summary>
 
-</details>
-
 Request body:
 
 ```
@@ -569,6 +567,7 @@ collaborationother: any text
 additionalinformation: any text
 
 ```
+</details>
 
 <details>
 
