@@ -1,5 +1,6 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, Column, DataType, Model, NotEmpty, Table, Unique, } from "sequelize-typescript";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, Table, Unique, } from "sequelize-typescript";
+import Report from "./Report";
 
 
 @Table({
@@ -19,7 +20,7 @@ export default class DualUse extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "dual_use_unique", msg: "code for dual use must be unique"})
+    @Unique({ name: "dual_use_unique", msg: "code for dual use must be unique" })
     @Column({
         type: DataType.STRING
     })
@@ -40,4 +41,7 @@ export default class DualUse extends Model<
         field: "name_en"
     })
     declare en: string;
+
+    @HasMany(() => Report)
+    declare reports?: NonAttribute<Report>[];
 }

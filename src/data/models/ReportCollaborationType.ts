@@ -22,10 +22,12 @@ export default class ReportCollaborationType extends Model<
 
     @ForeignKey(() => Report)
     @AllowNull(false)
+    /*
     @Index({
         name: "report_collaboration_type_unique",
         unique: true,
     })
+        */
     @Column({
         type: DataType.BIGINT,
         field: "report_id",
@@ -34,10 +36,12 @@ export default class ReportCollaborationType extends Model<
 
     @ForeignKey(() => CollaborationType)
     @AllowNull(false)
+    /*
     @Index({
         name: "report_collaboration_type_unique",
         unique: true,
     })
+        */
     @Column({
         type: DataType.BIGINT,
         field: "collaboration_type_id",

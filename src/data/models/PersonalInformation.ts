@@ -1,5 +1,6 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, Column, DataType, Model, NotEmpty, Table, Unique,} from "sequelize-typescript";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, Table, Unique, } from "sequelize-typescript";
+import Report from "./Report";
 
 
 @Table({
@@ -19,7 +20,7 @@ export default class PersonalInformation extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "personal_information_code_unique", msg: "code for personal information must be unique"})
+    @Unique({ name: "personal_information_code_unique", msg: "code for personal information must be unique" })
     @Column({
         type: DataType.STRING
     })
@@ -40,4 +41,7 @@ export default class PersonalInformation extends Model<
         field: "name_en"
     })
     declare en: string;
+
+    @HasMany(() => Report)
+    declare reports?: NonAttribute<Report>[];
 }

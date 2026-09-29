@@ -1,5 +1,6 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, AutoIncrement, Column, CreatedAt, DataType, Model, NotEmpty, PrimaryKey, Table, Unique, UpdatedAt, IsEmail } from "sequelize-typescript";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { AllowNull, AutoIncrement, Column, CreatedAt, DataType, Model, NotEmpty, PrimaryKey, Table, Unique, UpdatedAt, IsEmail, HasMany } from "sequelize-typescript";
+import Report from "./Report";
 
 
 @Table({
@@ -19,7 +20,7 @@ export default class HHRole extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "hhrole_code_unique", msg: "code for HH role must be unique"})
+    @Unique({ name: "hhrole_code_unique", msg: "code for HH role must be unique" })
     @Column({
         type: DataType.STRING
     })
@@ -46,4 +47,7 @@ export default class HHRole extends Model<
 
     @UpdatedAt
     declare updated_at: CreationOptional<Date>;
+
+    @HasMany(() => Report)
+    declare reports?: NonAttribute<Report>[];
 }
