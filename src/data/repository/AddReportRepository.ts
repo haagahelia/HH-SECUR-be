@@ -42,8 +42,8 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
         }
 
         async getReports() {
-            return await Report.findAll( {
-                include: [{model: CollaborationType }]
+            return await Report.findAll({
+                include: [{ model: CollaborationType }]
             })
 
         }
@@ -51,21 +51,21 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
         async findReportById(id: number) {
             return await Report.findByPk(id, {
                 include: [
-                    {model: ReportSnapshot },
+                    { model: ReportSnapshot },
                     { model: CollaborationHistory },
                     { model: CollaborationType },
                     { model: ConsortiumType },
                     { model: ContractInfo },
                     { model: Country },
                     { model: DualUse },
-                    { model: Duration},
+                    { model: Duration },
                     { model: EthicsAssessment },
                     { model: HHRole },
-                    { model: Liability},
-                    { model: Organization},
-                    { model: OrganizationType}, 
-                    { model: PersonalInformation},
-                    { model: User}
+                    { model: Liability },
+                    { model: Organization },
+                    { model: OrganizationType },
+                    { model: PersonalInformation },
+                    { model: User }
                 ],
                 raw: false
             });

@@ -1,10 +1,12 @@
 import { Request, Response } from "express";
-import { calculateRisk, parseRiskPayload } from "../utils/riskCalculation";
+import { calculateRisk, parseRiskPayload, validateRiskOptions } from "../utils/riskCalculation";
 import repository from "../data/repository/repository";
 
 type ReportSnapshot = {
     reportId: number,
     name: string,
+    ownerUsername: string,
+    creatorUsername: string,
     additionalInformation: string,
     organizationOther: string,
     collaborationOther: string,
@@ -28,6 +30,7 @@ type ReportSnapshot = {
 
 type ReportCreationAttributes = {
     name: string,
+    userId: number,
     collaborationHistoryId: number,
     consortiumTypeId: number,
     contractInfoId: number,
@@ -40,7 +43,6 @@ type ReportCreationAttributes = {
     organizationId: number,
     organizationTypeId: number,
     personalInformationId: number,
-    userId: number
 }
 
 
@@ -58,10 +60,8 @@ export const saveReport = async (req: Request, res: Response) => {
         return;
     }
 
-    const collaborationHistoryCode = req.body.history;
-    const collaborationHistory = await repository.findCollaborationHistoryByCode(collaborationHistoryCode);
-    if (!collaborationHistory) {
-        res.status(404).json({ message: `Code ${collaborationHistoryCode} is invalid for field history` })
+    const reportCreationAttrbiutes: ReportCreationAttributes | null = await validateRiskOptions(req, res);
+    if (!reportCreationAttrbiutes) {
         return;
     }
 
@@ -70,6 +70,7 @@ export const saveReport = async (req: Request, res: Response) => {
         res.status(404).json({ message: `Collaborationtype codes required` })
         return;
     }
+
     let collaborationTypes = [];
     for (let i = 0; i < collaborationTypeCodes.length; i++) {
         const collaborationType = await repository.findCollaborationTypeByCode(collaborationTypeCodes[i]);
@@ -80,135 +81,72 @@ export const saveReport = async (req: Request, res: Response) => {
         collaborationTypes.push(collaborationType);
     }
 
-    const consortiumTypeCode = req.body.consortium;
-    const consortiumType = await repository.findConsortiumTypeByCode(consortiumTypeCode);
-    if (!consortiumType) {
-        res.status(404).json({ message: `Code ${consortiumTypeCode} is invalid for field consortium` })
-        return;
-    }
-
-    const contractInfoCode = req.body.contract;
-    const contractInfo = await repository.findContractInfoByCode(contractInfoCode);
-    if (!contractInfo) {
-        res.status(404).json({ message: `Code ${contractInfoCode} is invalid for field contract` })
-        return;
-    }
-
-    const countryCode = req.body.country;
-    const country = await repository.findCountryByCode(countryCode);
-    if (!country) {
-        res.status(404).json({ message: `Code ${countryCode} is invalid for field country` })
-        return;
-    }
-
-    const dualUseCode = req.body.dualuse;
-    const dualUse = await repository.findDualUseByCode(dualUseCode);
-    if (!dualUse) {
-        res.status(404).json({ message: `Code ${dualUseCode} is invalid for field dualuse` })
-        return;
-    }
-
-    const durationCode = req.body.duration;
-    const duration = await repository.findDurationByCode(durationCode);
-    if (!duration) {
-        res.status(404).json({ message: `Code ${durationCode} is invalid for field duration` })
-        return;
-    }
-
-    const ethicsAssessmentCode = req.body.ethics;
-    const ethicsAssessment = await repository.findEthicsAssessmentByCode(ethicsAssessmentCode);
-    if (!ethicsAssessment) {
-        res.status(404).json({ message: `Code ${ethicsAssessmentCode} is invalid for field ethics` })
-        return;
-    }
-
-    const hhroleCode = req.body.hhrole;
-    const hhrole = await repository.findHHRoleByCode(hhroleCode);
-    if (!hhrole) {
-        res.status(404).json({ message: `Code ${hhroleCode} is invalid for field hhrole` })
-        return;
-    }
-
-    const liabilityCode = req.body.liability;
-    const liability = await repository.findLiabilityByCode(liabilityCode);
-    if (!liability) {
-        res.status(404).json({ message: `Code ${liabilityCode} is invalid for field liability` })
-        return;
-    }
-
-    const organizationId = req.body.organization;
-    const organization = await repository.findOrganizationById(organizationId);
-    if (!organization) {
-        res.status(404).json({ message: `Id ${organizationId} is invalid for field organization` })
-        return;
-    }
-
-    const organizationTypeCode = req.body.organizationtype;
-    const organizationType = await repository.findOrganizationTypeByCode(organizationTypeCode);
-    if (!organizationType) {
-        res.status(404).json({ message: `Code ${organizationTypeCode} is invalid for field organizationtype` })
-        return;
-    }
-
-    const personalInformationCode = req.body.personalinformation;
-    const personalInformation = await repository.findPersonalInformationByCode(personalInformationCode);
-    if (!personalInformation) {
-        res.status(404).json({ message: `Code ${personalInformationCode} is invalid for field personalInformation` })
-        return;
-    }
-
-    const userEmail = req.body.email;
-    const user = await repository.findByEmail(userEmail);
-    if (!user) {
-        res.status(404).json({ message: `Email ${userEmail} is invalid for field email` })
-        return;
-    }
-
-    const name = req.body.name;
-    if (!name) {
-        res.status(404).json({ message: `name field cannot be empty` })
-        return;
-    }
-
-    let reportCreationAttrbiutes: ReportCreationAttributes = {
-        name: name,
-        collaborationHistoryId: collaborationHistory.id,
-        consortiumTypeId: consortiumType.id,
-        contractInfoId: contractInfo.id,
-        countryId: country.id,
-        dualUseId: dualUse.id,
-        durationId: duration.id,
-        ethicsAssessmentId: ethicsAssessment.id,
-        hhroleId: hhrole.id,
-        liabilityId: liability.id,
-        organizationId: organization.id,
-        organizationTypeId: organizationType.id,
-        personalInformationId: personalInformation.id,
-        userId: user.id
-    }
-
-    let reportId = req.body.reportid;
-
+    const reportIdRaw = (req.params.id);
+    let reportId = parseInt(reportIdRaw as string)
     let report;
 
-    if (reportId) {
+    if (reportIdRaw) { //Bypass if called without id param
+        if (Number.isNaN(reportId)) {
+            res.status(400).json({
+                message: `Requested id ${reportIdRaw} is not a number`
+            })
+            return;
+        }
         report = await repository.findReportById(reportId);
+        if (!report) {
+            res.status(404).json({
+                message: `Report by the id of ${reportId} does not exist`
+            })
+            return;
+        }
+        report.set({
+            name: reportCreationAttrbiutes.name,
+            collaborationHistoryId: reportCreationAttrbiutes.collaborationHistoryId,
+            contractInfoId: reportCreationAttrbiutes.contractInfoId,
+            countryId: reportCreationAttrbiutes.countryId,
+            dualUseId: reportCreationAttrbiutes.dualUseId,
+            durationId: reportCreationAttrbiutes.durationId,
+            ethicsAssessmentId: reportCreationAttrbiutes.ethicsAssessmentId,
+            hhroleId: reportCreationAttrbiutes.hhroleId,
+            liabilityId: reportCreationAttrbiutes.liabilityId,
+            organizationId: reportCreationAttrbiutes.organizationId,
+            organizationTypeId: reportCreationAttrbiutes.organizationTypeId,
+            personalInformationId: reportCreationAttrbiutes.personalInformationId,
+            userId: reportCreationAttrbiutes.userId,
+        });
+        await report.save();
     } else {
         report = await repository.createReport(reportCreationAttrbiutes);
         reportId = report.id;
     }
 
     if (!report) {
-        res.status(404).json({ message: `Failed to add snapshot since report by the id of ${reportId} does not exists` })
+        res.status(404).json({ message: `Failed to save report` })
     }
 
     await report?.$set("collaborationTypes", collaborationTypes);
 
     const reportRisks = await calculateRisk(req);
 
+
+    let name = req.body.name;
+    if (!name) {
+        name = "PlaceholderName"
+    }
+    let ownerUsername = req.body.ownerusername;
+    if (!ownerUsername) {
+        ownerUsername = "PlaceholderOwnerUsername";
+    }
+    let creatorUsername = req.body.creatorusername;
+    if (!creatorUsername) {
+        creatorUsername = "PlaceholderCreatorUsername";
+    }
+
     const reportSnapshot: ReportSnapshot = {
         reportId: reportId,
-        name: "Placeholder",
+        name: name,
+        ownerUsername: ownerUsername,
+        creatorUsername: creatorUsername,
         additionalInformation: reportRisks.additionalinformation,
         organizationOther: reportRisks.organizationother,
         collaborationOther: reportRisks.collaborationtypeother,
@@ -230,6 +168,7 @@ export const saveReport = async (req: Request, res: Response) => {
         ethics: reportRisks.ethics.risk,
     }
 
+    await repository.deleteReportSnapshotByReportId(reportId);
 
     await repository.createReportSnapshot(reportSnapshot);
 

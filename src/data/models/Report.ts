@@ -42,7 +42,7 @@ export default class Report extends Model<
         field: "name",
     })
     declare name: string;
-
+    
     @ForeignKey(() => CollaborationHistory)
     @AllowNull(true)
     @Column({

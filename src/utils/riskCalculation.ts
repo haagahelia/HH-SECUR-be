@@ -36,6 +36,164 @@ export const parseRiskPayload = (req: Request, res: Response) => {
     }
 }
 
+type ReportCreationAttributes = {
+    name: string,
+    userId: number,
+    collaborationHistoryId: number,
+    consortiumTypeId: number,
+    contractInfoId: number,
+    countryId: number,
+    dualUseId: number,
+    durationId: number,
+    ethicsAssessmentId: number,
+    hhroleId: number,
+    liabilityId: number,
+    organizationId: number,
+    organizationTypeId: number,
+    personalInformationId: number,
+}
+
+export const validateRiskOptions = async (req: Request, res: Response): Promise<ReportCreationAttributes | null> => {
+
+    const collaborationHistoryCode = req.body.history;
+    const collaborationHistory = await repository.findCollaborationHistoryByCode(collaborationHistoryCode);
+    if (!collaborationHistory) {
+        res.status(404).json({ message: `Code ${collaborationHistoryCode} is invalid for field history` })
+        return null;
+    }
+
+    const collaborationTypeCodes = req.body.collaborationtype;
+    if (!collaborationTypeCodes) {
+        res.status(404).json({ message: `Collaborationtype codes required` })
+        return null;
+    }
+    let collaborationTypes = [];
+    for (let i = 0; i < collaborationTypeCodes.length; i++) {
+        const collaborationType = await repository.findCollaborationTypeByCode(collaborationTypeCodes[i]);
+        if (!collaborationType) {
+            res.status(404).json({ message: `Code ${collaborationTypeCodes[i]} is not a valid code for collaboration type` })
+            return null;
+        }
+        collaborationTypes.push(collaborationType);
+    }
+
+    const consortiumTypeCode = req.body.consortium;
+    const consortiumType = await repository.findConsortiumTypeByCode(consortiumTypeCode);
+    if (!consortiumType) {
+        res.status(404).json({ message: `Code ${consortiumTypeCode} is invalid for field consortium` })
+        return null;
+    }
+
+    const contractInfoCode = req.body.contract;
+    const contractInfo = await repository.findContractInfoByCode(contractInfoCode);
+    if (!contractInfo) {
+        res.status(404).json({ message: `Code ${contractInfoCode} is invalid for field contract` })
+        return null;
+    }
+
+    const countryCode = req.body.country;
+    const country = await repository.findCountryByCode(countryCode);
+    if (!country) {
+        res.status(404).json({ message: `Code ${countryCode} is invalid for field country` })
+        return null;
+    }
+
+    const dualUseCode = req.body.dualuse;
+    const dualUse = await repository.findDualUseByCode(dualUseCode);
+    if (!dualUse) {
+        res.status(404).json({ message: `Code ${dualUseCode} is invalid for field dualuse` })
+        return null;
+    }
+
+    const durationCode = req.body.duration;
+    const duration = await repository.findDurationByCode(durationCode);
+    if (!duration) {
+        res.status(404).json({ message: `Code ${durationCode} is invalid for field duration` })
+        return null;
+    }
+
+    const ethicsAssessmentCode = req.body.ethics;
+    const ethicsAssessment = await repository.findEthicsAssessmentByCode(ethicsAssessmentCode);
+    if (!ethicsAssessment) {
+        res.status(404).json({ message: `Code ${ethicsAssessmentCode} is invalid for field ethics` })
+        return null;
+    }
+
+    const hhroleCode = req.body.hhrole;
+    const hhrole = await repository.findHHRoleByCode(hhroleCode);
+    if (!hhrole) {
+        res.status(404).json({ message: `Code ${hhroleCode} is invalid for field hhrole` })
+        return null;
+    }
+
+    const liabilityCode = req.body.liability;
+    const liability = await repository.findLiabilityByCode(liabilityCode);
+    if (!liability) {
+        res.status(404).json({ message: `Code ${liabilityCode} is invalid for field liability` })
+        return null;
+    }
+
+    const organizationId = req.body.organization;
+    const organization = await repository.findOrganizationById(organizationId);
+    if (!organization) {
+        res.status(404).json({ message: `Id ${organizationId} is invalid for field organization` })
+        return null;
+    }
+
+    const organizationTypeCode = req.body.organizationtype;
+    const organizationType = await repository.findOrganizationTypeByCode(organizationTypeCode);
+    if (!organizationType) {
+        res.status(404).json({ message: `Code ${organizationTypeCode} is invalid for field organizationtype` })
+        return null;
+    }
+
+    const personalInformationCode = req.body.personalinformation;
+    const personalInformation = await repository.findPersonalInformationByCode(personalInformationCode);
+    if (!personalInformation) {
+        res.status(404).json({ message: `Code ${personalInformationCode} is invalid for field personalInformation` })
+        return null;
+    }
+
+    const ownerUsername = req.body.ownerusername;
+    const ownerUser = await repository.findByUsername(ownerUsername);
+    if (!ownerUser) {
+        res.status(404).json({ message: `Username ${ownerUsername} is invalid for field ownerusername` })
+        return null;
+    }
+
+    const creatorUsername = req.body.ownerusername;
+    const creatorUser = await repository.findByUsername(creatorUsername);
+    if (!creatorUser) {
+        res.status(404).json({ message: `Username ${creatorUsername} is invalid for field creatorusername` })
+        return null;
+    }
+
+    const name = req.body.name;
+    if (!name) {
+        res.status(404).json({ message: `name field cannot be empty` })
+        return null;
+    }
+
+    let reportCreationAttrbiutes: ReportCreationAttributes = {
+        name: name,
+        userId: ownerUser.id,
+        collaborationHistoryId: collaborationHistory.id,
+        consortiumTypeId: consortiumType.id,
+        contractInfoId: contractInfo.id,
+        countryId: country.id,
+        dualUseId: dualUse.id,
+        durationId: duration.id,
+        ethicsAssessmentId: ethicsAssessment.id,
+        hhroleId: hhrole.id,
+        liabilityId: liability.id,
+        organizationId: organization.id,
+        organizationTypeId: organizationType.id,
+        personalInformationId: personalInformation.id
+    }
+
+    return reportCreationAttrbiutes;
+}
+
 export const calculateRisk = async (req: Request) => {
     const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, collaborationtypeother, additionalinformation, name, fundinghistory, fundingsource, consortium } = req.body;
     const dualUseRisk = calculateDualUseRisk(dualuse);
@@ -60,6 +218,7 @@ export const calculateRisk = async (req: Request) => {
     }
 
     const report = {
+        name: name,
         collaboration: {
             title: riskResultDescriptions.collaboration.title,
             risk: collaborationRisk,

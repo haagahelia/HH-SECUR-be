@@ -210,25 +210,27 @@ Responses:
 
 </summary>
 
-**Work in progress: features only partially implemented**
-
-
-
 Requires: authentication
 
 Request body:
 
 ```
 {
+    "name": "Esimerkkiprojekti",
+    "ownerusername": "User",
+    "creatorusername": "Admin",
+    "country": "CHN",
+    "organization": 1,
+    "consortium": "option1"
     "hhrole": "option1",
     "collaborationtype": ["option1", "option2"]´
-    "country": "FIN",
-    "organization": "HH",
     "organizationtype": "option1",
     "history": "option1",
     "contract": "option1",
     "funding": "option1",
     "exhange": "option1"
+    "fundinghistory": "option1",
+    "fundingsource": "option1"
     "liability": "option1",
     "personalinformation": "option1",
     "dualuse": "option1",
@@ -249,21 +251,37 @@ Optional fields:
 
     - additionalinformation - Additional information about project
 
+Conditionally required fields
+
+Funding: "option1":
+
+    - exchange
+
+    - fundinghistory
+
+    - fundingsource
+
 Response will always contain these but left empty if missing from request or condition to include them is not triggered.
 
-Valid values:
+Valid values #descriptions after:
 
 ```
+name: project name field content,
+ownerusername: valid username of project owner,
+creatorusername: valid username of current user,
 country: 3 letter country code
-organization: organization string id
-hhrole: option1 | option2 | option3
-collaborationtype: [ option1 | option2 | option3 | option4 | option5 | option6 | option7 ]
-organizationtype: option1 | option2 | option3 | option4 | option5
-history: option1 | option2
-contract: option1 | option2
-funding: option1 | option2
-exchange: option1 | option2 | option3
-liability: option1 | option2 | option3
+organization: organization number id
+hhrole: option1 | option2 | option3 # Collaboration coordinator | Partner  Other
+consortium: option1 | option2 # Bilateral | Multilateral
+history: option1 | option2 # Yes | No
+organizationtype: option1 | option2 | option3 | option4 | option5 # University | Other Research Institute | Company | Non-Governmental Organization | Other
+contract: option1 | option2 # Yes | No
+collaborationtype: [ option1 | option2 | option3 | option4 | option5 | option6 | option7 ] # Research Collaboration | Education/Teaching Collaboration | Export of Education | International Student Mobility | International Staff Mobility | Joint Degree 
+funding: option1 | option2 # Yes | No
+exchange: option1 | option2 | option3 # In euros | Partially in euros | In currency other than euros
+fundinghistory: option1 | option2 #Yes | No
+fundingsource: option1 | option2 | option3 | option4 | option5 | option6 | option7 | option 8 # Finnish public sector entity | Finnish foundation or equivalent | Finnish corpororation | Finnish source other than the above | Foreign public sector entity | Foreign foundation or equivalent | Foreign corporation | Foreign entity other than the above
+liability: option1 | option2 | option3 | 
 personalinformation: option1 | option2
 dualuse: option1 | option2 | option3
 ethics: option1 | option2 | option3 | option4 | option5
@@ -271,6 +289,7 @@ duration: option1 | option2 | option3
 organizationother: any text
 collaborationother: any text
 additionalinformation: any text
+
 ```
 
 Responses:
@@ -285,6 +304,7 @@ Response body:
 
 ```
 {
+    "name": "Project name",
     "collaboration": {
         "title": {
             "fi": "Title in finnish",
@@ -495,8 +515,9 @@ Response body:
 
 </summary>
 
-
 </details>
+
+Fetches all reports with collaborationTypes relation included.
 
 <details>
 
@@ -506,67 +527,272 @@ Response body:
 
 </summary>
 
+Saves report to database and returns that report and its relations.
+
 Request body:
+
+Same as **/calculaterisk**
+
+<details>
+
+<summary>
+
+Example response:
+
+</summary>
 
 ```
 
 {
-    "reportid": "1",
-    "name": "test",
-    "email": "user@testing.com",
-    "hhrole": "option1",
-    "collaborationtype": [
-        "option1",
-        "option2",
-        "option3"
-    ],
-    "country": "CHN",
-    "consortium": "option1",
-    "organization": 1,
-    "organizationtype": "option5",
-    "history": "option1",
-    "contract": "option1",
-    "funding": "option1",
-    "liability": "option1",
-    "exchange": "option1",
-    "personalinformation": "option1",
-    "dualuse": "option1",
-    "ethics": "option1",
-    "duration": "option1",
-    "organizationother": "This message is added to response if option5 is selected for organizationtype",
-    "collaborationtypeother": "This message is added to response if option7 is included in collaboration types",
-    "additionalinformation": "Additional information about project"
+    "message": "Report by the id of 7 has been saved.",
+    "report": {
+        "id": 7,
+        "name": "Sample report",
+        "collaborationHistoryId": 1,
+        "consortiumTypeId": 1,
+        "contractInfoId": 1,
+        "countryId": 152,
+        "dualUseId": 1,
+        "durationId": 1,
+        "ethicsAssessmentId": 1,
+        "hhroleId": 1,
+        "liabilityId": 1,
+        "organizationId": 1,
+        "organizationTypeId": 5,
+        "personalInformationId": 1,
+        "userId": 1,
+        "created_at": "2026-09-30T13:30:12.000Z",
+        "updated_at": "2026-09-30T13:30:12.000Z",
+        "reportSnapshots": [
+            {
+                "id": 4,
+                "reportId": 7,
+                "name": "Sample report",
+                "ownerUsername": "User",
+                "creatorUsername": "User",
+                "additionalInformation": "Additional information about project",
+                "organizationOther": "This message is added to response if option5 is selected for organizationtype",
+                "collaborationOther": "This message is added to response if option7 is included in collaboration types",
+                "collaboration": 1,
+                "countryOverall": 1,
+                "countryCorruption": 1,
+                "countrySecurity": 1,
+                "countryAcademicFreedom": 1,
+                "countryPoliticalStability": 1,
+                "countryDevelopment": 1,
+                "countryGdpr": 1,
+                "countrySanctions": 1,
+                "countryRuleOfLaw": 1,
+                "organization": 1,
+                "financialOverall": 1,
+                "financialExchange": 1,
+                "financialScope": 1,
+                "dualUse": 1,
+                "ethics": 1,
+                "created_at": "2026-09-30T13:30:12.000Z",
+                "updated_at": "2026-09-30T13:30:12.000Z"
+            }
+        ],
+        "collaborationHistory": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Kyllä",
+            "en": "Yes",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "collaborationTypes": [
+            {
+                "id": 1,
+                "code": "option1",
+                "fi": "TKI-yhteistyö",
+                "en": "Research Collaboration",
+                "createdAt": "2026-09-30T13:23:56.000Z",
+                "updatedAt": "2026-09-30T13:23:56.000Z",
+                "ReportCollaborationType": {
+                    "id": 11,
+                    "reportId": 7,
+                    "collaborationTypeId": 1,
+                    "createdAt": "2026-09-30T13:30:12.000Z",
+                    "updatedAt": "2026-09-30T13:30:12.000Z"
+                }
+            },
+            {
+                "id": 2,
+                "code": "option2",
+                "fi": "Koulutus/opetusyhteistyö",
+                "en": "Education/Teaching Collaboration",
+                "createdAt": "2026-09-30T13:23:56.000Z",
+                "updatedAt": "2026-09-30T13:23:56.000Z",
+                "ReportCollaborationType": {
+                    "id": 12,
+                    "reportId": 7,
+                    "collaborationTypeId": 2,
+                    "createdAt": "2026-09-30T13:30:12.000Z",
+                    "updatedAt": "2026-09-30T13:30:12.000Z"
+                }
+            },
+            {
+                "id": 3,
+                "code": "option3",
+                "fi": "Koulutusvienti",
+                "en": "Export of Education",
+                "createdAt": "2026-09-30T13:23:56.000Z",
+                "updatedAt": "2026-09-30T13:23:56.000Z",
+                "ReportCollaborationType": {
+                    "id": 13,
+                    "reportId": 7,
+                    "collaborationTypeId": 3,
+                    "createdAt": "2026-09-30T13:30:12.000Z",
+                    "updatedAt": "2026-09-30T13:30:12.000Z"
+                }
+            },
+            {
+                "id": 4,
+                "code": "option4",
+                "fi": "Kansainvälinen opiskelijaliikkuvuus",
+                "en": "International Student Mobility",
+                "createdAt": "2026-09-30T13:23:56.000Z",
+                "updatedAt": "2026-09-30T13:23:56.000Z",
+                "ReportCollaborationType": {
+                    "id": 14,
+                    "reportId": 7,
+                    "collaborationTypeId": 4,
+                    "createdAt": "2026-09-30T13:30:12.000Z",
+                    "updatedAt": "2026-09-30T13:30:12.000Z"
+                }
+            },
+            {
+                "id": 7,
+                "code": "option7",
+                "fi": "Muu",
+                "en": "Other",
+                "createdAt": "2026-09-30T13:23:56.000Z",
+                "updatedAt": "2026-09-30T13:23:56.000Z",
+                "ReportCollaborationType": {
+                    "id": 15,
+                    "reportId": 7,
+                    "collaborationTypeId": 7,
+                    "createdAt": "2026-09-30T13:30:12.000Z",
+                    "updatedAt": "2026-09-30T13:30:12.000Z"
+                }
+            }
+        ],
+        "consortiumType": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Kahdenvälinen",
+            "en": "Bilateral",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "contractInfo": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Kyllä",
+            "en": "Yes",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "country": {
+            "id": 152,
+            "code": "SWE",
+            "fi": "Ruotsi",
+            "en": "Sweden",
+            "dataYear": 2025,
+            "corruption": 97.64,
+            "security": 1,
+            "politicalStability": 73.46,
+            "academicFreedom": 0.934,
+            "development": 5,
+            "gdpr": 1,
+            "sanctions": 1,
+            "ruleOfLaw": 0.85227449,
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "dualUse": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Kyllä",
+            "en": "Yes",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "duration": {
+            "id": 1,
+            "code": "option1",
+            "fi": "0-24 kk",
+            "en": "0-24 months",
+            "lowerlimit": 0,
+            "upperlimit": 24,
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "ethicsAssessment": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Ei missään tapauksessa",
+            "en": "Absolutely not",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "hhrole": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Yhteistyön koordinaattori",
+            "en": "Collaboration Coordnator",
+            "created_at": "2026-09-30T13:23:56.000Z",
+            "updated_at": "2026-09-30T13:23:56.000Z"
+        },
+        "liability": {
+            "id": 1,
+            "code": "option1",
+            "fi": "0-20.000",
+            "en": "0-20.000",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "organization": {
+            "id": 1,
+            "code": "halmstad",
+            "fi": "Halmstadin yliopisto",
+            "en": "Halmstad University",
+            "country_code": "SWE",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "organizationType": {
+            "id": 5,
+            "code": "option5",
+            "fi": "Muu",
+            "en": "Other",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "personalInformation": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Kyllä",
+            "en": "Yes",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "user": {
+            "id": 1,
+            "username": "User",
+            "email": "user@testing.com",
+            "password_hash": "$2b$10$1FQlHlv5Ig10XIWbUZuiWe.kpTihemiyGKbAh/ywXpt0mooskdZf.",
+            "role": "user",
+            "created_at": "2026-09-30T13:23:56.000Z",
+            "updated_at": "2026-09-30T13:23:56.000Z"
+        }
+    }
 }
-
 ```
 
-Valid values:
+</details>
 
-```
-
-reportid: valid report id number | empty
-name: any text
-email: email of a valid user
-hhrole: option1 | option2 | option3
-collaborationtype: [ option1 | option2 | option3 | option4 | option5 | option6 | option7 ]
-country: 3 letter country code
-consortium: option1 | option1
-organization: valid organization number id
-organizationtype: option1 | option2 | option3 | option4 | option5
-history: option1 | option2
-contract: option1 | option2
-funding: option1 | option2
-liability: option1 | option2 | option3
-exchange: option1 | option2 | option3
-personalinformation: option1 | option2
-dualuse: option1 | option2 | option3
-ethics: option1 | option2 | option3 | option4 | option5
-duration: option1 | option2 | option3
-organizationother: any text
-collaborationother: any text
-additionalinformation: any text
-
-```
 </details>
 
 <details>
@@ -576,6 +802,238 @@ additionalinformation: any text
 **/reports/{id}** - GET: Fetch specific report
 
 </summary>
+
+Fetches a specific report and its relations
+
+<details>
+
+<summary>
+
+Example response:
+
+</sumary>
+
+```
+
+{
+    "report": {
+        "id": 1,
+        "name": "test11",
+        "collaborationHistoryId": 1,
+        "consortiumTypeId": 1,
+        "contractInfoId": 1,
+        "countryId": 152,
+        "dualUseId": 1,
+        "durationId": 1,
+        "ethicsAssessmentId": 1,
+        "hhroleId": 1,
+        "liabilityId": 1,
+        "organizationId": 1,
+        "organizationTypeId": 5,
+        "personalInformationId": 1,
+        "userId": 1,
+        "created_at": "2026-09-30T13:26:17.000Z",
+        "updated_at": "2026-09-30T13:26:17.000Z",
+        "reportSnapshots": [
+            {
+                "id": 1,
+                "reportId": 1,
+                "name": "test11",
+                "ownerUsername": "User",
+                "creatorUsername": "PlaceholderCreatorUsername",
+                "additionalInformation": "Additional information about project",
+                "organizationOther": "This message is added to response if option5 is selected for organizationtype",
+                "collaborationOther": "",
+                "collaboration": 1,
+                "countryOverall": 1,
+                "countryCorruption": 1,
+                "countrySecurity": 1,
+                "countryAcademicFreedom": 1,
+                "countryPoliticalStability": 1,
+                "countryDevelopment": 1,
+                "countryGdpr": 1,
+                "countrySanctions": 1,
+                "countryRuleOfLaw": 1,
+                "organization": 1,
+                "financialOverall": 1,
+                "financialExchange": 1,
+                "financialScope": 1,
+                "dualUse": 1,
+                "ethics": 1,
+                "created_at": "2026-09-30T13:26:17.000Z",
+                "updated_at": "2026-09-30T13:26:17.000Z"
+            }
+        ],
+        "collaborationHistory": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Kyllä",
+            "en": "Yes",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "collaborationTypes": [
+            {
+                "id": 1,
+                "code": "option1",
+                "fi": "TKI-yhteistyö",
+                "en": "Research Collaboration",
+                "createdAt": "2026-09-30T13:23:56.000Z",
+                "updatedAt": "2026-09-30T13:23:56.000Z",
+                "ReportCollaborationType": {
+                    "id": 1,
+                    "reportId": 1,
+                    "collaborationTypeId": 1,
+                    "createdAt": "2026-09-30T13:26:17.000Z",
+                    "updatedAt": "2026-09-30T13:26:17.000Z"
+                }
+            },
+            {
+                "id": 2,
+                "code": "option2",
+                "fi": "Koulutus/opetusyhteistyö",
+                "en": "Education/Teaching Collaboration",
+                "createdAt": "2026-09-30T13:23:56.000Z",
+                "updatedAt": "2026-09-30T13:23:56.000Z",
+                "ReportCollaborationType": {
+                    "id": 2,
+                    "reportId": 1,
+                    "collaborationTypeId": 2,
+                    "createdAt": "2026-09-30T13:26:17.000Z",
+                    "updatedAt": "2026-09-30T13:26:17.000Z"
+                }
+            },
+            {
+                "id": 3,
+                "code": "option3",
+                "fi": "Koulutusvienti",
+                "en": "Export of Education",
+                "createdAt": "2026-09-30T13:23:56.000Z",
+                "updatedAt": "2026-09-30T13:23:56.000Z",
+                "ReportCollaborationType": {
+                    "id": 3,
+                    "reportId": 1,
+                    "collaborationTypeId": 3,
+                    "createdAt": "2026-09-30T13:26:17.000Z",
+                    "updatedAt": "2026-09-30T13:26:17.000Z"
+                }
+            }
+        ],
+        "consortiumType": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Kahdenvälinen",
+            "en": "Bilateral",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "contractInfo": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Kyllä",
+            "en": "Yes",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "country": {
+            "id": 152,
+            "code": "SWE",
+            "fi": "Ruotsi",
+            "en": "Sweden",
+            "dataYear": 2025,
+            "corruption": 97.64,
+            "security": 1,
+            "politicalStability": 73.46,
+            "academicFreedom": 0.934,
+            "development": 5,
+            "gdpr": 1,
+            "sanctions": 1,
+            "ruleOfLaw": 0.85227449,
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "dualUse": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Kyllä",
+            "en": "Yes",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "duration": {
+            "id": 1,
+            "code": "option1",
+            "fi": "0-24 kk",
+            "en": "0-24 months",
+            "lowerlimit": 0,
+            "upperlimit": 24,
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "ethicsAssessment": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Ei missään tapauksessa",
+            "en": "Absolutely not",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "hhrole": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Yhteistyön koordinaattori",
+            "en": "Collaboration Coordnator",
+            "created_at": "2026-09-30T13:23:56.000Z",
+            "updated_at": "2026-09-30T13:23:56.000Z"
+        },
+        "liability": {
+            "id": 1,
+            "code": "option1",
+            "fi": "0-20.000",
+            "en": "0-20.000",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "organization": {
+            "id": 1,
+            "code": "halmstad",
+            "fi": "Halmstadin yliopisto",
+            "en": "Halmstad University",
+            "country_code": "SWE",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "organizationType": {
+            "id": 5,
+            "code": "option5",
+            "fi": "Muu",
+            "en": "Other",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "personalInformation": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Kyllä",
+            "en": "Yes",
+            "createdAt": "2026-09-30T13:23:56.000Z",
+            "updatedAt": "2026-09-30T13:23:56.000Z"
+        },
+        "user": {
+            "id": 1,
+            "username": "User",
+            "email": "user@testing.com",
+            "password_hash": "$2b$10$1FQlHlv5Ig10XIWbUZuiWe.kpTihemiyGKbAh/ywXpt0mooskdZf.",
+            "role": "user",
+            "created_at": "2026-09-30T13:23:56.000Z",
+            "updated_at": "2026-09-30T13:23:56.000Z"
+        }
+    }
+}
+
+```
+
+</details>
 
 </details>
 
