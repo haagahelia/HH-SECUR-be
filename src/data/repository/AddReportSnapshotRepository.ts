@@ -12,6 +12,7 @@ export function AddReportSnapshotRepository<TBase extends Constructor<BaseReposi
             name: string;
             ownerUsername: string;
             creatorUsername: string;
+            organizationName: string;
             additionalInformation: string;
             organizationOther: string;
             collaborationOther: string;
@@ -49,6 +50,15 @@ export function AddReportSnapshotRepository<TBase extends Constructor<BaseReposi
                 where: {
                     reportId: id,
                 },
+            });
+        }
+
+        async getReportSnapshotsByReportId(id: number) {
+            return await ReportSnapshot.findAll({
+                where:
+                {
+                    reportId: id
+                }
             });
         }
     }

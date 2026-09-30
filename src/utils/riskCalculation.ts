@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { riskResultDescriptions } from "./riskResultDescriptions";
 import repository from "../data/repository/repository";
+import Report from "../data/models/Report";
+import ReportSnapshot from "../data/models/ReportSnapshot";
+import { snapshot } from "node:test";
 
 type CountryRisk = {
     "overall": 0 | 1 | 2 | 3,
@@ -20,8 +23,26 @@ type FinancialRisk = {
     "exchange": 0 | 1 | 2 | 3
 }
 
+type ReportRisks = {
+    name: string,
+    ownername: string,
+    creatorname: string,
+    collaboration: 0 | 1 | 2 | 3,
+    country: CountryRisk,
+    organization: 0 | 1 | 2 | 3,
+    financial: FinancialRisk,
+    dualuse: 0 | 1 | 2 | 3,
+    ethics: 0 | 1 | 2 | 3,
+    organizationname: string,
+    organizationother: string,
+    collaborationtypeother: string,
+    additionalinformation: string,
+
+
+}
+
 export const parseRiskPayload = (req: Request, res: Response) => {
-    const requiredFields = ["country", "organization", "organizationtype", "hhrole", "collaborationtype", "history", "contract", "funding", "liability", "exchange", "personalinformation", "dualuse", "ethics", "duration"]
+    const requiredFields = ["country", "organizationtype", "hhrole", "collaborationtype", "history", "contract", "funding", "liability", "exchange", "personalinformation", "dualuse", "ethics", "duration"]
     let missingFields: string[] = [];
     for (let i = 0; i < requiredFields.length; i++) {
         if (!req.body[requiredFields[i]]) {
@@ -195,7 +216,7 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
 }
 
 export const calculateRisk = async (req: Request) => {
-    const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, collaborationtypeother, additionalinformation, name, fundinghistory, fundingsource, consortium } = req.body;
+    const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, collaborationtypeother, additionalinformation, name, fundinghistory, fundingsource, consortium, organizationname, ownername, creatorname } = req.body;
     const dualUseRisk = calculateDualUseRisk(dualuse);
     const countryRisk = await calculateCountryRisk(country, personalinformation);
     const ethicsRisk = calculateEthicsRisk(ethics);
@@ -206,6 +227,7 @@ export const calculateRisk = async (req: Request) => {
     let collaborationtypeOptional = "";
     let organizationOptional = "";
     let additionalinformationOptional = "";
+    let organizationNameOptional = "";
 
     if (collaborationtype.includes("option7")) {
         collaborationtypeOptional = collaborationtypeother;
@@ -216,104 +238,275 @@ export const calculateRisk = async (req: Request) => {
     if (additionalinformation) {
         additionalinformationOptional = additionalinformation;
     }
+    if (organization) {
+        organizationNameOptional = organizationname;
+    }
+    let ownerName = "Placeholder";
+    let creatorName = "Placeholder";
+    if (ownername) {
+        ownerName = ownername;
+    }
+    if (creatorname) {
+        creatorName = creatorname;
+    }
+
+    const reportRisks: ReportRisks = {
+        name: name,
+        ownername: ownerName,
+        creatorname: creatorName,
+        collaboration: collaborationRisk,
+        country: countryRisk,
+        organization: organizationRisk,
+        financial: financialRisk,
+        dualuse: dualUseRisk,
+        ethics: ethicsRisk,
+        organizationname: organizationNameOptional,
+        organizationother: organizationOptional,
+        collaborationtypeother: collaborationtypeOptional,
+        additionalinformation: additionalinformationOptional,
+    }
+    /* //Moved to a separate component, can be removed once confirmed to work for a while
+        const report = {
+            name: name,
+            collaboration: {
+                title: riskResultDescriptions.collaboration.title,
+                risk: collaborationRisk,
+                description: riskResultDescriptions.collaboration[collaborationRisk]
+            },
+            country: {
+                overall: {
+                    title: riskResultDescriptions.countryOverall.title,
+                    risk: countryRisk.overall,
+                    description: riskResultDescriptions.countryOverall[countryRisk.overall]
+                },
+                corruption: {
+                    title: riskResultDescriptions.countryCorruption.title,
+                    risk: countryRisk.corruption,
+                    description: riskResultDescriptions.countryCorruption[countryRisk.corruption]
+                },
+                security: {
+                    title: riskResultDescriptions.countrySecurity.title,
+                    risk: countryRisk.security,
+                    description: riskResultDescriptions.countrySecurity[countryRisk.security]
+                },
+                academicfreedom: {
+                    title: riskResultDescriptions.countryAcademic.title,
+                    risk: countryRisk.academicfreedom,
+                    description: riskResultDescriptions.countryAcademic[countryRisk.academicfreedom]
+    
+                },
+                politicalstability: {
+                    title: riskResultDescriptions.countryPolitical.title,
+                    risk: countryRisk.politicalstability,
+                    description: riskResultDescriptions.countryPolitical[countryRisk.politicalstability]
+                },
+                development: {
+                    title: riskResultDescriptions.countryDevelopment.title,
+                    risk: countryRisk.development,
+                    description: riskResultDescriptions.countryDevelopment[countryRisk.development]
+                },
+                gdpr: {
+                    title: riskResultDescriptions.countryGdpr.title,
+                    risk: countryRisk.gdpr,
+                    description: riskResultDescriptions.countryGdpr[countryRisk.gdpr]
+                },
+                sanctions: {
+                    title: riskResultDescriptions.countrySanctions.title,
+                    risk: countryRisk.sanctions,
+                    description: riskResultDescriptions.countrySanctions[countryRisk.sanctions]
+                },
+                ruleoflaw: {
+                    title: riskResultDescriptions.countryLaw.title,
+                    risk: countryRisk.ruleoflaw,
+                    description: riskResultDescriptions.countryLaw[countryRisk.ruleoflaw]
+                }
+    
+            },
+            organization: {
+                title: riskResultDescriptions.organization.title,
+                risk: organizationRisk,
+                description: riskResultDescriptions.organization[organizationRisk]
+            },
+            financial: {
+                overall: {
+                    title: riskResultDescriptions.financial.title,
+                    risk: financialRisk.overall,
+                    description: riskResultDescriptions.financial[financialRisk.overall]
+                },
+                exchange: {
+                    title: riskResultDescriptions.exchangeRate.title,
+                    risk: financialRisk.exchange,
+                    description: riskResultDescriptions.exchangeRate[financialRisk.exchange]
+                },
+                scope: {
+                    title: riskResultDescriptions.economicScope.title,
+                    risk: financialRisk.scope,
+                    description: riskResultDescriptions.economicScope[financialRisk.scope]
+                }
+    
+            },
+            dualuse: {
+                title: riskResultDescriptions.dualUse.title,
+                risk: dualUseRisk,
+                description: riskResultDescriptions.dualUse[dualUseRisk]
+            },
+            ethics: {
+                title: riskResultDescriptions.ethics.title,
+                risk: ethicsRisk,
+                description: riskResultDescriptions.ethics[ethicsRisk]
+            },
+            organizationname: organizationNameOptional,
+            organizationother: organizationOptional,
+            collaborationtypeother: collaborationtypeOptional,
+            additionalinformation: additionalinformationOptional,
+            realCalculationImpementedFor: [
+                "Functionanility that was present in frontend should be fully implemented. Leaving this field here to be reused when currently missing functionality has been mapped and is being implemented in future sprints."
+            ]
+        }
+    
+        */
+    const report = generateVerboseReport(reportRisks);
+    return report;
+}
+
+export const generateVerboseReport = (risks: ReportRisks) => {
 
     const report = {
-        name: name,
+        name: risks.name,
+        ownername: risks.ownername,
+        creatorname: risks.creatorname,
         collaboration: {
             title: riskResultDescriptions.collaboration.title,
-            risk: collaborationRisk,
-            description: riskResultDescriptions.collaboration[collaborationRisk]
+            risk: risks.collaboration,
+            description: riskResultDescriptions.collaboration[risks.collaboration]
         },
         country: {
             overall: {
                 title: riskResultDescriptions.countryOverall.title,
-                risk: countryRisk.overall,
-                description: riskResultDescriptions.countryOverall[countryRisk.overall]
+                risk: risks.country.overall,
+                description: riskResultDescriptions.countryOverall[risks.country.overall]
             },
             corruption: {
                 title: riskResultDescriptions.countryCorruption.title,
-                risk: countryRisk.corruption,
-                description: riskResultDescriptions.countryCorruption[countryRisk.corruption]
+                risk: risks.country.corruption,
+                description: riskResultDescriptions.countryCorruption[risks.country.corruption]
             },
             security: {
                 title: riskResultDescriptions.countrySecurity.title,
-                risk: countryRisk.security,
-                description: riskResultDescriptions.countrySecurity[countryRisk.security]
+                risk: risks.country.security,
+                description: riskResultDescriptions.countrySecurity[risks.country.security]
             },
             academicfreedom: {
                 title: riskResultDescriptions.countryAcademic.title,
-                risk: countryRisk.academicfreedom,
-                description: riskResultDescriptions.countryAcademic[countryRisk.academicfreedom]
+                risk: risks.country.academicfreedom,
+                description: riskResultDescriptions.countryAcademic[risks.country.academicfreedom]
 
             },
             politicalstability: {
                 title: riskResultDescriptions.countryPolitical.title,
-                risk: countryRisk.politicalstability,
-                description: riskResultDescriptions.countryPolitical[countryRisk.politicalstability]
+                risk: risks.country.politicalstability,
+                description: riskResultDescriptions.countryPolitical[risks.country.politicalstability]
             },
             development: {
                 title: riskResultDescriptions.countryDevelopment.title,
-                risk: countryRisk.development,
-                description: riskResultDescriptions.countryDevelopment[countryRisk.development]
+                risk: risks.country.development,
+                description: riskResultDescriptions.countryDevelopment[risks.country.development]
             },
             gdpr: {
                 title: riskResultDescriptions.countryGdpr.title,
-                risk: countryRisk.gdpr,
-                description: riskResultDescriptions.countryGdpr[countryRisk.gdpr]
+                risk: risks.country.gdpr,
+                description: riskResultDescriptions.countryGdpr[risks.country.gdpr]
             },
             sanctions: {
                 title: riskResultDescriptions.countrySanctions.title,
-                risk: countryRisk.sanctions,
-                description: riskResultDescriptions.countrySanctions[countryRisk.sanctions]
+                risk: risks.country.sanctions,
+                description: riskResultDescriptions.countrySanctions[risks.country.sanctions]
             },
             ruleoflaw: {
                 title: riskResultDescriptions.countryLaw.title,
-                risk: countryRisk.ruleoflaw,
-                description: riskResultDescriptions.countryLaw[countryRisk.ruleoflaw]
+                risk: risks.country.ruleoflaw,
+                description: riskResultDescriptions.countryLaw[risks.country.ruleoflaw]
             }
 
         },
         organization: {
             title: riskResultDescriptions.organization.title,
-            risk: organizationRisk,
-            description: riskResultDescriptions.organization[organizationRisk]
+            risk: risks.organization,
+            description: riskResultDescriptions.organization[risks.organization]
         },
         financial: {
             overall: {
                 title: riskResultDescriptions.financial.title,
-                risk: financialRisk.overall,
-                description: riskResultDescriptions.financial[financialRisk.overall]
+                risk: risks.financial.overall,
+                description: riskResultDescriptions.financial[risks.financial.overall]
             },
             exchange: {
                 title: riskResultDescriptions.exchangeRate.title,
-                risk: financialRisk.exchange,
-                description: riskResultDescriptions.exchangeRate[financialRisk.exchange]
+                risk: risks.financial.exchange,
+                description: riskResultDescriptions.exchangeRate[risks.financial.exchange]
             },
             scope: {
                 title: riskResultDescriptions.economicScope.title,
-                risk: financialRisk.scope,
-                description: riskResultDescriptions.economicScope[financialRisk.scope]
+                risk: risks.financial.scope,
+                description: riskResultDescriptions.economicScope[risks.financial.scope]
             }
 
         },
         dualuse: {
             title: riskResultDescriptions.dualUse.title,
-            risk: dualUseRisk,
-            description: riskResultDescriptions.dualUse[dualUseRisk]
+            risk: risks.dualuse,
+            description: riskResultDescriptions.dualUse[risks.dualuse]
         },
         ethics: {
             title: riskResultDescriptions.ethics.title,
-            risk: ethicsRisk,
-            description: riskResultDescriptions.ethics[ethicsRisk]
+            risk: risks.ethics,
+            description: riskResultDescriptions.ethics[risks.ethics]
         },
-        organizationother: organizationOptional,
-        collaborationtypeother: collaborationtypeOptional,
-        additionalinformation: additionalinformationOptional,
+        organizationname: risks.organizationname,
+        organizationother: risks.organizationother,
+        collaborationtypeother: risks.collaborationtypeother,
+        additionalinformation: risks.additionalinformation,
         realCalculationImpementedFor: [
             "Functionanility that was present in frontend should be fully implemented. Leaving this field here to be reused when currently missing functionality has been mapped and is being implemented in future sprints."
         ]
     }
+
     return report;
+}
+
+export const getReportRisksFromReportSnapshot = (reportSnapshot: ReportSnapshot) => {
+
+        const reportRisks: ReportRisks = {
+        name: reportSnapshot.name,
+        ownername: reportSnapshot.ownerUsername,
+        creatorname: reportSnapshot.creatorUsername,
+        collaboration: reportSnapshot.collaboration as 0 | 1 | 2 | 3,
+        country: {
+            overall: reportSnapshot.countryOverall as 0 | 1 | 2 | 3,
+            corruption: reportSnapshot.countryCorruption as 0 | 1 | 2 | 3,
+            security: reportSnapshot.countrySecurity as 0 | 1 | 2 | 3,
+            academicfreedom: reportSnapshot.countryAcademicFreedom as 0 | 1 | 2 | 3,
+            politicalstability: reportSnapshot.countryPoliticalStability as 0 | 1 | 2 | 3,
+            development: reportSnapshot.countryDevelopment as 0 | 1 | 2 | 3,
+            gdpr: reportSnapshot.countryGdpr as 0 | 1 | 2 | 3,
+            sanctions: reportSnapshot.countrySanctions as 0 | 1 | 2 | 3,
+            ruleoflaw: reportSnapshot.countryRuleOfLaw as 0 | 1 | 2 | 3
+        },
+        organization: reportSnapshot.organization as 0 | 1 | 2 | 3,
+        financial: {
+            overall: reportSnapshot.financialOverall as 0 | 1 | 2 | 3,
+            scope: reportSnapshot.financialScope as 0 | 1 | 2 | 3,
+            exchange: reportSnapshot.financialExchange as 0 | 1 | 2 | 3
+        },
+        dualuse: reportSnapshot.dualUse as 0 | 1 | 2 | 3,
+        ethics: reportSnapshot.ethics as 0 | 1 | 2 | 3,
+        organizationname: reportSnapshot.organizationName,
+        organizationother: reportSnapshot.organizationOther,
+        collaborationtypeother: reportSnapshot.collaborationOther,
+        additionalinformation: reportSnapshot.additionalInformation,
+    }
+
+    return reportRisks;
 }
 
 const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType: any, duration: any, hhrole: any, contract: any, history: any): 0 | 1 | 2 | 3 => {
@@ -567,7 +760,7 @@ const calculateOrganizationRisk = async (id: string): Promise<0 | 1 | 2 | 3> => 
         return 0;
     }
     const organization = await repository.findOrganizationById(idNumber)
-    if (!organization) {
+    if (!organization || organization.code === "other") {
         return 3;
     }
     return 1;

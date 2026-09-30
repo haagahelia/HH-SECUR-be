@@ -54,6 +54,13 @@ export default class ReportSnapshot extends Model<
     @AllowNull(false)
     @Column({
         type: DataType.STRING,
+        field: "organization_name",
+    })
+    declare organizationName: string;
+
+    @AllowNull(false)
+    @Column({
+        type: DataType.STRING,
         field: "additional_information",
     })
     declare additionalInformation: string;

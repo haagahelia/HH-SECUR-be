@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { calculateRisk, parseRiskPayload, validateRiskOptions } from "../utils/riskCalculation";
+import { calculateRisk, getReportRisksFromReportSnapshot, generateVerboseReport, parseRiskPayload, validateRiskOptions } from "../utils/riskCalculation";
 import repository from "../data/repository/repository";
 
 type ReportSnapshot = {
@@ -7,6 +7,7 @@ type ReportSnapshot = {
     name: string,
     ownerUsername: string,
     creatorUsername: string,
+    organizationName: string,
     additionalInformation: string,
     organizationOther: string,
     collaborationOther: string,
@@ -141,12 +142,20 @@ export const saveReport = async (req: Request, res: Response) => {
     if (!creatorUsername) {
         creatorUsername = "PlaceholderCreatorUsername";
     }
+    let organizationName = "";
+    const organizationOther = await repository.findOrganizationById(report.organizationId)
+    if (organizationOther) {
+        if (organizationOther.code === "other") {
+            organizationName = req.body.organizationname;
+        }
+    }
 
     const reportSnapshot: ReportSnapshot = {
         reportId: reportId,
         name: name,
         ownerUsername: ownerUsername,
         creatorUsername: creatorUsername,
+        organizationName: organizationName,
         additionalInformation: reportRisks.additionalinformation,
         organizationOther: reportRisks.organizationother,
         collaborationOther: reportRisks.collaborationtypeother,
@@ -177,7 +186,8 @@ export const saveReport = async (req: Request, res: Response) => {
     if (savedReport) {
         res.status(200).json({
             message: `Report by the id of ${savedReport.id} has been saved.`,
-            report: savedReport
+            report: savedReport,
+            verbose: reportRisks
         })
     } else {
         res.status(400).json({
@@ -196,19 +206,29 @@ export const getReports = async (req: Request, res: Response) => {
 export const getReportById = async (req: Request, res: Response) => {
     const idRaw = (req.params.id);
     const id = parseInt(idRaw as string);
+    let verboseReport = {};
     if (Number.isNaN(id)) {
         res.status(400).json({
             message: `Requested id ${idRaw} is not a number`
         })
+        return;
     } else {
         const report = await repository.findReportById(id);
         if (!report) {
             res.status(404).json({
                 message: `Report by the id of ${id} does not exist`
             })
+            return;
         } else {
+            const reportSnapshots = await repository.getReportSnapshotsByReportId(report.id);
+            if (reportSnapshots[0]) {
+                const reportRisks = getReportRisksFromReportSnapshot(reportSnapshots[0]);
+                verboseReport = generateVerboseReport(reportRisks);
+            }
+
             res.json({
                 report,
+                verbose: verboseReport
             })
         }
     }

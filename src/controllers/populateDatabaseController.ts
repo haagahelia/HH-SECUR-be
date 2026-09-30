@@ -175,6 +175,12 @@ export async function addOrganizations() {
             country_code: "CHN",
             fi: "Tsinghuan yliopisto",
             en: "Tsinghua University"
+        },
+        {
+            code: "other",
+            country_code: "OTH",
+            fi: "Muu",
+            en: "Other"
         }
     ]
 
