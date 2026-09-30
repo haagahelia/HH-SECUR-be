@@ -281,11 +281,11 @@ funding: option1 | option2 # Yes | No
 exchange: option1 | option2 | option3 # In euros | Partially in euros | In currency other than euros
 fundinghistory: option1 | option2 #Yes | No
 fundingsource: option1 | option2 | option3 | option4 | option5 | option6 | option7 | option 8 # Finnish public sector entity | Finnish foundation or equivalent | Finnish corpororation | Finnish source other than the above | Foreign public sector entity | Foreign foundation or equivalent | Foreign corporation | Foreign entity other than the above
-liability: option1 | option2 | option3 | 
-personalinformation: option1 | option2
-dualuse: option1 | option2 | option3
-ethics: option1 | option2 | option3 | option4 | option5
-duration: option1 | option2 | option3
+liability: option1 | option2 | option3  # 0-20.000 | 20.000 | Over 50.000
+personalinformation: option1 | option2 # Yes | No | Unkown
+dualuse: option1 | option2 | option3 # Yes | No | Unkown
+ethics: option1 | option2 | option3 | option4 | option5 # Absolutely not | Most likely not | Possibly | Very likely | Definitely
+duration: option1 | option2 | option3 # 0-24 months | 24-60 months | Over 60 Months
 organizationother: any text
 collaborationother: any text
 additionalinformation: any text
@@ -515,9 +515,9 @@ Response body:
 
 </summary>
 
-</details>
-
 Fetches all reports with collaborationTypes relation included.
+
+</details>
 
 <details>
 
@@ -533,13 +533,7 @@ Request body:
 
 Same as **/calculaterisk**
 
-<details>
-
-<summary>
-
 Example response:
-
-</summary>
 
 ```
 
@@ -793,8 +787,6 @@ Example response:
 
 </details>
 
-</details>
-
 <details>
 
 <summary>
@@ -805,13 +797,7 @@ Example response:
 
 Fetches a specific report and its relations
 
-<details>
-
-<summary>
-
 Example response:
-
-</sumary>
 
 ```
 
@@ -1032,8 +1018,6 @@ Example response:
 }
 
 ```
-
-</details>
 
 </details>
 
