@@ -15,24 +15,26 @@ import { AddReportSnapshotRepository} from "./AddReportSnapshotRepository.js"
 import { AddReportRepository } from "./AddReportRepository.js";
 import { AddPersonalInformationRepository } from "./AddPersonalInformationRepository.js";
 import { AddContractInfoRepository } from "./AddContractInfoRepository.js";
+import { AddFundingRepository } from "./AddFundingRepository.js";
 
 const CombinedRepository = AddReportSnapshotRepository
-    (AddReportRepository
-        (AddCollaborationTypeRepository
-            (AddCountryRepository
-                (AddHHRoleRepository
-                    (AddConsortiumTypeRepository
-                        (AddOrganizationTypeRepository
-                            (AddDurationRepository
-                                (AddContractInfoRepository
-                                    (AddCollaborationHistoryRepository
-                                        (AddEthicsAssessmentRepository
-                                            (AddLiabilityRepository
-                                                (AddOrganizationRepository
-                                                    (AddDualUseRepository
-                                                        (AddPersonalInformationRepository
-                                                            (AddUserRepository
-                                                                (BaseRepository))))))))))))))));const repository = new CombinedRepository();
+    (AddFundingRepository
+        (AddReportRepository
+            (AddCollaborationTypeRepository
+                (AddCountryRepository
+                    (AddHHRoleRepository
+                        (AddConsortiumTypeRepository
+                            (AddOrganizationTypeRepository
+                                (AddDurationRepository
+                                    (AddContractInfoRepository
+                                        (AddCollaborationHistoryRepository
+                                            (AddEthicsAssessmentRepository
+                                                (AddLiabilityRepository
+                                                    (AddOrganizationRepository
+                                                        (AddDualUseRepository
+                                                            (AddPersonalInformationRepository
+                                                                (AddUserRepository
+                                                                    (BaseRepository)))))))))))))))));const repository = new CombinedRepository();
 
 //const repository = new BaseRepository();
 

@@ -427,31 +427,6 @@ export async function addFunding() {
     }
 }
 
-export async function addFunding() {
-    const fundings = [
-        {
-            code: "option1",
-            fi: "Kyllä",
-            en: "Yes"
-        },
-        {
-            code: "option2",
-            fi: "Ei",
-            en: "No"
-        }
-    ]
-    for (let i = 0; i < fundings.length; i++) {
-        let funding = await repository.findFundingByCode(fundings[i].code)
-        if (funding) {
-            funding.fi = fundings[i].fi;
-            funding.en = fundings[i].en;
-            funding.save();
-        } else {
-            repository.createFunding(fundings[i]);
-        }
-    }
-}
-
 export async function addDualUse() {
     const dualUses = [
         {
