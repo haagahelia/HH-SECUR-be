@@ -1,5 +1,7 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, Column, DataType, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { AllowNull, BelongsToMany, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
+import Report from "./Report";
+import ReportCollaborationType from "./ReportCollaborationType";
 
 
 @Table({
@@ -42,4 +44,6 @@ export default class CollaborationType extends Model<
     })
     declare en: string;
 
+    @BelongsToMany(() => Report, () => ReportCollaborationType)
+    declare reports?: NonAttribute<Report[]>;
 }

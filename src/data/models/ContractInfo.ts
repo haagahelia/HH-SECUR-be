@@ -1,15 +1,16 @@
 import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
-import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
+import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, Table, Unique, } from "sequelize-typescript";
 import Report from "./Report";
 
 
 @Table({
-    tableName: "organization",
-    modelName: "Organization",
+    tableName: "contract_info",
+    modelName: "ContractInfo",
 })
-export default class Organization extends Model<
-    InferAttributes<Organization>,
-    InferCreationAttributes<Organization>
+
+export default class ContractInfo extends Model<
+    InferAttributes<ContractInfo>,
+    InferCreationAttributes<ContractInfo>
 > {
     @Column({
         primaryKey: true,
@@ -20,10 +21,9 @@ export default class Organization extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({ name: "organization_code_unique", msg: "Organization code must be unique" })
+    @Unique({ name: "contract_info_code_unique", msg: "code for contract info must be unique" })
     @Column({
-        type: DataType.STRING,
-        field: "code",
+        type: DataType.STRING
     })
     declare code: string;
 
@@ -31,7 +31,7 @@ export default class Organization extends Model<
     @NotEmpty
     @Column({
         type: DataType.STRING,
-        field: "name_fi"
+        field: "name_fi",
     })
     declare fi: string;
 
@@ -39,17 +39,11 @@ export default class Organization extends Model<
     @NotEmpty
     @Column({
         type: DataType.STRING,
-        field: "name_en"
+        field: "name_en",
     })
     declare en: string;
 
-    @AllowNull(false)
-    @NotEmpty
-    @Column({
-        type: DataType.STRING
-    })
-    declare country_code: string;
-
     @HasMany(() => Report)
     declare reports?: NonAttribute<Report>[];
+
 }
