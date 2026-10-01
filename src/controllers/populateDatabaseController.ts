@@ -13,6 +13,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addDuration();
     await addCollaborationHistory();
     await addLiability();
+    await addFunding();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -322,6 +323,31 @@ export async function addLiability() {
             liability.save();
         } else {
             repository.createLiability(liabilities[i]);
+        }
+    }
+}
+
+export async function addFunding() {
+    const fundings = [
+        {
+            code: "option1",
+            fi: "Kyllä",
+            en: "Yes"
+        },
+        {
+            code: "option2",
+            fi: "Ei",
+            en: "No"
+        }
+    ]
+    for (let i = 0; i < fundings.length; i++) {
+        let funding = await repository.findFundingByCode(fundings[i].code)
+        if (funding) {
+            funding.fi = fundings[i].fi;
+            funding.en = fundings[i].en;
+            funding.save();
+        } else {
+            repository.createFunding(fundings[i]);
         }
     }
 }
