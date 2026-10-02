@@ -2,7 +2,10 @@ import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequ
 import { AllowNull, Column, DataType, Model, NotEmpty, PrimaryKey, Table, Unique } from "sequelize-typescript";
 
 
-
+@Table({
+    tableName: "funding",
+    modelName: "Funding",
+})
 export default class Funding extends Model<
     InferAttributes<Funding>,
     InferCreationAttributes<Funding>> {
