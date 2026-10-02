@@ -4,6 +4,8 @@ import repository from "../data/repository/repository";
 import Report from "../data/models/Report";
 import ReportSnapshot from "../data/models/ReportSnapshot";
 import { snapshot } from "node:test";
+import OrganizationType from "../data/models/OrganizationType";
+import CollaborationType from "../data/models/CollaborationType";
 
 type CountryRisk = {
     "overall": 0 | 1 | 2 | 3,
@@ -37,7 +39,33 @@ type ReportRisks = {
     organizationother: string,
     collaborationtypeother: string,
     additionalinformation: string,
+}
 
+type ReportChoices = {
+    country: string | null
+    organization: string | null,
+    organizationtype: string | null,
+    hhrole: string | null,
+    collaborationtype: string[] | null,
+    history: string | null,
+    contract: string | null,
+    funding: string | null,
+    liability: string | null,
+    exchange: string | null,
+    personalinformation: string | null,
+    dualuse: string | null,
+    ethics: string | null,
+    duration: string | null,
+    organizationother: string | null,
+    collaborationtypeother: string | null,
+    additionalinformation: string | null,
+    name: string | null,
+    fundinghistory: string | null,
+    fundingsource: string | null,
+    consortium: string | null,
+    organizationname: string | null,
+    ownerusername: string | null,
+    creatorusername: string | null
 
 }
 
@@ -57,6 +85,79 @@ export const parseRiskPayload = (req: Request, res: Response) => {
     }
 }
 
+export const generateReportChoices = (choices: any) => {
+    const reportChoices: ReportChoices = {
+        country: choices.country ? choices.country : "",
+        organization: choices.organization ? choices.organization : "",
+        organizationtype: choices.organizationtype ? choices.organizationtype : "",
+        hhrole: choices.hhrole ? choices.hhrole : "",
+        collaborationtype: choices.collaborationtype ? choices.collaborationtype : "",
+        history: choices.history ? choices.history : "",
+        contract: choices.contract ? choices.contract : "",
+        funding: choices.funding ? choices.funding : "",
+        liability: choices.liability ? choices.liability : "",
+        exchange: choices.exchange ? choices.exchange : "",
+        personalinformation: choices.personalinformation ? choices.personalinformation : "",
+        dualuse: choices.dualuse ? choices.dualuse : "",
+        ethics: choices.ethics ? choices.ethics : "",
+        duration: choices.duration ? choices.duration : "",
+        organizationother: choices.organizationother ? choices.organizationother : "",
+        collaborationtypeother: choices.collaborationtypeother ? choices.collaborationtypeother : "",
+        additionalinformation: choices.additionalinformation ? choices.additionalinformation : "",
+        name: choices.name ? choices.name : "",
+        fundinghistory: choices.fundinghistory ? choices.fundinghistory : "",
+        fundingsource: choices.fundingsource ? choices.fundingsource : "",
+        consortium: choices.consortium ? choices.consortium : "",
+        organizationname: choices.organizationname ? choices.organizationname : "",
+        ownerusername: choices.ownerusername ? choices.ownerusername : "",
+        creatorusername: choices.creatorusername ? choices.creatorusername : ""
+    }
+
+    return reportChoices;
+}
+
+export const getReportChoicesFromReport = async (id: number): Promise<ReportChoices> => {
+    const report = await repository.findReportById(id);
+    const reportSnapshots = report?.reportSnapshots;
+
+    if (!report) {
+        return generateReportChoices({});
+    }
+
+    const collaborationTypes = report.collaborationTypes ? report.collaborationTypes.map(type => { return type.code }) : []
+
+    const reportChoicesRaw = {
+        country: report.country?.code,
+        organization: report.organization?.id,
+        organizationtype: report.organizationType?.code,
+        hhrole: report.hhrole?.code,
+        collaborationtype: collaborationTypes,
+        history: report.collaborationHistory?.code,
+        contract: report.contractInfo?.code,
+        funding: report.funding?.code,
+        liability: report.liability?.code,
+        exchange: "placeholder", //report.exchange?.code,
+        personalinformation: report.personalInformation?.code,
+        dualuse: report.dualUse?.code,
+        ethics: report.ethicsAssessment?.code,
+        duration: report.duration?.code,
+        name: report.name,
+        fundinghistory: "placeholder", //report.fundinghistory?.code,
+        fundingsource: "placeholder", //report.fundingsource?.code,
+        consortium: report.consortiumType?.code,
+        ownerusername: reportSnapshots && reportSnapshots[0].ownerUsername ? reportSnapshots[0].ownerUsername : "",
+        creatorusername: reportSnapshots && reportSnapshots[0].creatorUsername ? reportSnapshots[0].creatorUsername : "",
+        organizationname: reportSnapshots && reportSnapshots[0].organizationName ? reportSnapshots[0].organizationName : "",
+        organizationother: reportSnapshots && reportSnapshots[0].organizationOther ? reportSnapshots[0].organizationOther : "",
+        collaborationtypeother: reportSnapshots && reportSnapshots[0].collaborationOther ? reportSnapshots[0].collaborationOther: "",
+        additionalinformation: reportSnapshots && reportSnapshots[0].additionalInformation ? reportSnapshots[0].additionalInformation: "",
+    }
+
+    const reportChoices = generateReportChoices(reportChoicesRaw);
+
+    return reportChoices;
+}
+
 type ReportCreationAttributes = {
     name: string,
     userId: number,
@@ -69,6 +170,7 @@ type ReportCreationAttributes = {
     ethicsAssessmentId: number,
     hhroleId: number,
     liabilityId: number,
+    fundingId: number,
     organizationId: number,
     organizationTypeId: number,
     personalInformationId: number,
@@ -154,6 +256,14 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         return null;
     }
 
+
+    const fundingCode = req.body.funding;
+    const funding = await repository.findFundingByCode(fundingCode);
+    if (!funding) {
+        res.status(404).json({ message: `Code ${funding} is invalid for field funding` })
+        return null;
+    }
+
     const organizationId = req.body.organization;
     const organization = await repository.findOrganizationById(organizationId);
     if (!organization) {
@@ -207,6 +317,7 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         ethicsAssessmentId: ethicsAssessment.id,
         hhroleId: hhrole.id,
         liabilityId: liability.id,
+        fundingId: funding.id,
         organizationId: organization.id,
         organizationTypeId: organizationType.id,
         personalInformationId: personalInformation.id
@@ -465,10 +576,7 @@ export const generateVerboseReport = (risks: ReportRisks) => {
         organizationname: risks.organizationname,
         organizationother: risks.organizationother,
         collaborationtypeother: risks.collaborationtypeother,
-        additionalinformation: risks.additionalinformation,
-        realCalculationImpementedFor: [
-            "Functionanility that was present in frontend should be fully implemented. Leaving this field here to be reused when currently missing functionality has been mapped and is being implemented in future sprints."
-        ]
+        additionalinformation: risks.additionalinformation
     }
 
     return report;
@@ -476,7 +584,7 @@ export const generateVerboseReport = (risks: ReportRisks) => {
 
 export const getReportRisksFromReportSnapshot = (reportSnapshot: ReportSnapshot) => {
 
-        const reportRisks: ReportRisks = {
+    const reportRisks: ReportRisks = {
         name: reportSnapshot.name,
         ownername: reportSnapshot.ownerUsername,
         creatorname: reportSnapshot.creatorUsername,

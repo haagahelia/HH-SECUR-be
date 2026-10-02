@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { calculateRisk, getReportRisksFromReportSnapshot, generateVerboseReport, parseRiskPayload, validateRiskOptions } from "../utils/riskCalculation";
+import { calculateRisk, getReportRisksFromReportSnapshot, generateVerboseReport, parseRiskPayload, validateRiskOptions, generateReportChoices, getReportChoicesFromReport } from "../utils/riskCalculation";
 import repository from "../data/repository/repository";
 
 type ReportSnapshot = {
@@ -41,6 +41,7 @@ type ReportCreationAttributes = {
     ethicsAssessmentId: number,
     hhroleId: number,
     liabilityId: number,
+    fundingId: number,
     organizationId: number,
     organizationTypeId: number,
     personalInformationId: number,
@@ -53,7 +54,11 @@ export const generateReport = async (req: Request, res: Response) => {
         return;
     }
     const report = await calculateRisk(req);
-    res.json(report);
+    const reportChoices = generateReportChoices(req.body);
+    res.json({
+        report,
+        choices: reportChoices
+    });
 }
 
 export const saveReport = async (req: Request, res: Response) => {
@@ -61,8 +66,8 @@ export const saveReport = async (req: Request, res: Response) => {
         return;
     }
 
-    const reportCreationAttrbiutes: ReportCreationAttributes | null = await validateRiskOptions(req, res);
-    if (!reportCreationAttrbiutes) {
+    const reportCreationAttributes: ReportCreationAttributes | null = await validateRiskOptions(req, res);
+    if (!reportCreationAttributes) {
         return;
     }
 
@@ -101,23 +106,24 @@ export const saveReport = async (req: Request, res: Response) => {
             return;
         }
         report.set({
-            name: reportCreationAttrbiutes.name,
-            collaborationHistoryId: reportCreationAttrbiutes.collaborationHistoryId,
-            contractInfoId: reportCreationAttrbiutes.contractInfoId,
-            countryId: reportCreationAttrbiutes.countryId,
-            dualUseId: reportCreationAttrbiutes.dualUseId,
-            durationId: reportCreationAttrbiutes.durationId,
-            ethicsAssessmentId: reportCreationAttrbiutes.ethicsAssessmentId,
-            hhroleId: reportCreationAttrbiutes.hhroleId,
-            liabilityId: reportCreationAttrbiutes.liabilityId,
-            organizationId: reportCreationAttrbiutes.organizationId,
-            organizationTypeId: reportCreationAttrbiutes.organizationTypeId,
-            personalInformationId: reportCreationAttrbiutes.personalInformationId,
-            userId: reportCreationAttrbiutes.userId,
+            name: reportCreationAttributes.name,
+            collaborationHistoryId: reportCreationAttributes.collaborationHistoryId,
+            contractInfoId: reportCreationAttributes.contractInfoId,
+            countryId: reportCreationAttributes.countryId,
+            dualUseId: reportCreationAttributes.dualUseId,
+            durationId: reportCreationAttributes.durationId,
+            ethicsAssessmentId: reportCreationAttributes.ethicsAssessmentId,
+            hhroleId: reportCreationAttributes.hhroleId,
+            liabilityId: reportCreationAttributes.liabilityId,
+            fundingId: reportCreationAttributes.fundingId,
+            organizationId: reportCreationAttributes.organizationId,
+            organizationTypeId: reportCreationAttributes.organizationTypeId,
+            personalInformationId: reportCreationAttributes.personalInformationId,
+            userId: reportCreationAttributes.userId,
         });
         await report.save();
     } else {
-        report = await repository.createReport(reportCreationAttrbiutes);
+        report = await repository.createReport(reportCreationAttributes);
         reportId = report.id;
     }
 
@@ -183,11 +189,14 @@ export const saveReport = async (req: Request, res: Response) => {
 
     const savedReport = await repository.findReportById(reportId);
 
+    const reportChoices = generateReportChoices(req.body);
+
     if (savedReport) {
         res.status(200).json({
             message: `Report by the id of ${savedReport.id} has been saved.`,
             report: savedReport,
-            verbose: reportRisks
+            verbose: reportRisks,
+            choices: reportChoices
         })
     } else {
         res.status(400).json({
@@ -226,9 +235,12 @@ export const getReportById = async (req: Request, res: Response) => {
                 verboseReport = generateVerboseReport(reportRisks);
             }
 
+            const reportChoices = await getReportChoicesFromReport(report.id);
+
             res.json({
                 report,
-                verbose: verboseReport
+                verbose: verboseReport,
+                choices: reportChoices
             })
         }
     }

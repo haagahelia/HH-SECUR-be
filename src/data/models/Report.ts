@@ -16,6 +16,7 @@ import Organization from "./Organization";
 import OrganizationType from "./OrganizationType";
 import PersonalInformation from "./PersonalInformation";
 import User from "./User";
+import Funding from "./Funding";
 
 
 @Table({
@@ -42,7 +43,7 @@ export default class Report extends Model<
         field: "name",
     })
     declare name: string;
-    
+
     @ForeignKey(() => CollaborationHistory)
     @AllowNull(true)
     @Column({
@@ -115,6 +116,14 @@ export default class Report extends Model<
     })
     declare liabilityId: number;
 
+    @ForeignKey(() => Funding)
+    @AllowNull(true)
+    @Column({
+        type: DataType.BIGINT,
+        field: "funding_id",
+    })
+    declare fundingId: number;
+
     @ForeignKey(() => Organization)
     @AllowNull(true)
     @Column({
@@ -182,6 +191,9 @@ export default class Report extends Model<
 
     @BelongsTo(() => Liability)
     declare liability?: NonAttribute<Liability>;
+
+    @BelongsTo(() => Funding)
+    declare funding?: NonAttribute<Funding>;
 
     @BelongsTo(() => Organization)
     declare organization?: NonAttribute<OrganizationType>;
