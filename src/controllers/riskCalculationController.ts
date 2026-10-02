@@ -194,8 +194,8 @@ export const saveReport = async (req: Request, res: Response) => {
     if (savedReport) {
         res.status(200).json({
             message: `Report by the id of ${savedReport.id} has been saved.`,
-            report: savedReport,
-            verbose: reportRisks,
+            reportDetails: savedReport,
+            report: reportRisks,
             choices: reportChoices
         })
     } else {
@@ -238,8 +238,8 @@ export const getReportById = async (req: Request, res: Response) => {
             const reportChoices = await getReportChoicesFromReport(report.id);
 
             res.json({
-                report,
-                verbose: verboseReport,
+                reportDetails: report,
+                report: verboseReport,
                 choices: reportChoices
             })
         }
