@@ -1,10 +1,11 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, Column, DataType, Model, NotEmpty, Table, Unique, } from "sequelize-typescript";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, Table, Unique, } from "sequelize-typescript";
+import Report from "./Report";
 
 
 @Table({
-    tableName:"ethics_assessment",
-    modelName:"EthicsAssessment",
+    tableName: "ethics_assessment",
+    modelName: "EthicsAssessment",
 })
 
 export default class EthicsAssessment extends Model<
@@ -20,7 +21,7 @@ export default class EthicsAssessment extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "ethics_assessment_code_unique", msg: "code for ethics assessment must be unique"})
+    @Unique({ name: "ethics_assessment_code_unique", msg: "code for ethics assessment must be unique" })
     @Column({
         type: DataType.STRING
     })
@@ -31,15 +32,18 @@ export default class EthicsAssessment extends Model<
     @Column({
         type: DataType.STRING,
         field: "name_fi",
-        })
+    })
     declare fi: string;
-    
+
     @AllowNull(false)
     @NotEmpty
     @Column({
         type: DataType.STRING,
         field: "name_en",
-        })
+    })
     declare en: string;
-    
-    }
+
+    @HasMany(() => Report)
+    declare reports?: NonAttribute<Report>[];
+
+}

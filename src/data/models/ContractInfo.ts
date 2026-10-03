@@ -4,12 +4,13 @@ import Report from "./Report";
 
 
 @Table({
-    tableName: "personal_information",
-    modelName: "PersonalInformation",
+    tableName: "contract_info",
+    modelName: "ContractInfo",
 })
-export default class PersonalInformation extends Model<
-    InferAttributes<PersonalInformation>,
-    InferCreationAttributes<PersonalInformation>
+
+export default class ContractInfo extends Model<
+    InferAttributes<ContractInfo>,
+    InferCreationAttributes<ContractInfo>
 > {
     @Column({
         primaryKey: true,
@@ -20,7 +21,7 @@ export default class PersonalInformation extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({ name: "personal_information_code_unique", msg: "code for personal information must be unique" })
+    @Unique({ name: "contract_info_code_unique", msg: "code for contract info must be unique" })
     @Column({
         type: DataType.STRING
     })
@@ -30,7 +31,7 @@ export default class PersonalInformation extends Model<
     @NotEmpty
     @Column({
         type: DataType.STRING,
-        field: "name_fi"
+        field: "name_fi",
     })
     declare fi: string;
 
@@ -38,10 +39,11 @@ export default class PersonalInformation extends Model<
     @NotEmpty
     @Column({
         type: DataType.STRING,
-        field: "name_en"
+        field: "name_en",
     })
     declare en: string;
 
     @HasMany(() => Report)
     declare reports?: NonAttribute<Report>[];
+
 }

@@ -1,5 +1,6 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, Column, DataType, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
+import Report from "./Report";
 
 
 @Table({
@@ -116,4 +117,7 @@ export default class Country extends Model<
         field: "rule_of_law",
     })
     declare ruleOfLaw: number;
+
+    @HasMany(() => Report)
+    declare reports?: NonAttribute<Report>[];
 }

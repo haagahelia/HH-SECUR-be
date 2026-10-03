@@ -1,5 +1,6 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, Column, DataType, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
+import Report from "./Report";
 
 
 @Table({
@@ -20,7 +21,7 @@ export default class ConsortiumType extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "consortium_type_code_unique", msg: "Code for consortium type must be unique"})
+    @Unique({ name: "consortium_type_code_unique", msg: "Code for consortium type must be unique" })
     @Column({
         type: DataType.STRING
     })
@@ -41,5 +42,8 @@ export default class ConsortiumType extends Model<
         field: "consortium_type_en",
     })
     declare en: string;
+
+    @HasMany(() => Report)
+    declare reports?: NonAttribute<Report>[];
 
 }
