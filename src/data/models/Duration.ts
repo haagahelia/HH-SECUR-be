@@ -1,5 +1,6 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, Column, DataType, Model, NotEmpty, Table, Unique } from "sequelize-typescript";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, Table, Unique } from "sequelize-typescript";
+import Report from "./Report";
 
 
 @Table({
@@ -19,7 +20,7 @@ export default class Duration extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "duration_code_unique", msg: "code for duration must be unique"})
+    @Unique({ name: "duration_code_unique", msg: "code for duration must be unique" })
     @Column({
         type: DataType.STRING
     })
@@ -40,17 +41,20 @@ export default class Duration extends Model<
         field: "name_en"
     })
     declare en: string;
-    
-    @AllowNull(true)
-    @Column({
-        type:DataType.BIGINT,
-    })
-    declare lowerlimit:number | null
 
     @AllowNull(true)
     @Column({
-        type:DataType.BIGINT,
+        type: DataType.BIGINT,
     })
-    declare upperlimit:number | null
+    declare lowerlimit: number | null
+
+    @AllowNull(true)
+    @Column({
+        type: DataType.BIGINT,
+    })
+    declare upperlimit: number | null
+
+    @HasMany(() => Report)
+    declare reports?: NonAttribute<Report>[];
 
 }

@@ -1,5 +1,6 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, Column, DataType, Model, NotEmpty, Table, Unique, } from "sequelize-typescript";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, Table, Unique, } from "sequelize-typescript";
+import Report from "./Report";
 
 
 @Table({
@@ -20,7 +21,7 @@ export default class CollaborationHistory extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "collaboration_history_code_unique", msg: "code for collaboration history must be unique"})
+    @Unique({ name: "collaboration_history_code_unique", msg: "code for collaboration history must be unique" })
     @Column({
         type: DataType.STRING
     })
@@ -31,7 +32,7 @@ export default class CollaborationHistory extends Model<
     @Column({
         type: DataType.STRING,
         field: "name_fi",
-        })
+    })
     declare fi: string;
 
     @AllowNull(false)
@@ -39,7 +40,10 @@ export default class CollaborationHistory extends Model<
     @Column({
         type: DataType.STRING,
         field: "name_en",
-        })
+    })
     declare en: string;
 
-    }
+    @HasMany(() => Report)
+    declare reports?: NonAttribute<Report>[];
+
+}

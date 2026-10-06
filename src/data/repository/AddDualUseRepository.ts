@@ -14,7 +14,7 @@ export function AddDualUseRepository<TBase extends Constructor<BaseRepository>>(
 
         
         async findDualUseByCode(code: string) {
-            return DualUse.findOne({
+            return await DualUse.findOne({
                 where: {
                     code: code,
                 },

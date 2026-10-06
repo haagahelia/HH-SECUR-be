@@ -7,9 +7,12 @@ export function AddReportSnapshotRepository<TBase extends Constructor<BaseReposi
 ) {
     return class extends Base {
 
-        async createReportSnapshot(reportSnapshotAttributes: { 
+        async createReportSnapshot(reportSnapshotAttributes: {
             reportId: number;
             name: string;
+            ownerUsername: string;
+            creatorUsername: string;
+            organizationName: string;
             additionalInformation: string;
             organizationOther: string;
             collaborationOther: string;
@@ -29,7 +32,7 @@ export function AddReportSnapshotRepository<TBase extends Constructor<BaseReposi
             financialScope: number;
             dualUse: number;
             ethics: number;
-            }) {
+        }) {
             return await ReportSnapshot.create(reportSnapshotAttributes);
         }
 
@@ -40,6 +43,23 @@ export function AddReportSnapshotRepository<TBase extends Constructor<BaseReposi
                 return true;
             }
             return false;
+        }
+
+        async deleteReportSnapshotByReportId(id: number) {
+            await ReportSnapshot.destroy({
+                where: {
+                    reportId: id,
+                },
+            });
+        }
+
+        async getReportSnapshotsByReportId(id: number) {
+            return await ReportSnapshot.findAll({
+                where:
+                {
+                    reportId: id
+                }
+            });
         }
     }
 }

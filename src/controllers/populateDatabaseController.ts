@@ -12,27 +12,29 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addCountryData();
     await addDuration();
     await addCollaborationHistory();
+    await addContractInfo();
     await addEthicsAssessment();
     await addLiability();
     await addDualUse();
     await addPersonalInformation();
+    await addFunding();
     res.status(200).json({ message: "Database populated" });
 }
 
 export async function addHHRole() {
     const hhRoles = [
         {
-            code: "coordinator",
+            code: "option1",
             fi: "Yhteistyön koordinaattori",
             en: "Collaboration Coordnator"
         },
         {
-            code: "partner",
+            code: "option2",
             fi: "Kumppani tai tasaveroinen partner",
             en: "Partner"
         },
         {
-            code: "other",
+            code: "option3",
             fi: "Muu",
             en: "Other"
         }
@@ -174,6 +176,12 @@ export async function addOrganizations() {
             country_code: "CHN",
             fi: "Tsinghuan yliopisto",
             en: "Tsinghua University"
+        },
+        {
+            code: "other",
+            country_code: "OTH",
+            fi: "Muu",
+            en: "Other"
         }
     ]
 
@@ -194,27 +202,27 @@ export async function addOrganizations() {
 export async function addOrganizationType() {
     const organizationTypes = [
         {
-            code: "university",
+            code: "option1",
             fi: "Yliopisto",
             en: "University"
         },
         {
-            code: "otherResearch",
+            code: "option2",
             fi: "Muu tutkimuslaitos",
             en: "Other Research Institute"
         },
         {
-            code: "business",
+            code: "option3",
             fi: "Yritys",
             en: "Company"
         },
         {
-            code: "ngo",
+            code: "option4",
             fi: "Kansalaisjärjestö",
             en: "Non-Governmental Organization"
         },
         {
-            code: "other",
+            code: "option5",
             fi: "Muu",
             en: "Other"
         }
@@ -293,6 +301,31 @@ export async function addCollaborationHistory() {
         }
     }
 }
+export async function addContractInfo() {
+    const contractInfos = [
+        {
+            code: "option1",
+            fi: "Kyllä",
+            en: "Yes"
+        },
+        {
+            code: "option2",
+            fi: "Ei",
+            en: "No"
+        }
+    ]
+    for (let i = 0; i < contractInfos.length; i++) {
+
+        let contractInfo = await repository.findContractInfoByCode(contractInfos[i].code)
+        if (contractInfo) {
+            contractInfo.fi = contractInfos[i].fi;
+            contractInfo.en = contractInfos[i].en;
+            await contractInfo.save();
+        } else {
+            await repository.createContractInfo(contractInfos[i]);
+        }
+    }
+}
 export async function addEthicsAssessment() {
     const ethicsAssessments = [
         {
@@ -365,6 +398,31 @@ export async function addLiability() {
             liability.save();
         } else {
             repository.createLiability(liabilities[i]);
+        }
+    }
+}
+
+export async function addFunding() {
+    const fundings = [
+        {
+            code: "option1",
+            fi: "Kyllä",
+            en: "Yes"
+        },
+        {
+            code: "option2",
+            fi: "Ei",
+            en: "No"
+        }
+    ]
+    for (let i = 0; i < fundings.length; i++) {
+        let funding = await repository.findFundingByCode(fundings[i].code)
+        if (funding) {
+            funding.fi = fundings[i].fi;
+            funding.en = fundings[i].en;
+            funding.save();
+        } else {
+            repository.createFunding(fundings[i]);
         }
     }
 }

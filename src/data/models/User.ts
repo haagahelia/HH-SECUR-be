@@ -1,5 +1,6 @@
-import { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { AllowNull, AutoIncrement, Column, CreatedAt, DataType, Model, NotEmpty, PrimaryKey, Table, Unique, UpdatedAt, IsEmail } from "sequelize-typescript";
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
+import { AllowNull, AutoIncrement, Column, CreatedAt, DataType, Model, NotEmpty, PrimaryKey, Table, Unique, UpdatedAt, IsEmail, HasMany } from "sequelize-typescript";
+import Report from "./Report";
 
 
 @Table({
@@ -19,7 +20,7 @@ export default class User extends Model<
 
     @AllowNull(false)
     @NotEmpty
-    @Unique({name: "user_username_unique", msg: "Username must be unique"})
+    @Unique({ name: "user_username_unique", msg: "Username must be unique" })
     @Column({
         type: DataType.STRING
     })
@@ -28,7 +29,7 @@ export default class User extends Model<
     @AllowNull(false)
     @NotEmpty
     @IsEmail
-    @Unique({name: "user_email_unique", msg: "Email must be unique"})
+    @Unique({ name: "user_email_unique", msg: "Email must be unique" })
     @Column({
         type: DataType.STRING
     })
@@ -54,4 +55,7 @@ export default class User extends Model<
 
     @UpdatedAt
     declare updated_at: CreationOptional<Date>;
+
+    @HasMany(() => Report)
+    declare reports?: NonAttribute<Report>[];
 }
