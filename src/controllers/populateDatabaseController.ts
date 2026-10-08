@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import repository from "../data/repository/repository";
 import { addCountryData } from "../utils/countryData.js";
-import { organizations } from "../utils/organizations";
+//import { organizations } from "../utils/organizations"; //commented out until deployment works with limited selection
+import { organizationsLimited } from "../utils/organizationsLimited";
 import Duration from "../data/models/Duration";
 
 export const populateDatabase = async (req: Request, res: Response) => {
@@ -187,6 +188,7 @@ export async function addOrganizations() {
         }
     ]
 */
+    const organizations = organizationsLimited
     for (let i = 0; i < organizations.length; i++) {
 
         let organization = await repository.findOrganizationByCode(organizations[i].code)
