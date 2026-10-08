@@ -70,7 +70,7 @@ type ReportChoices = {
 }
 
 export const parseRiskPayload = (req: Request, res: Response) => {
-    const requiredFields = ["country", "organizationtype", "hhrole", "collaborationtype", "history", "contract", "funding", "liability", "exchange", "personalinformation", "dualuse", "ethics", "duration"]
+    const requiredFields = ["country", "organizationtype", "hhrole", "collaborationtype", "history", "contract", "funding", "liability", "personalinformation", "dualuse", "ethics", "duration"]
     let missingFields: string[] = [];
     for (let i = 0; i < requiredFields.length; i++) {
         if (!req.body[requiredFields[i]]) {
