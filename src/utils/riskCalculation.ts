@@ -915,7 +915,9 @@ const calculateFinancialRisk = (liability: any, funding: any, exchange: any, fun
         financialRisk.scope = 3;
     }
 
-    if (exchange === "option1") {
+    if (funding === "option2") {
+        financialRisk.exchange = 1
+    } else if (exchange === "option1") {
         financialRisk.exchange = 1;
     } else if (exchange === "option2") {
         financialRisk.exchange = 2;
