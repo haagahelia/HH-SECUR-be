@@ -16,10 +16,12 @@ import { AddReportRepository } from "./AddReportRepository.js";
 import { AddPersonalInformationRepository } from "./AddPersonalInformationRepository.js";
 import { AddContractInfoRepository } from "./AddContractInfoRepository.js";
 import { AddFundingRepository } from "./AddFundingRepository.js";
+import { AddFundingSourceRepository } from "./AddFundingSourceRepository.js";
 
 const CombinedRepository = AddReportSnapshotRepository
-    (AddFundingRepository
-        (AddReportRepository
+    (AddFundingSourceRepository
+        (AddFundingRepository
+            (AddReportRepository
             (AddCollaborationTypeRepository
                 (AddCountryRepository
                     (AddHHRoleRepository
@@ -34,7 +36,7 @@ const CombinedRepository = AddReportSnapshotRepository
                                                         (AddDualUseRepository
                                                             (AddPersonalInformationRepository
                                                                 (AddUserRepository
-                                                                    (BaseRepository)))))))))))))))));const repository = new CombinedRepository();
+                                                                    (BaseRepository))))))))))))))))));const repository = new CombinedRepository();
 
 //const repository = new BaseRepository();
 

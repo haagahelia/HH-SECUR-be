@@ -7,6 +7,7 @@ import DualUse from "../models/DualUse.js";
 import Duration from "../models/Duration.js";
 import EthicsAssessment from "../models/EthicsAssessment.js";
 import Funding from "../models/Funding.js";
+import FundingSource from "../models/FundingSource.js";
 import HHRole from "../models/HHRole.js";
 import Liability from "../models/Liability.js";
 import Organization from "../models/Organization.js";
@@ -35,6 +36,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
             hhroleId: number,
             liabilityId: number,
             fundingId: number,
+            fundingSourceId?: number | null,
             organizationId: number,
             organizationTypeId: number,
             personalInformationId: number,
@@ -65,6 +67,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
                     { model: HHRole },
                     { model: Liability },
                     { model: Funding },
+                    { model: FundingSource },
                     { model: Organization },
                     { model: OrganizationType },
                     { model: PersonalInformation },
