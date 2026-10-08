@@ -196,7 +196,7 @@ export async function addOrganizations() {
             organization.country_code = organizations[i].country_code;
             organization.save();
         } else {
-            repository.createOrganization(organizations[i]);
+            await repository.createOrganization(organizations[i]);
         }
     }
 
