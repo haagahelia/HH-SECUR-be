@@ -189,21 +189,21 @@ export async function addOrganizations() {
         }
     ]
 */
-/*
-    //Real orga
-    for (let i = 0; i < organizations.length; i++) {
-
-        let organization = await repository.findOrganizationByCode(organizations[i].code)
-        if (organization) {
-            organization.fi = organizations[i].fi;
-            organization.en = organizations[i].en;
-            organization.country_code = organizations[i].country_code;
-            await organization.save();
-        } else {
-            await repository.createOrganization(organizations[i]);
+    /*
+        //Real orga
+        for (let i = 0; i < organizations.length; i++) {
+    
+            let organization = await repository.findOrganizationByCode(organizations[i].code)
+            if (organization) {
+                organization.fi = organizations[i].fi;
+                organization.en = organizations[i].en;
+                organization.country_code = organizations[i].country_code;
+                await organization.save();
+            } else {
+                await repository.createOrganization(organizations[i]);
+            }
         }
-    }
-*/
+    */
     await addOrganizationsLimited();
 }
 
@@ -219,13 +219,17 @@ export const addOrganizationsLimited = async () => {
 
         if (limit < 2) {
             let organization = await repository.findOrganizationByCode(organizations[i].code)
-            if (organization) {
-                organization.fi = organizations[i].fi;
-                organization.en = organizations[i].en;
-                organization.country_code = organizations[i].country_code;
-                await organization.save();
-            } else {
-                await repository.createOrganization(organizations[i]);
+            try {
+                if (organization) {
+                    organization.fi = organizations[i].fi;
+                    organization.en = organizations[i].en;
+                    organization.country_code = organizations[i].country_code;
+                    await organization.save();
+                } else {
+                    await repository.createOrganization(organizations[i]);
+                }
+            } catch (error) {
+                console.log(error)
             }
             limit++;
         }
