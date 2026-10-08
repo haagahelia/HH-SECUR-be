@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import repository from "../data/repository/repository";
 import { addCountryData } from "../utils/countryData.js";
-//import { organizations } from "../utils/organizations"; //commented out until deployment works with limited selection
-import { organizationsLimited } from "../utils/organizationsLimited";
+import { organizations } from "../utils/organizations"; //commented out until deployment works with limited selection
+//import { organizationsLimited } from "../utils/organizationsLimited"; //Alternative limited organizations source
 import Duration from "../data/models/Duration";
 
 export const populateDatabase = async (req: Request, res: Response) => {
@@ -138,6 +138,7 @@ export async function addConsortiumTypes() {
 
 export async function addOrganizations() {
     /*
+    //Old organizations source
     const organizations = [
         {
             code: "halmstad",
@@ -189,21 +190,54 @@ export async function addOrganizations() {
         }
     ]
 */
-    const organizations = organizationsLimited
+    /*
+        //Real orga
+        for (let i = 0; i < organizations.length; i++) {
+    
+            let organization = await repository.findOrganizationByCode(organizations[i].code)
+            if (organization) {
+                organization.fi = organizations[i].fi;
+                organization.en = organizations[i].en;
+                organization.country_code = organizations[i].country_code;
+                await organization.save();
+            } else {
+                await repository.createOrganization(organizations[i]);
+            }
+        }
+    */
+    await addOrganizationsLimited();
+}
+
+export const addOrganizationsLimited = async () => {
+    let limit = 0;
+    let countryCode = ""
     for (let i = 0; i < organizations.length; i++) {
 
-        let organization = await repository.findOrganizationByCode(organizations[i].code)
-        if (organization) {
-            organization.fi = organizations[i].fi;
-            organization.en = organizations[i].en;
-            organization.country_code = organizations[i].country_code;
-            organization.save();
-        } else {
-            await repository.createOrganization(organizations[i]);
+        if (organizations[i].country_code !== countryCode) {
+            countryCode = organizations[i].country_code
+            limit = 0
+        }
+
+        if (limit < 2) {
+            limit++;
+            let organization = await repository.findOrganizationByCode(organizations[i].code)
+            try {
+                if (organization) {
+                    organization.fi = organizations[i].fi;
+                    organization.en = organizations[i].en;
+                    organization.country_code = organizations[i].country_code;
+                    await organization.save();
+                } else {
+                    await repository.createOrganization(organizations[i]);
+                }
+            } catch (error) {
+                limit --;
+                console.log(error)
+            }
         }
     }
-
 }
+
 export async function addOrganizationType() {
     const organizationTypes = [
         {
@@ -244,37 +278,37 @@ export async function addOrganizationType() {
         }
     }
 }
-export async function addDuration(){
-    const durations= [
+export async function addDuration() {
+    const durations = [
         {
-            code:"option1",
-            fi:"0-24 kk",
-            en:"0-24 months",
-            lowerlimit:0,
-            upperlimit:24
+            code: "option1",
+            fi: "0-24 kk",
+            en: "0-24 months",
+            lowerlimit: 0,
+            upperlimit: 24
         },
         {
-            code:"option2",
-            fi:"24-60 kk",
-            en:"24-60 months",
-            lowerlimit:24,
-            upperlimit:60
+            code: "option2",
+            fi: "24-60 kk",
+            en: "24-60 months",
+            lowerlimit: 24,
+            upperlimit: 60
         },
         {
-            code:"option3",
-            fi:"yli 60 kk",
-            en:"Over 60 months",
-            lowerlimit:60,
-            upperlimit:null
+            code: "option3",
+            fi: "yli 60 kk",
+            en: "Over 60 months",
+            lowerlimit: 60,
+            upperlimit: null
         }
     ]
-    for (let i=0; i<durations.length; i++){
-        let duration= await repository.findDurationByCode(durations[i].code)
-        if (duration){
-            duration.fi= durations[i].fi;
-            duration.en= durations[i].en;
-            duration.lowerlimit= durations[i].lowerlimit;
-            duration.upperlimit=durations[i].upperlimit;
+    for (let i = 0; i < durations.length; i++) {
+        let duration = await repository.findDurationByCode(durations[i].code)
+        if (duration) {
+            duration.fi = durations[i].fi;
+            duration.en = durations[i].en;
+            duration.lowerlimit = durations[i].lowerlimit;
+            duration.upperlimit = durations[i].upperlimit;
             duration.save();
         } else {
             repository.createDuration(durations[i]);

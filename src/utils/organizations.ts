@@ -34465,8 +34465,8 @@ export const organizations = [
     },
     {
         code: "IAU-010408",
-        fi: "Klaipėda University",
-        en: "Klaipėda University",
+        fi: "Klaipeda University",
+        en: "Klaipeda University",
         country_code: "LTU"
     },
     {
