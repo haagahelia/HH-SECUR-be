@@ -218,6 +218,7 @@ export const addOrganizationsLimited = async () => {
         }
 
         if (limit < 2) {
+            limit++;
             let organization = await repository.findOrganizationByCode(organizations[i].code)
             try {
                 if (organization) {
@@ -229,9 +230,9 @@ export const addOrganizationsLimited = async () => {
                     await repository.createOrganization(organizations[i]);
                 }
             } catch (error) {
+                limit --;
                 console.log(error)
             }
-            limit++;
         }
     }
 }
