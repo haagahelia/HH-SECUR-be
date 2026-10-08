@@ -20,6 +20,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addDualUse();
     await addPersonalInformation();
     await addFunding();
+    await addFundingSource();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -427,6 +428,61 @@ export async function addFunding() {
             funding.save();
         } else {
             repository.createFunding(fundings[i]);
+        }
+    }
+}
+
+export async function addFundingSource() {
+    const fundingSources = [
+        {
+            code: "option1",
+            fi: "Suomalainen julkisen sektorin toimija",
+            en: "Finnish public sector entity"
+        },
+        {
+            code: "option2",
+            fi: "Suomalainen säätiö tai vastaava",
+            en: "Finnish foundation or equivalent"
+        },
+        {
+            code: "option3",
+            fi: "Suomalainen yritys",
+            en: "Finnish corporation"
+        },
+        {
+            code: "option4",
+            fi: "Muu suomalainen rahoittaja",
+            en: "Finnish source other than the above"
+        },
+        {
+            code: "option5",
+            fi: "Ulkomainen julkisen sektorin toimija",
+            en: "Foreign public sector entity"
+        },
+        {
+            code: "option6",
+            fi: "Ulkomainen säätiö tai vastaava",
+            en: "Foreign foundation or equivalent"
+        },
+        {
+            code: "option7",
+            fi: "Ulkomainen yritys",
+            en: "Foreign corporation"
+        },
+        {
+            code: "option8",
+            fi: "Muu ulkomainen rahoittaja",
+            en: "Foreign entity other than the above"
+        }
+    ]
+    for (let i = 0; i < fundingSources.length; i++) {
+        let fundingSource = await repository.findFundingSourceByCode(fundingSources[i].code)
+        if (fundingSource) {
+            fundingSource.fi = fundingSources[i].fi;
+            fundingSource.en = fundingSources[i].en;
+            fundingSource.save();
+        } else {
+            repository.createFundingSource(fundingSources[i]);
         }
     }
 }
