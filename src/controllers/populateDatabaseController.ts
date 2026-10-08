@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import repository from "../data/repository/repository";
 import { addCountryData } from "../utils/countryData.js";
+import { organizations } from "../utils/organizations";
 import Duration from "../data/models/Duration";
 
 export const populateDatabase = async (req: Request, res: Response) => {
@@ -134,6 +135,7 @@ export async function addConsortiumTypes() {
 }
 
 export async function addOrganizations() {
+    /*
     const organizations = [
         {
             code: "halmstad",
@@ -184,7 +186,7 @@ export async function addOrganizations() {
             en: "Other"
         }
     ]
-
+*/
     for (let i = 0; i < organizations.length; i++) {
 
         let organization = await repository.findOrganizationByCode(organizations[i].code)
