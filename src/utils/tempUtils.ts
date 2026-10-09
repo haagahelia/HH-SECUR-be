@@ -81,5 +81,35 @@ export const internalAddDefaultAdmin = async () => {
         console.log(error);
         return false;
     }
+}
+
+export const addExtraUser = async (username: string, password: string, email: string, role: string) => {
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    const user = {
+        username: username,
+        email: email,
+        password_hash: hashedPassword,
+        role: role
+    }
+
+    try {
+        const oldUser: User | null = await repository.findByEmail(email);
+        if (oldUser != null) {
+            oldUser.username = user.username;
+            oldUser.email = user.email;
+            oldUser.password_hash = user.password_hash;
+            oldUser.role = user.role;
+            await oldUser.save();
+        } else {
+            await repository.createUser(user);
+        }
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+
+    return true;
 
 }

@@ -4,6 +4,7 @@ import { addCountryData } from "../utils/countryData.js";
 import { organizations } from "../utils/organizations"; //commented out until deployment works with limited selection
 //import { organizationsLimited } from "../utils/organizationsLimited"; //Alternative limited organizations source
 import Duration from "../data/models/Duration";
+import { addExtraUsers } from "./testController";
 
 export const populateDatabase = async (req: Request, res: Response) => {
     await addHHRole();
@@ -21,6 +22,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addPersonalInformation();
     await addFunding();
     await addFundingSource();
+    await addExtraUsers();
     res.status(200).json({ message: "Database populated" });
 }
 

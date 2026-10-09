@@ -2165,7 +2165,7 @@ DEFAULT_ADMIN_ROLE=admin
 
 ## env variable template
 
-Use .env file locally in the root directory and update values to match your environment.
+Use .env file locally in the root directory and update values to match your environment. Extra user credentials are optional.
 
 ```
 PORT=3000
@@ -2183,6 +2183,26 @@ DEFAULT_ADMIN_USERNAME=usernameForDefaultAdmin
 DEFAULT_ADMIN_PASSWORD=passwordForDefaultAdmin
 DEFAULT_ADMIN_EMAIL=emailForDefaultAdmin
 DEFAULT_ADMIN_ROLE=admin
+EXTRA_USER_1_USERNAME=nameForExtraUser1
+EXTRA_USER_1_PASSWORD=passwordForExtraUser1
+EXTRA_USER_1_EMAIL=EmailForExtraUser1
+EXTRA_USER_1_ROLE=user
+EXTRA_USER_2_USERNAME=nameForExtraUser2
+EXTRA_USER_2_PASSWORD=passwordForExtraUser2
+EXTRA_USER_2_EMAIL=EmailForExtraUser2
+EXTRA_USER_2_ROLE=user
+EXTRA_USER_3_USERNAME=nameForExtraUser3
+EXTRA_USER_3_PASSWORD=passwordForExtraUser3
+EXTRA_USER_3_EMAIL=EmailForExtraUser3
+EXTRA_USER_3_ROLE=user
+EXTRA_USER_4_USERNAME=nameForExtraUser4
+EXTRA_USER_4_PASSWORD=passwordForExtraUser4
+EXTRA_USER_4_EMAIL=sEmailForExtraUser4
+EXTRA_USER_4_ROLE=user
+EXTRA_USER_5_USERNAME=nameForExtraUser5
+EXTRA_USER_5_PASSWORD=passwordForExtraUser5
+EXTRA_USER_5_EMAIL=EmailForExtraUser5
+EXTRA_USER_5_ROLE=user
 ```
 
 ## Default users (Rahti)
