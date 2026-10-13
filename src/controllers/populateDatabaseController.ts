@@ -20,7 +20,7 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addLiability();
     await addDualUse();
     await addPersonalInformation();
-    await addFunding();
+    await addFundingOption();
     await addFundingSource();
     await addExtraUsers();
     res.status(200).json({ message: "Database populated" });
@@ -443,8 +443,8 @@ export async function addLiability() {
     }
 }
 
-export async function addFunding() {
-    const fundings = [
+export async function addFundingOption() {
+    const fundingsOptions = [
         {
             code: "option1",
             fi: "Kyllä",
@@ -456,14 +456,14 @@ export async function addFunding() {
             en: "No"
         }
     ]
-    for (let i = 0; i < fundings.length; i++) {
-        let funding = await repository.findFundingByCode(fundings[i].code)
+    for (let i = 0; i < fundingsOptions.length; i++) {
+        let funding = await repository.findFundingOptionByCode(fundingsOptions[i].code)
         if (funding) {
-            funding.fi = fundings[i].fi;
-            funding.en = fundings[i].en;
+            funding.fi = fundingsOptions[i].fi;
+            funding.en = fundingsOptions[i].en;
             funding.save();
         } else {
-            repository.createFunding(fundings[i]);
+            repository.createFundingOption(fundingsOptions[i]);
         }
     }
 }

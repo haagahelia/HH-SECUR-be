@@ -134,7 +134,7 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
         collaborationtype: collaborationTypes,
         history: report.collaborationHistory?.code,
         contract: report.contractInfo?.code,
-        funding: report.funding?.code,
+        funding: report.funding?.fundingOption?.code,
         liability: report.liability?.code,
         exchange: "placeholder", //report.exchange?.code,
         personalinformation: report.personalInformation?.code,
@@ -258,7 +258,7 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
 
 
     const fundingCode = req.body.funding;
-    const funding = await repository.findFundingByCode(fundingCode);
+    const funding = await repository.findFundingOptionByCode(fundingCode);
     if (!funding) {
         res.status(404).json({ message: `Code ${funding} is invalid for field funding` })
         return null;

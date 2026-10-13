@@ -1,25 +1,28 @@
 import Funding from "../models/Funding";
+import FundingOption from "../models/FundingOption";
 import BaseRepository, { Constructor } from "./BaseRepository.js";
 
 export function AddFundingRepository<TBase extends Constructor<BaseRepository>>(
-    Base:TBase
-){
-    return class extends Base{
+    Base: TBase
+) {
+    return class extends Base {
 
-        async createFunding(fundingAttributes: {code:string; fi:string; en:string;}){
+        async createFunding(fundingAttributes: { fundingOptionId: number; fundingSourceId: number | null }) {
             return await Funding.create(fundingAttributes);
         }
 
-        async findAllFunding(){
+        async findFundingById(id: number) {
+            return await Funding.findByPk(id, {
+                include: [
+                    { model: FundingOption },
+                ],
+                raw: false
+            });
+        }
+
+        async findAllFunding() {
             return Funding.findAll();
         }
 
-        async findFundingByCode(code:string){
-            return Funding.findOne({
-                where: {
-                    code:code,
-                },
-            });
-        }
     }
 }

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { calculateRisk, getReportRisksFromReportSnapshot, generateVerboseReport, parseRiskPayload, validateRiskOptions, generateReportChoices, getReportChoicesFromReport } from "../utils/riskCalculation";
 import repository from "../data/repository/repository";
+import { request } from "node:http";
 
 type ReportSnapshot = {
     reportId: number,
@@ -105,6 +106,23 @@ export const saveReport = async (req: Request, res: Response) => {
             })
             return;
         }
+        const fundingOption = await repository.getFundingOption(reportCreationAttributes.fundingId)
+        if (!fundingOption) {
+            res.status(404).json({
+                message: `Id ${reportCreationAttributes.fundingId} is invalid for funding`
+            })
+            return;
+        }
+        const funding = report.funding;
+        funding?.set({ fundingOptionId: fundingOption.id })
+        if (funding?.fundingOption?.code !== "option1") {
+            funding?.set({ fundingSourceId: null})
+        } else if (funding?.fundingOption?.code === "option1") {
+            const fundingSource = await repository.findFundingSourceByCode(req.body.fundingsource)
+            if (fundingSource) {
+                funding?.set({ fundingSourceId: fundingSource.id})
+            }
+        }
         report.set({
             name: reportCreationAttributes.name,
             collaborationHistoryId: reportCreationAttributes.collaborationHistoryId,
@@ -115,7 +133,6 @@ export const saveReport = async (req: Request, res: Response) => {
             ethicsAssessmentId: reportCreationAttributes.ethicsAssessmentId,
             hhroleId: reportCreationAttributes.hhroleId,
             liabilityId: reportCreationAttributes.liabilityId,
-            fundingId: reportCreationAttributes.fundingId,
             organizationId: reportCreationAttributes.organizationId,
             organizationTypeId: reportCreationAttributes.organizationTypeId,
             personalInformationId: reportCreationAttributes.personalInformationId,
@@ -123,8 +140,24 @@ export const saveReport = async (req: Request, res: Response) => {
         });
         await report.save();
     } else {
-        report = await repository.createReport(reportCreationAttributes);
-        reportId = report.id;
+        const fundingOption = await repository.getFundingOption(reportCreationAttributes.fundingId)
+        const fundingOptionId = fundingOption?.id;
+        if (!fundingOptionId) {
+            res.status(404).json({
+                message: `Id ${reportCreationAttributes.fundingId} is invalid for funding`
+            })
+            return;
+        } else {
+            const fundingSource = fundingOption.code === "option1" ? await repository.findFundingSourceByCode(req.body.fundingsource) : null
+            const fundingCreationAttributes = {
+                fundingOptionId: fundingOptionId,
+                fundingSourceId: fundingSource ? fundingSource.id : null
+            }
+            const funding = await repository.createFunding(fundingCreationAttributes);
+            reportCreationAttributes.fundingId = funding.id;
+            report = await repository.createReport(reportCreationAttributes);
+            reportId = report.id;
+        }
     }
 
     if (!report) {
