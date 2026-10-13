@@ -125,6 +125,7 @@ export default class Report extends Model<
     })
     declare fundingId: number;
 
+    /*
     @ForeignKey(() => FundingSource)
     @AllowNull(true)
     @Column({
@@ -132,7 +133,7 @@ export default class Report extends Model<
         field: "funding_source_id",
     })
     declare fundingSourceId: number | null;
-
+*/
     @ForeignKey(() => Organization)
     @AllowNull(true)
     @Column({
@@ -204,9 +205,10 @@ export default class Report extends Model<
     @BelongsTo(() => Funding)
     declare funding?: NonAttribute<Funding>;
 
+    /*
     @BelongsTo(() => FundingSource)
     declare fundingSource?: NonAttribute<FundingSource>;
-
+*/
     @BelongsTo(() => Organization)
     declare organization?: NonAttribute<OrganizationType>;
 

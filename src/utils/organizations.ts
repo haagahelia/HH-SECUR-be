@@ -34963,8 +34963,8 @@ export const organizations = [
     },
     {
         code: "IAU-019412",
-        fi: "Nicolae Testemiţanu Moldova State University of Medicine and Pharmacy",
-        en: "Nicolae Testemiţanu Moldova State University of Medicine and Pharmacy",
+        fi: "Nicolae Testemitanu Moldova State University of Medicine and Pharmacy",
+        en: "Nicolae Testemitanu Moldova State University of Medicine and Pharmacy",
         country_code: "MDA"
     },
     {
@@ -34975,8 +34975,8 @@ export const organizations = [
     },
     {
         code: "IAU-019410",
-        fi: "Alecu Russo State University of Bălţi",
-        en: "Alecu Russo State University of Bălţi",
+        fi: "Alecu Russo State University of Bălti",
+        en: "Alecu Russo State University of Bălti",
         country_code: "MDA"
     },
     {
@@ -49279,8 +49279,8 @@ export const organizations = [
     },
     {
         code: "IAU-019452",
-        fi: "Ovidius University of Constanţa",
-        en: "Ovidius University of Constanţa",
+        fi: "Ovidius University of Constanta",
+        en: "Ovidius University of Constanta",
         country_code: "ROU"
     },
     {

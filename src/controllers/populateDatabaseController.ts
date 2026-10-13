@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import repository from "../data/repository/repository";
 import { addCountryData } from "../utils/countryData.js";
 import { organizations } from "../utils/organizations"; //commented out until deployment works with limited selection
-//import { organizationsLimited } from "../utils/organizationsLimited"; //Alternative limited organizations source
+import { organizationsLimited } from "../utils/organizationsLimited"; //Alternative limited organizations source
 import Duration from "../data/models/Duration";
 import { addExtraUsers } from "./testController";
 
@@ -20,8 +20,10 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addLiability();
     await addDualUse();
     await addPersonalInformation();
-    await addFunding();
+    await addFundingOption();
     await addFundingSource();
+    await addFundingHistory();
+    await addFundingExchange();
     await addExtraUsers();
     res.status(200).json({ message: "Database populated" });
 }
@@ -233,11 +235,12 @@ export const addOrganizationsLimited = async () => {
                     await repository.createOrganization(organizations[i]);
                 }
             } catch (error) {
-                limit --;
+                limit--;
                 console.log(error)
             }
         }
     }
+
 }
 
 export async function addOrganizationType() {
@@ -443,8 +446,8 @@ export async function addLiability() {
     }
 }
 
-export async function addFunding() {
-    const fundings = [
+export async function addFundingOption() {
+    const fundingOptions = [
         {
             code: "option1",
             fi: "Kyllä",
@@ -456,14 +459,39 @@ export async function addFunding() {
             en: "No"
         }
     ]
-    for (let i = 0; i < fundings.length; i++) {
-        let funding = await repository.findFundingByCode(fundings[i].code)
+    for (let i = 0; i < fundingOptions.length; i++) {
+        let funding = await repository.findFundingOptionByCode(fundingOptions[i].code)
         if (funding) {
-            funding.fi = fundings[i].fi;
-            funding.en = fundings[i].en;
+            funding.fi = fundingOptions[i].fi;
+            funding.en = fundingOptions[i].en;
             funding.save();
         } else {
-            repository.createFunding(fundings[i]);
+            repository.createFundingOption(fundingOptions[i]);
+        }
+    }
+}
+
+export async function addFundingHistory() {
+    const fundingHistory = [
+        {
+            code: "option1",
+            fi: "Kyllä",
+            en: "Yes"
+        },
+        {
+            code: "option2",
+            fi: "Ei",
+            en: "No"
+        }
+    ]
+    for (let i = 0; i < fundingHistory.length; i++) {
+        let funding = await repository.findFundingHistoryByCode(fundingHistory[i].code)
+        if (funding) {
+            funding.fi = fundingHistory[i].fi;
+            funding.en = fundingHistory[i].en;
+            funding.save();
+        } else {
+            repository.createFundingHistory(fundingHistory[i]);
         }
     }
 }
@@ -519,6 +547,36 @@ export async function addFundingSource() {
             fundingSource.save();
         } else {
             repository.createFundingSource(fundingSources[i]);
+        }
+    }
+}
+
+export async function addFundingExchange() {
+    const fundingExchanges = [
+        {
+            code: "option1",
+            fi: "Eorumääräinen",
+            en: "In euros"
+        },
+        {
+            code: "option2",
+            fi: "Osittain euromääräinen",
+            en: "Partially in euros"
+        },
+        {
+            code: "option3",
+            fi: "Muussa valuutassa kuin euroissa",
+            en: "In currency other than euros"
+        }
+    ]
+    for (let i = 0; i < fundingExchanges.length; i++) {
+        let fundingExchange = await repository.findFundingExchangeByCode(fundingExchanges[i].code)
+        if (fundingExchange) {
+            fundingExchange.fi = fundingExchanges[i].fi;
+            fundingExchange.en = fundingExchanges[i].en;
+            fundingExchange.save();
+        } else {
+            repository.createFundingExchange(fundingExchanges[i]);
         }
     }
 }
