@@ -1,11 +1,7 @@
 import { Request, Response } from "express";
 import { riskResultDescriptions } from "./riskResultDescriptions";
 import repository from "../data/repository/repository";
-import Report from "../data/models/Report";
 import ReportSnapshot from "../data/models/ReportSnapshot";
-import { snapshot } from "node:test";
-import OrganizationType from "../data/models/OrganizationType";
-import CollaborationType from "../data/models/CollaborationType";
 
 type CountryRisk = {
     "overall": 0 | 1 | 2 | 3,
@@ -136,14 +132,14 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
         contract: report.contractInfo?.code,
         funding: report.funding?.fundingOption?.code,
         liability: report.liability?.code,
-        exchange: "placeholder", //report.exchange?.code,
+        exchange: report.funding?.fundingExchange?.code,
         personalinformation: report.personalInformation?.code,
         dualuse: report.dualUse?.code,
         ethics: report.ethicsAssessment?.code,
         duration: report.duration?.code,
         name: report.name,
-        fundinghistory: "placeholder", //report.fundinghistory?.code,
-        fundingsource: "placeholder", //report.fundingsource?.code,
+        fundinghistory: report.funding?.fundingHistory?.code,
+        fundingsource: report.funding?.fundingSource?.code,
         consortium: report.consortiumType?.code,
         ownerusername: reportSnapshots && reportSnapshots[0].ownerUsername ? reportSnapshots[0].ownerUsername : "",
         creatorusername: reportSnapshots && reportSnapshots[0].creatorUsername ? reportSnapshots[0].creatorUsername : "",

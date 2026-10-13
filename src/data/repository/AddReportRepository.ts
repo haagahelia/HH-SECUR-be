@@ -7,6 +7,8 @@ import DualUse from "../models/DualUse.js";
 import Duration from "../models/Duration.js";
 import EthicsAssessment from "../models/EthicsAssessment.js";
 import Funding from "../models/Funding.js";
+import FundingExchange from "../models/FundingExchange.js";
+import FundingHistory from "../models/FundingHistory.js";
 import FundingOption from "../models/FundingOption.js";
 import FundingSource from "../models/FundingSource.js";
 import HHRole from "../models/HHRole.js";
@@ -61,6 +63,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
                     { model: ConsortiumType },
                     { model: ContractInfo },
                     { model: Country },
+                    { model: EthicsAssessment},
                     { model: DualUse },
                     { model: Duration },
                     { model: HHRole },
@@ -69,7 +72,9 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
                         model: Funding,
                         include: [
                             { model: FundingOption },
-                            { model: FundingSource }
+                            { model: FundingSource },
+                            { model: FundingHistory },
+                            { model: FundingExchange },
                         ]
                     },
                     { model: Organization },

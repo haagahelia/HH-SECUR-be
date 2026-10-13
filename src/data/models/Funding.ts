@@ -2,6 +2,9 @@ import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribut
 import { AllowNull, BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, NotEmpty, PrimaryKey, Table, Unique, UpdatedAt } from "sequelize-typescript";
 import FundingOption from "./FundingOption";
 import FundingSource from "./FundingSource";
+import FundingHistory from "./FundingHistory";
+import Report from "./Report";
+import FundingExchange from "./FundingExchange";
 
 
 @Table({
@@ -36,11 +39,33 @@ export default class Funding extends Model<
     })
     declare fundingSourceId: number | null;
 
+    @ForeignKey(() => FundingHistory)
+    @AllowNull(true)
+    @Column({
+        type: DataType.BIGINT,
+        field: "funding_history_id",
+    })
+    declare fundingHistoryId: number | null;
+
+    @ForeignKey(() => FundingExchange)
+    @AllowNull(true)
+    @Column({
+        type: DataType.BIGINT,
+        field: "funding_exchange_id",
+    })
+    declare fundingExchangeId: number | null;
+
     @BelongsTo(() => FundingOption)
     declare fundingOption?: NonAttribute<FundingOption>;
 
+    @BelongsTo(() => FundingHistory)
+    declare fundingHistory?: NonAttribute<FundingHistory>;
+
     @BelongsTo(() => FundingSource)
     declare fundingSource?: NonAttribute<FundingSource>;
+
+    @BelongsTo(() => FundingExchange)
+    declare fundingExchange?: NonAttribute<FundingExchange>;
 
     @CreatedAt
     declare created_at: CreationOptional<Date>;
