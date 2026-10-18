@@ -538,27 +538,52 @@ Response body:
 
 </summary>
 
-Fetches all reports with `id`, `name`, `risk`, `ownername` and `creatorname` included.
+Fetches all reports with `id`, `name`, `risk`, `ownername`, `creatorname`, `country: {code, fi, en}` and `organizations: [{id, fi en}]` included. Currently only bilateral organizations are supported but the format allows for expanding it to include multilaterals since organizations are returned as an array.
 
 Requires: Authentication
 
 Example response:
 
 ```
+
 [
     {
         "id": 1,
         "name": "Sample report2",
         "risk": 1,
         "ownwername": "User",
-        "creatorname": "User"
+        "creatorname": "User",
+        "country": {
+            "code": "SWE",
+            "fi": "Ruotsi",
+            "en": "Sweden"
+        },
+        "organizations": [
+            {
+                "id": 281,
+                "fi": "Chalmers University of Technology",
+                "en": "Chalmers University of Technology"
+            }
+        ]
     },
     {
-        "id": 3,
+        "id": 2,
         "name": "Sample report",
         "risk": 1,
         "ownwername": "User",
-        "creatorname": "User"
+        "creatorname": "User",
+        "country": {
+            "code": "SWE",
+            "fi": "Ruotsi",
+            "en": "Sweden"
+        },
+        "organizations": [
+            {
+                "id": 282,
+                "fi": "Jönköping University",
+                "en": "Jönköping University"
+            }
+        ]
     }
 ]
 

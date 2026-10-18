@@ -35,7 +35,7 @@ type ReportCreationAttributes = {
     name: string,
     userId: number,
     collaborationHistoryId: number,
-    consortiumTypeId: number,
+    consortiumId: number,
     contractInfoId: number,
     countryId: number,
     dualUseId: number,
@@ -151,6 +151,33 @@ export const patchReport = async (req: Request, res: Response) => {
 
     await funding.save();
 
+    const consortiumType = await repository.getConsortiumType(reportCreationAttributes.consortiumId)
+    if (!consortiumType) {
+        res.status(404).json({
+            message: `Id ${reportCreationAttributes.consortiumId} is invalid for funding`
+        })
+        return;
+    }
+    let consortium = await repository.getConsortium(report.consortiumId);
+    if (!consortium) {
+        return;
+    }
+
+    const organization = await repository.findOrganizationById(req.body.organization)
+    let organizations = []
+    if (!organization) {
+        res.status(404).json({
+            message: `Id ${reportCreationAttributes.organizationId} is invalid for corganiztaion`
+        })
+        return;
+    }
+    organizations.push(organization);
+
+    consortium?.set({ consortiumTypeId: consortiumType.id })
+    await consortium?.$set("organizations", organizations)
+
+    await consortium.save();
+
     report.set({
         name: reportCreationAttributes.name,
         collaborationHistoryId: reportCreationAttributes.collaborationHistoryId,
@@ -162,7 +189,6 @@ export const patchReport = async (req: Request, res: Response) => {
         hhroleId: reportCreationAttributes.hhroleId,
         liabilityId: reportCreationAttributes.liabilityId,
         fundingId: funding.id,
-        organizationId: reportCreationAttributes.organizationId,
         organizationTypeId: reportCreationAttributes.organizationTypeId,
         personalInformationId: reportCreationAttributes.personalInformationId,
         userId: reportCreationAttributes.userId,
@@ -190,7 +216,7 @@ export const patchReport = async (req: Request, res: Response) => {
         creatorUsername = "PlaceholderCreatorUsername";
     }
     let organizationName = "";
-    const organizationOther = await repository.findOrganizationById(report.organizationId)
+    const organizationOther = await repository.findOrganizationById(req.body.organization)
     if (organizationOther) {
         if (organizationOther.code === "other") {
             organizationName = req.body.organizationname;
@@ -283,7 +309,7 @@ export const saveReport = async (req: Request, res: Response) => {
             message: `Id ${reportCreationAttributes.fundingId} is invalid for funding`
         })
         return;
-    } //else {
+    }
     const fundingSource = fundingOption.code === "option1" ? await repository.findFundingSourceByCode(req.body.fundingsource) : null
     const fundingHistory = fundingOption.code === "option1" ? await repository.findFundingHistoryByCode(req.body.fundinghistory) : null
     const fundingExchange = fundingOption.code === "option1" ? await repository.findFundingExchangeByCode(req.body.exchange) : null
@@ -307,15 +333,39 @@ export const saveReport = async (req: Request, res: Response) => {
     }
     const funding = await repository.createFunding(fundingCreationAttributes);
     reportCreationAttributes.fundingId = funding.id;
+
+    const consortiumType = await repository.getConsortiumType(reportCreationAttributes.consortiumId)
+    if (!consortiumType) {
+        res.status(404).json({
+            message: `Id ${reportCreationAttributes.consortiumId} is invalid for consortium`
+        })
+        return;
+    }
+    let consortium = await repository.createConsortium({ consortiumTypeId: consortiumType.id })
+    const organization = await repository.findOrganizationById(req.body.organization)
+    let organizations = []
+    if (!organization) {
+        res.status(404).json({
+            message: `Id ${reportCreationAttributes.organizationId} is invalid for corganiztaion`
+        })
+        return;
+    }
+    organizations.push(organization);
+    await consortium?.$set("organizations", organizations)
+
+    consortium.save();
+
+    reportCreationAttributes.consortiumId = consortium.id;
+
     report = await repository.createReport(reportCreationAttributes);
     reportId = report.id;
-    // }
 
     if (!report) {
         res.status(404).json({ message: `Failed to save report` })
     }
 
     await report?.$set("collaborationTypes", collaborationTypes);
+
 
     const reportRisks = await calculateRisk(req);
 
@@ -333,7 +383,7 @@ export const saveReport = async (req: Request, res: Response) => {
         creatorUsername = "PlaceholderCreatorUsername";
     }
     let organizationName = "";
-    const organizationOther = await repository.findOrganizationById(report.organizationId)
+    const organizationOther = await repository.findOrganizationById(req.body.organization)
     if (organizationOther) {
         if (organizationOther.code === "other") {
             organizationName = req.body.organizationname;
@@ -393,12 +443,26 @@ export const getReports = async (req: Request, res: Response) => {
     const reports = await repository.getReports();
     const reportsParsed = reports.map(report => {
         const snapshot = report.reportSnapshots ? report.reportSnapshots[0] : null;
-        return({
+        const organizations = report.consortium ? report.consortium.organizations : null
+        const organizationsMapped = organizations?.map(organization => {
+            return ({
+                id: organization.id,
+                fi: organization.fi,
+                en: organization.en
+            })
+        })
+        return ({
             id: report.id,
             name: report.name,
             risk: snapshot ? snapshot.collaboration : "",
             ownwername: snapshot ? snapshot.ownerUsername : "",
             creatorname: snapshot ? snapshot.creatorUsername : "",
+            country: {
+                code: report.country?.code,
+                fi: report.country?.fi,
+                en: report.country?.en
+            },
+            organizations: organizationsMapped,
             created_at: report.createdAt,
             updated_at: report.updatedAt
         })

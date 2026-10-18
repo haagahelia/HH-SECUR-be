@@ -1,6 +1,8 @@
 import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
-import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
+import { AllowNull, BelongsToMany, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
 import Report from "./Report";
+import Consortium from "./Consortium";
+import ConsortiumOrganization from "./ConsortiumOrganization";
 
 
 @Table({
@@ -50,6 +52,12 @@ export default class Organization extends Model<
     })
     declare country_code: string;
 
+    /*
     @HasMany(() => Report)
     declare reports?: NonAttribute<Report>[];
+*/
+
+    @BelongsToMany(() => Consortium, () => ConsortiumOrganization)
+    declare consortiums?: NonAttribute<Consortium[]>;
+
 }

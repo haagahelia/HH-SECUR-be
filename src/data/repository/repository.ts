@@ -20,6 +20,7 @@ import { AddFundingSourceRepository } from "./AddFundingSourceRepository.js";
 import { AddFundingOptionRepository } from "./AddFundingOptionRepository.js";
 import { AddFundingHistoryRepository } from "./AddFundingHistoryRepository.js";
 import { AddFundingExchangeRepository } from "./AddFundingExchangeRepository.js";
+import { AddConsortiumRepository } from "./AddConsortiumRepository.js";
 
 const CombinedRepository = AddReportSnapshotRepository
     (AddFundingSourceRepository
@@ -33,16 +34,17 @@ const CombinedRepository = AddReportSnapshotRepository
                                     (AddHHRoleRepository
                                         (AddConsortiumTypeRepository
                                             (AddOrganizationTypeRepository
-                                                (AddDurationRepository
-                                                    (AddContractInfoRepository
-                                                        (AddCollaborationHistoryRepository
-                                                            (AddEthicsAssessmentRepository
-                                                                (AddLiabilityRepository
-                                                                    (AddOrganizationRepository
-                                                                        (AddDualUseRepository
-                                                                            (AddPersonalInformationRepository
-                                                                                (AddUserRepository
-                                                                                    (BaseRepository))))))))))))))))))))); const repository = new CombinedRepository();
+                                                (AddConsortiumRepository
+                                                    (AddDurationRepository
+                                                        (AddContractInfoRepository
+                                                            (AddCollaborationHistoryRepository
+                                                                (AddEthicsAssessmentRepository
+                                                                    (AddLiabilityRepository
+                                                                        (AddOrganizationRepository
+                                                                            (AddDualUseRepository
+                                                                                (AddPersonalInformationRepository
+                                                                                    (AddUserRepository
+                                                                                        (BaseRepository)))))))))))))))))))))); const repository = new CombinedRepository();
 
 //const repository = new BaseRepository();
 

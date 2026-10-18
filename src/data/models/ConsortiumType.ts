@@ -1,6 +1,7 @@
 import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
 import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
 import Report from "./Report";
+import Consortium from "./Consortium";
 
 
 @Table({
@@ -43,7 +44,7 @@ export default class ConsortiumType extends Model<
     })
     declare en: string;
 
-    @HasMany(() => Report)
-    declare reports?: NonAttribute<Report>[];
+    @HasMany(() => Consortium)
+    declare consortiums?: NonAttribute<Consortium>[];
 
 }

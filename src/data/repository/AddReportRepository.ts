@@ -1,5 +1,6 @@
 import CollaborationHistory from "../models/CollaborationHistory.js";
 import CollaborationType from "../models/CollaborationType.js";
+import Consortium from "../models/Consortium.js";
 import ConsortiumType from "../models/ConsortiumType.js";
 import ContractInfo from "../models/ContractInfo.js";
 import Country from "../models/Country.js";
@@ -30,7 +31,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
         async createReport(reportAttributes: {
             name: string,
             collaborationHistoryId: number,
-            consortiumTypeId: number,
+            consortiumId: number,
             contractInfoId: number,
             countryId: number,
             dualUseId: number,
@@ -40,7 +41,6 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
             liabilityId: number,
             fundingId: number,
             fundingSourceId?: number | null,
-            organizationId: number,
             organizationTypeId: number,
             personalInformationId: number,
             userId: number,
@@ -50,7 +50,14 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
 
         async getReports() {
             return await Report.findAll({
-                include: [{ model: ReportSnapshot }, { model: CollaborationType }]
+                include: [{ model: ReportSnapshot },
+                { model: CollaborationType },
+                { model: Country },
+                {
+                    model: Consortium,
+                    include: [{ model: Organization }]
+
+                }]
             })
         }
 
@@ -59,11 +66,16 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
                 include: [
                     { model: ReportSnapshot },
                     { model: CollaborationHistory },
-                    { model: CollaborationType },
-                    { model: ConsortiumType },
+                    {
+                        model: Consortium,
+                        include: [{ 
+                            model: Organization,
+                        }]
+
+                    },
                     { model: ContractInfo },
                     { model: Country },
-                    { model: EthicsAssessment},
+                    { model: EthicsAssessment },
                     { model: DualUse },
                     { model: Duration },
                     { model: HHRole },
@@ -77,7 +89,6 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
                             { model: FundingExchange },
                         ]
                     },
-                    { model: Organization },
                     { model: OrganizationType },
                     { model: PersonalInformation },
                     {
