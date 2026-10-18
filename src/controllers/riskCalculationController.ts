@@ -448,7 +448,8 @@ export const getReports = async (req: Request, res: Response) => {
             return ({
                 id: organization.id,
                 fi: organization.fi,
-                en: organization.en
+                en: organization.en,
+                country_code: organization.country_code
             })
         })
         return ({
@@ -463,8 +464,8 @@ export const getReports = async (req: Request, res: Response) => {
                 en: report.country?.en
             },
             organizations: organizationsMapped,
-            created_at: report.createdAt,
-            updated_at: report.updatedAt
+            created_at: report.created_at,
+            updated_at: report.updated_at,
         })
     })
     res.json(
