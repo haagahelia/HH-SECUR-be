@@ -50,7 +50,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
 
         async getReports() {
             return await Report.findAll({
-                include: [{ model: CollaborationType }]
+                include: [{ model: ReportSnapshot }, { model: CollaborationType }]
             })
         }
 

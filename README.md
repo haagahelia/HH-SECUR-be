@@ -538,9 +538,31 @@ Response body:
 
 </summary>
 
-Fetches all reports with collaborationTypes relation included.
+Fetches all reports with `id`, `name`, `risk`, `ownername` and `creatorname` included.
 
 Requires: Authentication
+
+Example response:
+
+```
+[
+    {
+        "id": 1,
+        "name": "Sample report2",
+        "risk": 1,
+        "ownwername": "User",
+        "creatorname": "User"
+    },
+    {
+        "id": 3,
+        "name": "Sample report",
+        "risk": 1,
+        "ownwername": "User",
+        "creatorname": "User"
+    }
+]
+
+```
 
 </details>
 

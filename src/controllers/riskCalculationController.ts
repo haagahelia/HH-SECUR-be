@@ -391,8 +391,20 @@ export const saveReport = async (req: Request, res: Response) => {
 
 export const getReports = async (req: Request, res: Response) => {
     const reports = await repository.getReports();
+    const reportsParsed = reports.map(report => {
+        const snapshot = report.reportSnapshots ? report.reportSnapshots[0] : null;
+        return({
+            id: report.id,
+            name: report.name,
+            risk: snapshot ? snapshot.collaboration : "",
+            ownwername: snapshot ? snapshot.ownerUsername : "",
+            creatorname: snapshot ? snapshot.creatorUsername : "",
+            created_at: report.createdAt,
+            updated_at: report.updatedAt
+        })
+    })
     res.json(
-        reports
+        reportsParsed
     );
 }
 
