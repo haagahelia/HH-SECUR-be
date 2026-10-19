@@ -1,7 +1,6 @@
 import CollaborationHistory from "../models/CollaborationHistory.js";
 import CollaborationType from "../models/CollaborationType.js";
 import Consortium from "../models/Consortium.js";
-import ConsortiumType from "../models/ConsortiumType.js";
 import ContractInfo from "../models/ContractInfo.js";
 import Country from "../models/Country.js";
 import DualUse from "../models/DualUse.js";

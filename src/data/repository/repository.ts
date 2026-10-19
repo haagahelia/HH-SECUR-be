@@ -23,18 +23,18 @@ import { AddFundingExchangeRepository } from "./AddFundingExchangeRepository.js"
 import { AddConsortiumRepository } from "./AddConsortiumRepository.js";
 
 const CombinedRepository = AddReportSnapshotRepository
-    (AddFundingSourceRepository
+    (AddReportRepository
         (AddFundingRepository
             (AddFundingHistoryRepository
                 (AddFundingExchangeRepository
                     (AddFundingOptionRepository
-                        (AddReportRepository
+                        (AddFundingSourceRepository
                             (AddCollaborationTypeRepository
                                 (AddCountryRepository
                                     (AddHHRoleRepository
-                                        (AddConsortiumTypeRepository
+                                        (AddConsortiumRepository
                                             (AddOrganizationTypeRepository
-                                                (AddConsortiumRepository
+                                                (AddConsortiumTypeRepository
                                                     (AddDurationRepository
                                                         (AddContractInfoRepository
                                                             (AddCollaborationHistoryRepository

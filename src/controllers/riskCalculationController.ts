@@ -1,10 +1,8 @@
 import { Request, Response } from "express";
 import { calculateRisk, getReportRisksFromReportSnapshot, generateVerboseReport, parseRiskPayload, validateRiskOptions, generateReportChoices, getReportChoicesFromReport } from "../utils/riskCalculation";
 import repository from "../data/repository/repository";
-import { request } from "node:http";
-import FundingExchange from "../data/models/FundingExchange";
 
-type ReportSnapshot = {
+export type ReportSnapshot = {
     reportId: number,
     name: string,
     ownerUsername: string,
@@ -31,7 +29,7 @@ type ReportSnapshot = {
     ethics: number
 }
 
-type ReportCreationAttributes = {
+export type ReportCreationAttributes = {
     name: string,
     userId: number,
     collaborationHistoryId: number,
@@ -44,6 +42,27 @@ type ReportCreationAttributes = {
     hhroleId: number,
     liabilityId: number,
     fundingId: number,
+    organizationTypeId: number,
+    personalInformationId: number,
+}
+
+export type ReportChoiceIds = {
+    name: string,
+    userId: number,
+    collaborationHistoryId: number,
+    consortiumTypeId: number,
+    organizationIds: number[],
+    contractInfoId: number,
+    countryId: number,
+    dualUseId: number,
+    durationId: number,
+    ethicsAssessmentId: number,
+    hhroleId: number,
+    liabilityId: number,
+    fundingTypeId: number,
+    fundingExchangeId: number | null,
+    fundingHistoryId: number | null,
+    fundingSourceId: number | null,
     organizationId: number,
     organizationTypeId: number,
     personalInformationId: number,
@@ -85,8 +104,11 @@ export const patchReport = async (req: Request, res: Response) => {
         return;
     }
 
-    const reportCreationAttributes: ReportCreationAttributes | null = await validateRiskOptions(req, res);
-    if (!reportCreationAttributes) {
+    const reportChoiceIds: ReportChoiceIds | null = await validateRiskOptions(req, res);
+    if (!reportChoiceIds) {
+        res.status(422).json({
+            message: `Invalid report choices`
+        })
         return;
     }
 
@@ -120,58 +142,61 @@ export const patchReport = async (req: Request, res: Response) => {
         })
         return;
     }
-    const fundingOption = await repository.getFundingOption(reportCreationAttributes.fundingId)
+    const fundingOption = await repository.getFundingOption(reportChoiceIds.fundingTypeId)
     if (!fundingOption) {
         res.status(404).json({
-            message: `Id ${reportCreationAttributes.fundingId} is invalid for funding`
+            message: `Id ${reportChoiceIds.fundingTypeId} is invalid for funding`
         })
         return;
     }
     let funding = await repository.findFundingById(report.fundingId);
-    if (!funding) {
+    let fundingSource = fundingOption.code === "option1" ? await repository.findFundingSourceByCode(req.body.fundingsource) : null
+    let fundingHistory = fundingOption.code === "option1" ? await repository.findFundingHistoryByCode(req.body.fundinghistory) : null
+    let fundingExchange = fundingOption.code === "option1" ? await repository.findFundingExchangeByCode(req.body.exchange) : null
+
+    if (fundingOption.code === "option1" && (!fundingSource || !fundingHistory || !fundingExchange)) {
+        res.status(404).json({
+            message: `Valid options required for fundingsource ${req.body.fundingsource}, fundinghistory ${req.body.fundinghistory} and fundingexchange ${req.body.exchange}`
+        })
         return;
     }
-    funding?.set({ fundingOptionId: fundingOption.id })
-    if (fundingOption.code === "option2") {
-        funding?.set({
-            fundingSourceId: null,
-            fundingHistoryId: null,
-            fundingExchangeId: null
-        })
-    } else if (fundingOption.code === "option1") {
-        const fundingSource = await repository.findFundingSourceByCode(req.body.fundingsource)
-        if (fundingSource) {
-            funding?.set({ fundingSourceId: fundingSource.id })
-        }
-        const fundingHistory = await repository.findFundingHistoryByCode(req.body.fundinghistory)
-        if (fundingHistory) {
-            funding?.set({ fundingHistoryId: fundingHistory.id })
-        }
+    let fundingCreationAttributes = {
+        fundingOptionId: fundingOption.id,
+        fundingSourceId: fundingSource ? fundingSource.id : null,
+        fundingHistoryId: fundingHistory ? fundingHistory.id : null,
+        fundingExchangeId: fundingExchange ? fundingExchange.id : null
+    }
+    if (!funding) {
+        funding = await repository.createFunding(fundingCreationAttributes)
+    } else {
+        funding?.set(fundingCreationAttributes)
     }
 
     await funding.save();
 
-    const consortiumType = await repository.getConsortiumType(reportCreationAttributes.consortiumId)
+    const consortiumType = await repository.getConsortiumType(reportChoiceIds.consortiumTypeId)
     if (!consortiumType) {
+        await funding.destroy();
         res.status(404).json({
-            message: `Id ${reportCreationAttributes.consortiumId} is invalid for funding`
+            message: `Id ${reportChoiceIds.consortiumTypeId} is invalid for funding`
         })
         return;
     }
     let consortium = await repository.getConsortium(report.consortiumId);
-    if (!consortium) {
-        return;
-    }
 
     const organization = await repository.findOrganizationById(req.body.organization)
     let organizations = []
     if (!organization) {
         res.status(404).json({
-            message: `Id ${reportCreationAttributes.organizationId} is invalid for corganiztaion`
+            message: `Id ${reportChoiceIds.organizationId} is invalid for corganiztaion`
         })
         return;
     }
     organizations.push(organization);
+
+    if (!consortium) {
+        consortium = await repository.createConsortium({ consortiumTypeId: consortiumType.id });
+    }
 
     consortium?.set({ consortiumTypeId: consortiumType.id })
     await consortium?.$set("organizations", organizations)
@@ -179,19 +204,20 @@ export const patchReport = async (req: Request, res: Response) => {
     await consortium.save();
 
     report.set({
-        name: reportCreationAttributes.name,
-        collaborationHistoryId: reportCreationAttributes.collaborationHistoryId,
-        contractInfoId: reportCreationAttributes.contractInfoId,
-        countryId: reportCreationAttributes.countryId,
-        dualUseId: reportCreationAttributes.dualUseId,
-        durationId: reportCreationAttributes.durationId,
-        ethicsAssessmentId: reportCreationAttributes.ethicsAssessmentId,
-        hhroleId: reportCreationAttributes.hhroleId,
-        liabilityId: reportCreationAttributes.liabilityId,
+        name: reportChoiceIds.name,
+        collaborationHistoryId: reportChoiceIds.collaborationHistoryId,
+        contractInfoId: reportChoiceIds.contractInfoId,
+        consortiumId: consortium.id,
+        countryId: reportChoiceIds.countryId,
+        dualUseId: reportChoiceIds.dualUseId,
+        durationId: reportChoiceIds.durationId,
+        ethicsAssessmentId: reportChoiceIds.ethicsAssessmentId,
+        hhroleId: reportChoiceIds.hhroleId,
+        liabilityId: reportChoiceIds.liabilityId,
         fundingId: funding.id,
-        organizationTypeId: reportCreationAttributes.organizationTypeId,
-        personalInformationId: reportCreationAttributes.personalInformationId,
-        userId: reportCreationAttributes.userId,
+        organizationTypeId: reportChoiceIds.organizationTypeId,
+        personalInformationId: reportChoiceIds.personalInformationId,
+        userId: reportChoiceIds.userId,
     });
     await report.save();
 
@@ -277,8 +303,8 @@ export const saveReport = async (req: Request, res: Response) => {
         return;
     }
 
-    const reportCreationAttributes: ReportCreationAttributes | null = await validateRiskOptions(req, res);
-    if (!reportCreationAttributes) {
+    const reportChoiceIds: ReportChoiceIds | null = await validateRiskOptions(req, res);
+    if (!reportChoiceIds) {
         return;
     }
 
@@ -302,11 +328,11 @@ export const saveReport = async (req: Request, res: Response) => {
     let reportId = parseInt(reportIdRaw as string)
     let report;
 
-    const fundingOption = await repository.getFundingOption(reportCreationAttributes.fundingId)
+    const fundingOption = await repository.getFundingOption(reportChoiceIds.fundingTypeId)
     const fundingOptionId = fundingOption?.id;
     if (!fundingOptionId) {
         res.status(404).json({
-            message: `Id ${reportCreationAttributes.fundingId} is invalid for funding`
+            message: `Id ${reportChoiceIds.fundingTypeId} is invalid for funding`
         })
         return;
     }
@@ -332,12 +358,12 @@ export const saveReport = async (req: Request, res: Response) => {
         fundingExchangeId: fundingExchange ? fundingExchange.id : null
     }
     const funding = await repository.createFunding(fundingCreationAttributes);
-    reportCreationAttributes.fundingId = funding.id;
+    reportChoiceIds.fundingTypeId = funding.id;
 
-    const consortiumType = await repository.getConsortiumType(reportCreationAttributes.consortiumId)
+    const consortiumType = await repository.getConsortiumType(reportChoiceIds.consortiumTypeId)
     if (!consortiumType) {
         res.status(404).json({
-            message: `Id ${reportCreationAttributes.consortiumId} is invalid for consortium`
+            message: `Id ${reportChoiceIds.consortiumTypeId} is invalid for consortium`
         })
         return;
     }
@@ -346,7 +372,7 @@ export const saveReport = async (req: Request, res: Response) => {
     let organizations = []
     if (!organization) {
         res.status(404).json({
-            message: `Id ${reportCreationAttributes.organizationId} is invalid for corganiztaion`
+            message: `Id ${reportChoiceIds.organizationId} is invalid for corganiztaion`
         })
         return;
     }
@@ -354,6 +380,41 @@ export const saveReport = async (req: Request, res: Response) => {
     await consortium?.$set("organizations", organizations)
 
     consortium.save();
+
+    const reportCreationAttributes: ReportCreationAttributes = {
+        name: reportChoiceIds.name,
+        userId: reportChoiceIds.userId,
+        collaborationHistoryId: reportChoiceIds.collaborationHistoryId,
+        consortiumId: consortium.id,
+        contractInfoId: reportChoiceIds.contractInfoId,
+        countryId: reportChoiceIds.countryId,
+        dualUseId: reportChoiceIds.dualUseId,
+        durationId: reportChoiceIds.durationId,
+        ethicsAssessmentId: reportChoiceIds.ethicsAssessmentId,
+        hhroleId: reportChoiceIds.hhroleId,
+        liabilityId: reportChoiceIds.liabilityId,
+        fundingId: funding.id,
+        organizationTypeId: reportChoiceIds.organizationTypeId,
+        personalInformationId: reportChoiceIds.personalInformationId,
+    }
+
+    /*
+    name: string,
+    userId: number,
+    collaborationHistoryId: number,
+    consortiumId: number,
+    contractInfoId: number,
+    countryId: number,
+    dualUseId: number,
+    durationId: number,
+    ethicsAssessmentId: number,
+    hhroleId: number,
+    liabilityId: number,
+    fundingId: number,
+    organizationId: number,
+    organizationTypeId: number,
+    personalInformationId: number,
+    */
 
     reportCreationAttributes.consortiumId = consortium.id;
 
@@ -522,8 +583,10 @@ export const deleteReportById = async (req: Request, res: Response) => {
             })
         } else {
             const funding = report.funding;
+            const consortium = report.consortium;
             await repository.deleteReportById(id);
             await funding?.destroy();
+            await consortium?.destroy();
             res.json({
                 message: `Report with the id ${id} has been deleted`
             })

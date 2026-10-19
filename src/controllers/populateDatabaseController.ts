@@ -53,9 +53,9 @@ export async function addHHRole() {
         if (hhRole) {
             hhRole.fi = hhRoles[i].fi;
             hhRole.en = hhRoles[i].en;
-            hhRole.save();
+            await hhRole.save();
         } else {
-            repository.createHHRole(hhRoles[i]);
+            await repository.createHHRole(hhRoles[i]);
         }
     }
 }
@@ -104,9 +104,9 @@ export async function addCollaborationTypes() {
         if (collaborationType) {
             collaborationType.fi = collaborationTypes[i].fi;
             collaborationType.en = collaborationTypes[i].en;
-            collaborationType.save();
+            await collaborationType.save();
         } else {
-            repository.createCollaborationType(collaborationTypes[i]);
+            await repository.createCollaborationType(collaborationTypes[i]);
         }
     }
 }
@@ -133,9 +133,9 @@ export async function addConsortiumTypes() {
         if (consortiumType) {
             consortiumType.fi = consortiumTypes[i].fi;
             consortiumType.en = consortiumTypes[i].en;
-            consortiumType.save();
+            await consortiumType.save();
         } else {
-            repository.createConsortiumType(consortiumTypes[i]);
+            await repository.createConsortiumType(consortiumTypes[i]);
         }
     }
 }
@@ -277,9 +277,9 @@ export async function addOrganizationType() {
         if (organizationType) {
             organizationType.fi = organizationTypes[i].fi;
             organizationType.en = organizationTypes[i].en;
-            organizationType.save();
+            await organizationType.save();
         } else {
-            repository.createOrganizationType(organizationTypes[i]);
+            await repository.createOrganizationType(organizationTypes[i]);
         }
     }
 }
@@ -314,9 +314,9 @@ export async function addDuration() {
             duration.en = durations[i].en;
             duration.lowerlimit = durations[i].lowerlimit;
             duration.upperlimit = durations[i].upperlimit;
-            duration.save();
+            await duration.save();
         } else {
-            repository.createDuration(durations[i]);
+            await repository.createDuration(durations[i]);
         }
     }
 }
@@ -339,9 +339,9 @@ export async function addCollaborationHistory() {
         if (collaborationHistory) {
             collaborationHistory.fi = collaborationHistories[i].fi;
             collaborationHistory.en = collaborationHistories[i].en;
-            collaborationHistory.save();
+            await collaborationHistory.save();
         } else {
-            repository.createCollaborationHistory(collaborationHistories[i]);
+            await repository.createCollaborationHistory(collaborationHistories[i]);
         }
     }
 }
@@ -404,9 +404,9 @@ export async function addEthicsAssessment() {
         if (ethicsAssessment) {
             ethicsAssessment.fi = ethicsAssessments[i].fi;
             ethicsAssessment.en = ethicsAssessments[i].en;
-            ethicsAssessment.save();
+            await ethicsAssessment.save();
         } else {
-            repository.createEthicsAssessment(ethicsAssessments[i]);
+            await repository.createEthicsAssessment(ethicsAssessments[i]);
         }
     }
 }
@@ -439,9 +439,9 @@ export async function addLiability() {
         if (liability) {
             liability.fi = liabilities[i].fi;
             liability.en = liabilities[i].en;
-            liability.save();
+            await liability.save();
         } else {
-            repository.createLiability(liabilities[i]);
+            await repository.createLiability(liabilities[i]);
         }
     }
 }
@@ -464,9 +464,9 @@ export async function addFundingOption() {
         if (funding) {
             funding.fi = fundingOptions[i].fi;
             funding.en = fundingOptions[i].en;
-            funding.save();
+            await funding.save();
         } else {
-            repository.createFundingOption(fundingOptions[i]);
+            await repository.createFundingOption(fundingOptions[i]);
         }
     }
 }
@@ -489,9 +489,9 @@ export async function addFundingHistory() {
         if (funding) {
             funding.fi = fundingHistory[i].fi;
             funding.en = fundingHistory[i].en;
-            funding.save();
+            await funding.save();
         } else {
-            repository.createFundingHistory(fundingHistory[i]);
+            await repository.createFundingHistory(fundingHistory[i]);
         }
     }
 }
@@ -544,9 +544,9 @@ export async function addFundingSource() {
         if (fundingSource) {
             fundingSource.fi = fundingSources[i].fi;
             fundingSource.en = fundingSources[i].en;
-            fundingSource.save();
+            await fundingSource.save();
         } else {
-            repository.createFundingSource(fundingSources[i]);
+            await repository.createFundingSource(fundingSources[i]);
         }
     }
 }
@@ -574,9 +574,9 @@ export async function addFundingExchange() {
         if (fundingExchange) {
             fundingExchange.fi = fundingExchanges[i].fi;
             fundingExchange.en = fundingExchanges[i].en;
-            fundingExchange.save();
+            await fundingExchange.save();
         } else {
-            repository.createFundingExchange(fundingExchanges[i]);
+            await repository.createFundingExchange(fundingExchanges[i]);
         }
     }
 }
@@ -606,9 +606,9 @@ export async function addDualUse() {
         if (dualUse) {
             dualUse.fi = dualUses[i].fi;
             dualUse.en = dualUses[i].en;
-            dualUse.save();
+            await dualUse.save();
         } else {
-            repository.createDualUse(dualUses[i]);
+            await repository.createDualUse(dualUses[i]);
         }
     }
 }
@@ -637,9 +637,9 @@ export async function addPersonalInformation() {
         if (personalInformation) {
             personalInformation.fi = personalInformations[i].fi;
             personalInformation.en = personalInformations[i].en;
-            personalInformation.save();
+            await personalInformation.save();
         } else {
-            repository.createPersonalInformation(personalInformations[i]);
+            await repository.createPersonalInformation(personalInformations[i]);
         }
     }
 }
