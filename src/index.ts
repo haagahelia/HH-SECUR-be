@@ -14,12 +14,11 @@ server.listen(port, async () => {
         await repository.sequelizeClient.drop();
         await repository.sequelizeClient.sync();
         console.log("Succsefully connected to database")
+        await addDataToAllTables();
     } catch (error) {
         console.log("Database connection failed");
         console.log(error);
     }
-
-    await addDataToAllTables();
 
     console.log(`API running on ${port}`)
 })
