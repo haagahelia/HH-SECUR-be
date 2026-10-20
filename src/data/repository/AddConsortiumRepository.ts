@@ -16,5 +16,9 @@ export function AddConsortiumRepository<TBase extends Constructor<BaseRepository
         async getConsortium(id: number) {
             return await Consortium.findByPk(id);
         }
+
+        async getConsortiums() {
+            return await Consortium.findAll();
+        }
     }
 }

@@ -11,19 +11,23 @@ export function AddFundingOptionRepository<TBase extends Constructor<BaseReposit
         }
 
         async findAllFundingOptions() {
-            return FundingOption.findAll();
+            return await FundingOption.findAll();
         }
 
         async getFundingOption(id: number) {
-            return FundingOption.findByPk(id);
+            return await FundingOption.findByPk(id);
         }
 
         async findFundingOptionByCode(code: string) {
-            return FundingOption.findOne({
+            return await FundingOption.findOne({
                 where: {
                     code: code,
                 },
             });
+        }
+
+        async getFundingOptions() {
+            return await FundingOption.findAll();
         }
     }
 }

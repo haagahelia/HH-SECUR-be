@@ -14,5 +14,9 @@ export function AddContractInfoRepository<TBase extends Constructor<BaseReposito
         async findContractInfoByCode(code: string) {
             return await ContractInfo.findOne({ where: { code: code, } });
         }
+
+        async getContractInfos() {
+            return await ContractInfo.findAll();
+        }
     }
 }

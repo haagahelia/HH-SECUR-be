@@ -31,5 +31,9 @@ export function AddFundingRepository<TBase extends Constructor<BaseRepository>>(
             }
         }
 
+        async getFundings() {
+            return await Funding.findAll();
+        }
+
     }
 }

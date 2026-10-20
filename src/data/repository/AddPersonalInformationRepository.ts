@@ -15,11 +15,15 @@ export function AddPersonalInformationRepository<TBase extends Constructor<BaseR
 
         
         async findPersonalInformationByCode(code: string) {
-            return PersonalInformation.findOne({
+            return await PersonalInformation.findOne({
                 where: {
                     code: code,
                 },
             });
+        }
+
+        async getPersonalInformations() {
+            return await PersonalInformation.findAll();
         }
 
     }

@@ -4,6 +4,7 @@ import { createTestRoutes } from "./testRoutes.js";
 import { createProjectRoutes } from "./projectRoutes.js";
 import { createOrganizationRoutes } from "./organizationRoutes.js";
 import { createCountryRoutes } from "./countryRoutes.js";
+import { createFormContentRoutes } from "./formContentRoutes.js";
 
 export const createRoutes = (app: Express) => {
     createUserRoutes(app);
@@ -11,4 +12,5 @@ export const createRoutes = (app: Express) => {
     createProjectRoutes(app);
     createOrganizationRoutes(app);
     createCountryRoutes(app);
+    createFormContentRoutes(app);
 };

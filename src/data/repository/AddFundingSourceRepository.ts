@@ -21,5 +21,9 @@ export function AddFundingSourceRepository<TBase extends Constructor<BaseReposit
                 },
             });
         }
+
+        async getFundingSources() {
+            return await FundingSource.findAll();
+        }
     }
 }

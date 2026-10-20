@@ -25,5 +25,9 @@ export function AddFundingExchangeRepository<TBase extends Constructor<BaseRepos
                 },
             });
         }
+
+        async getFundingExchanges() {
+            return await FundingExchange.findAll();
+        }
     }
 }

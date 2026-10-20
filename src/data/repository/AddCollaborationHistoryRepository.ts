@@ -12,7 +12,11 @@ export function AddCollaborationHistoryRepository<TBase extends Constructor<Base
         }
 
         async findCollaborationHistoryByCode(code:string){
-            return CollaborationHistory.findOne({where: {code:code,}});
+            return await CollaborationHistory.findOne({where: {code:code,}});
+        }
+
+        async getCollaborationHistories(){
+            return await CollaborationHistory.findAll();
         }
     }
 }

@@ -25,5 +25,9 @@ export function AddFundingHistoryRepository<TBase extends Constructor<BaseReposi
                 },
             });
         }
+
+        async getFundingHistories() {
+            return await FundingHistory.findAll();
+        }
     }
 }
