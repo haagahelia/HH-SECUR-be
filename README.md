@@ -2141,6 +2141,491 @@ Requires: Authentication, Admin access
 
 <summary>
 
+**/formcontent** - GET: Content for most form page selections
+
+Includes:
+
+    - name
+
+    - hhRole
+
+    - consortium
+
+    - collaborationHistory
+
+    - organizationType
+
+    - contract
+
+    - collaborationType
+
+    - externalFunding
+
+        - fundingExchange
+
+        - fundingSource
+
+        - fundingHistory
+
+    - liability
+
+    - personalInformation
+
+    - dualUse
+
+    - ethics
+
+    - duration
+
+    - additionalInformation
+
+Reponse: 
+
+```
+
+{
+    "name": {
+        "type": "TextField",
+        "placeholder": {
+            "fi": "Projektin nimi",
+            "en": "Project name"
+        }
+    },
+    "hhRole": {
+        "type": "SingleChoice",
+        "fi": "Haaga-Helia ammattikorkeakoulun rooli yhteistyössä",
+        "en": "Haaga-Helia university of applied sciences role in collaboration",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Yhteistyön koordinaattori",
+                "en": "Collaboration Coordnator"
+            },
+            {
+                "code": "option2",
+                "fi": "Kumppani tai tasaveroinen partner",
+                "en": "Partner"
+            },
+            {
+                "code": "option3",
+                "fi": "Muu",
+                "en": "Other"
+            }
+        ],
+        "other": {
+            "type": "TextField",
+            "placeholder": {
+                "fi": "Tarkenna",
+                "en": "Please specify"
+            }
+        }
+    },
+    "consortium": {
+        "type": "SingleChoice",
+        "fi": "Yhteistyökonsortion koostumus",
+        "en": "Composition of the Collaboration Consortium",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kahdenvälinen",
+                "en": "Bilateral"
+            },
+            {
+                "code": "option2",
+                "fi": "Monenkeskeinen",
+                "en": "Multilateral"
+            }
+        ]
+    },
+    "collaborationHistory": {
+        "type": "SingleChoice",
+        "fi": "Onko yhteistyöorganisaation kanssa tehty onnistunutta yhteistyötä aiemmin?",
+        "en": "Has there been previous successful cooperation with the organization?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kyllä",
+                "en": "Yes"
+            },
+            {
+                "code": "option2",
+                "fi": "Ei",
+                "en": "No"
+            }
+        ]
+    },
+    "organizationType": {
+        "type": "SingleChoice",
+        "fi": "Yhteistyöorganisaation tyyppi?",
+        "en": "Type of Partner Organization?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "TKI-yhteistyö",
+                "en": "Research Collaboration"
+            },
+            {
+                "code": "option2",
+                "fi": "Koulutus/opetusyhteistyö",
+                "en": "Education/Teaching Collaboration"
+            },
+            {
+                "code": "option3",
+                "fi": "Koulutusvienti",
+                "en": "Export of Education"
+            },
+            {
+                "code": "option4",
+                "fi": "Kansainvälinen opiskelijaliikkuvuus",
+                "en": "International Student Mobility"
+            },
+            {
+                "code": "option5",
+                "fi": "Kansainvälinen henkilöstöliikkuvuus",
+                "en": "International Staff Mobility"
+            },
+            {
+                "code": "option6",
+                "fi": "Yhteistutkintoyhteistyö",
+                "en": "Joint Degree Collaboration"
+            },
+            {
+                "code": "option7",
+                "fi": "Muu",
+                "en": "Other"
+            }
+        ],
+        "other": {
+            "type": "TextField",
+            "placeholder": {
+                "fi": "Tarkenna",
+                "en": "Please specify"
+            }
+        }
+    },
+    "contract": {
+        "type": "SingleChoice",
+        "fi": "Onko kirjallinen sopimus solmittu tai tullaanko sellainen solmimaan ennen yhteistyön aloittamista?",
+        "en": "Has a written agreement been signed, or will one be signed before the collaboration begins?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kyllä",
+                "en": "Yes"
+            },
+            {
+                "code": "option2",
+                "fi": "Ei",
+                "en": "No"
+            }
+        ]
+    },
+    "collaborationType": {
+        "type": "MultiChoice",
+        "fi": "Yhteistyön muodot?",
+        "en": "Forms of Collaboration",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "TKI-yhteistyö",
+                "en": "Research Collaboration"
+            },
+            {
+                "code": "option2",
+                "fi": "Koulutus/opetusyhteistyö",
+                "en": "Education/Teaching Collaboration"
+            },
+            {
+                "code": "option3",
+                "fi": "Koulutusvienti",
+                "en": "Export of Education"
+            },
+            {
+                "code": "option4",
+                "fi": "Kansainvälinen opiskelijaliikkuvuus",
+                "en": "International Student Mobility"
+            },
+            {
+                "code": "option5",
+                "fi": "Kansainvälinen henkilöstöliikkuvuus",
+                "en": "International Staff Mobility"
+            },
+            {
+                "code": "option6",
+                "fi": "Yhteistutkintoyhteistyö",
+                "en": "Joint Degree Collaboration"
+            },
+            {
+                "code": "option7",
+                "fi": "Muu",
+                "en": "Other"
+            }
+        ]
+    },
+    "externalFunding": {
+        "type": "SingleChoice",
+        "fi": "Sisältyykö yhteistyöhön ulkopuolista rahoitusta?",
+        "en": "Does the collaboration involve external funding?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kyllä",
+                "en": "Yes"
+            },
+            {
+                "code": "option2",
+                "fi": "Ei",
+                "en": "No"
+            }
+        ],
+        "fundingExchange": {
+            "type": "SingleSelect",
+            "fi": "Valitse valuutta",
+            "en": "Select currency",
+            "options": [
+                {
+                    "code": "option1",
+                    "fi": "Eorumääräinen",
+                    "en": "In euros"
+                },
+                {
+                    "code": "option2",
+                    "fi": "Osittain euromääräinen",
+                    "en": "Partially in euros"
+                },
+                {
+                    "code": "option3",
+                    "fi": "Muussa valuutassa kuin euroissa",
+                    "en": "In currency other than euros"
+                }
+            ],
+            "placeholder": {
+                "fi": "Rahoitukseen liittyvä vaihto",
+                "en": "Funding exchange"
+            }
+        },
+        "fundingSource": {
+            "type": "SingleSelect",
+            "fi": "Valitse rahoittajan tyyppi",
+            "en": "Select funding organization type",
+            "options": [
+                {
+                    "code": "option1",
+                    "fi": "Suomalainen julkisen sektorin toimija",
+                    "en": "Finnish public sector entity"
+                },
+                {
+                    "code": "option2",
+                    "fi": "Suomalainen säätiö tai vastaava",
+                    "en": "Finnish foundation or equivalent"
+                },
+                {
+                    "code": "option3",
+                    "fi": "Suomalainen yritys",
+                    "en": "Finnish corporation"
+                },
+                {
+                    "code": "option4",
+                    "fi": "Muu suomalainen rahoittaja",
+                    "en": "Finnish source other than the above"
+                },
+                {
+                    "code": "option5",
+                    "fi": "Ulkomainen julkisen sektorin toimija",
+                    "en": "Foreign public sector entity"
+                },
+                {
+                    "code": "option6",
+                    "fi": "Ulkomainen säätiö tai vastaava",
+                    "en": "Foreign foundation or equivalent"
+                },
+                {
+                    "code": "option7",
+                    "fi": "Ulkomainen yritys",
+                    "en": "Foreign corporation"
+                },
+                {
+                    "code": "option8",
+                    "fi": "Muu ulkomainen rahoittaja",
+                    "en": "Foreign entity other than the above"
+                }
+            ],
+            "placeholder": {
+                "fi": "Rahoituksen lähde",
+                "en": "Funding source"
+            }
+        },
+        "fundingHistory": {
+            "type": "SingleSelect",
+            "fi": "Valitse aiempi historia",
+            "en": "Select prior history",
+            "options": [
+                {
+                    "code": "option1",
+                    "fi": "Kyllä",
+                    "en": "Yes"
+                },
+                {
+                    "code": "option2",
+                    "fi": "Ei",
+                    "en": "No"
+                }
+            ],
+            "placeholder": {
+                "fi": "Aiempi rahoitushistoria",
+                "en": "Funding history"
+            }
+        }
+    },
+    "liability": {
+        "type": "SingleChoice",
+        "fi": "Anna arvio yhteistyön taloudellisista kokonaisvastuista (sis. omarahoitus) sen kokonaiskeston aikana.",
+        "en": "Provide an estimate of the collaboration’s total financial responsibilities (including self-funding) for the university over its entire duration.",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "0-20.000",
+                "en": "0-20.000"
+            },
+            {
+                "code": "option2",
+                "fi": "20.000-50.000",
+                "en": "20.000-50.000"
+            },
+            {
+                "code": "option3",
+                "fi": "Yli 50.000",
+                "en": "Over 50.000"
+            }
+        ]
+    },
+    "personalInformation": {
+        "type": "SingleChoice",
+        "fi": "Onko mahdollista, että yhteistyössä siirretään henkilötietoja yhteistyökumppaneille?",
+        "en": "Is it possible that personal data will be transferred to the partner organization during the collaboration?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kyllä",
+                "en": "Yes"
+            },
+            {
+                "code": "option2",
+                "fi": "Ei",
+                "en": "No"
+            },
+            {
+                "code": "option3",
+                "fi": "Ei tiedossa",
+                "en": "Unknown"
+            }
+        ]
+    },
+    "dualUse": {
+        "type": "SingleChoice",
+        "fi": "Onko mahdollista, että yhteistyössä siirtyy sotilaskäyttöön soveltuvaa teknologiaa tai osaamista kumppanille (vrt. Dual Use)?",
+        "en": "Is it possible that technology or expertise suitable for military use (i.e., Dual Use) will be transferred to the partner organization during the collaboration?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kyllä",
+                "en": "Yes"
+            },
+            {
+                "code": "option2",
+                "fi": "Ei",
+                "en": "No"
+            },
+            {
+                "code": "option3",
+                "fi": "Ei tiedossa",
+                "en": "Unknown"
+            }
+        ]
+    },
+    "ethics": {
+        "type": "SingleChoice",
+        "fi": "Arvioi, sisältääkö yhteistyö eettisiä ongelmakohtia (ihmisoikeudet, tasa-arvo, yhdenvertaisuus) tai ristiriitaa Haaga-Helian arvojen kanssa.",
+        "en": "Assess whether the collaboration involves any ethical issues (human rights, equality, non-discrimination) or conflicts with the university's values.",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Ei missään tapauksessa",
+                "en": "Absolutely not"
+            },
+            {
+                "code": "option2",
+                "fi": "Melko varmasti ei",
+                "en": "Most likely not"
+            },
+            {
+                "code": "option3",
+                "fi": "Ehkä",
+                "en": "Possibly"
+            },
+            {
+                "code": "option4",
+                "fi": "Melko varmasti",
+                "en": "Very likely"
+            },
+            {
+                "code": "option5",
+                "fi": "Varmasti",
+                "en": "Definitely"
+            }
+        ]
+    },
+    "duration": {
+        "type": "SingleChoice",
+        "fi": "Mikä on yhteistyön kesto?",
+        "en": "Duration of Collaboration",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "0-24 kk",
+                "en": "0-24 months"
+            },
+            {
+                "code": "option2",
+                "fi": "24-60 kk",
+                "en": "24-60 months"
+            },
+            {
+                "code": "option3",
+                "fi": "yli 60 kk",
+                "en": "Over 60 months"
+            }
+        ]
+    },
+    "additionalInformation": {
+        "type": "TextField",
+        "fi": "Tähän kenttään voi esimerkiksi kirjoittaa tärkeitä lisätietoja yhteistyöstä.",
+        "en": "In this field, you can enter important additional information about the collaboration.",
+        "placeholder": {
+            "fi": "Lisätietoja",
+            "en": "Additional information"
+        }
+    }
+}
+
+```
+
+
+</summary>
+    - Uses Bearer authentication to look for valid token.
+
+Responses:
+
+    - Success: {"token": "accepted"}
+    
+    - Failed: failure status response from auth middleware
+
+</details>
+
+<details>
+
+<summary>
+
 **/tokenstatus** - GET: Check auth token validity
 
 </summary>
