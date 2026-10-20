@@ -2143,6 +2143,8 @@ Requires: Authentication, Admin access
 
 **/formcontent** - GET: Content for most form page selections
 
+</summary>
+
 Includes:
 
     - name
@@ -2191,7 +2193,7 @@ Reponse:
             "en": "Project name"
         }
     },
-    "hhRole": {
+    "hhrole": {
         "type": "SingleChoice",
         "fi": "Haaga-Helia ammattikorkeakoulun rooli yhteistyössä",
         "en": "Haaga-Helia university of applied sciences role in collaboration",
@@ -2237,7 +2239,7 @@ Reponse:
             }
         ]
     },
-    "collaborationHistory": {
+    "history": {
         "type": "SingleChoice",
         "fi": "Onko yhteistyöorganisaation kanssa tehty onnistunutta yhteistyötä aiemmin?",
         "en": "Has there been previous successful cooperation with the organization?",
@@ -2254,7 +2256,7 @@ Reponse:
             }
         ]
     },
-    "organizationType": {
+    "organizationtype": {
         "type": "SingleChoice",
         "fi": "Yhteistyöorganisaation tyyppi?",
         "en": "Type of Partner Organization?",
@@ -2320,7 +2322,7 @@ Reponse:
             }
         ]
     },
-    "collaborationType": {
+    "collaborationtype": {
         "type": "MultiChoice",
         "fi": "Yhteistyön muodot?",
         "en": "Forms of Collaboration",
@@ -2360,9 +2362,16 @@ Reponse:
                 "fi": "Muu",
                 "en": "Other"
             }
-        ]
+        ],
+        "other": {
+            "type": "TextField",
+            "placeholder": {
+                "fi": "Tarkenna",
+                "en": "Please specify"
+            }
+        }
     },
-    "externalFunding": {
+    "funding": {
         "type": "SingleChoice",
         "fi": "Sisältyykö yhteistyöhön ulkopuolista rahoitusta?",
         "en": "Does the collaboration involve external funding?",
@@ -2378,7 +2387,7 @@ Reponse:
                 "en": "No"
             }
         ],
-        "fundingExchange": {
+        "exchange": {
             "type": "SingleSelect",
             "fi": "Valitse valuutta",
             "en": "Select currency",
@@ -2404,7 +2413,7 @@ Reponse:
                 "en": "Funding exchange"
             }
         },
-        "fundingSource": {
+        "fundingsource": {
             "type": "SingleSelect",
             "fi": "Valitse rahoittajan tyyppi",
             "en": "Select funding organization type",
@@ -2455,7 +2464,7 @@ Reponse:
                 "en": "Funding source"
             }
         },
-        "fundingHistory": {
+        "fundinghistory": {
             "type": "SingleSelect",
             "fi": "Valitse aiempi historia",
             "en": "Select prior history",
@@ -2499,7 +2508,7 @@ Reponse:
             }
         ]
     },
-    "personalInformation": {
+    "personalinformation": {
         "type": "SingleChoice",
         "fi": "Onko mahdollista, että yhteistyössä siirretään henkilötietoja yhteistyökumppaneille?",
         "en": "Is it possible that personal data will be transferred to the partner organization during the collaboration?",
@@ -2521,7 +2530,7 @@ Reponse:
             }
         ]
     },
-    "dualUse": {
+    "dualuse": {
         "type": "SingleChoice",
         "fi": "Onko mahdollista, että yhteistyössä siirtyy sotilaskäyttöön soveltuvaa teknologiaa tai osaamista kumppanille (vrt. Dual Use)?",
         "en": "Is it possible that technology or expertise suitable for military use (i.e., Dual Use) will be transferred to the partner organization during the collaboration?",
@@ -2597,7 +2606,7 @@ Reponse:
             }
         ]
     },
-    "additionalInformation": {
+    "additionalinformation": {
         "type": "TextField",
         "fi": "Tähän kenttään voi esimerkiksi kirjoittaa tärkeitä lisätietoja yhteistyöstä.",
         "en": "In this field, you can enter important additional information about the collaboration.",
@@ -2609,16 +2618,6 @@ Reponse:
 }
 
 ```
-
-
-</summary>
-    - Uses Bearer authentication to look for valid token.
-
-Responses:
-
-    - Success: {"token": "accepted"}
-    
-    - Failed: failure status response from auth middleware
 
 </details>
 

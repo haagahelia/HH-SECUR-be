@@ -48,9 +48,9 @@ export const getFormOptions = async (req: Request, res: Response) => {
             placeholder: {
                 fi: "Projektin nimi",
                 en: "Project name"
-            },
+            }
         },
-        hhRole: {
+        hhrole: {
             type: "SingleChoice",
             fi: "Haaga-Helia ammattikorkeakoulun rooli yhteistyössä",
             en: "Haaga-Helia university of applied sciences role in collaboration",
@@ -69,13 +69,13 @@ export const getFormOptions = async (req: Request, res: Response) => {
             en: "Composition of the Collaboration Consortium",
             options: consortium
         },
-        collaborationHistory: {
+        history: {
             type: "SingleChoice",
             fi: "Onko yhteistyöorganisaation kanssa tehty onnistunutta yhteistyötä aiemmin?",
             en: "Has there been previous successful cooperation with the organization?",
             options: collaborationHistory
         },
-        organizationType: {
+        organizationtype: {
             type: "SingleChoice",
             fi: "Yhteistyöorganisaation tyyppi?",
             en: "Type of Partner Organization?",
@@ -94,18 +94,25 @@ export const getFormOptions = async (req: Request, res: Response) => {
             en: "Has a written agreement been signed, or will one be signed before the collaboration begins?",
             options: contract
         },
-        collaborationType: {
+        collaborationtype: {
             type: "MultiChoice",
             fi: "Yhteistyön muodot?",
             en: "Forms of Collaboration",
-            options: collaborationType
+            options: collaborationType,
+            other: {
+                type: "TextField",
+                placeholder: {
+                    fi: "Tarkenna",
+                    en: "Please specify"
+                }
+            }
         },
-        externalFunding: {
+        funding: {
             type: "SingleChoice",
             fi: "Sisältyykö yhteistyöhön ulkopuolista rahoitusta?",
             en: "Does the collaboration involve external funding?",
             options: externalFunding,
-            fundingExchange: {
+            exchange: {
                 type: "SingleSelect",
                 fi: "Valitse valuutta",
                 en: "Select currency",
@@ -115,7 +122,7 @@ export const getFormOptions = async (req: Request, res: Response) => {
                     en: "Funding exchange"
                 }
             },
-            fundingSource: {
+            fundingsource: {
                 type: "SingleSelect",
                 fi: "Valitse rahoittajan tyyppi",
                 en: "Select funding organization type",
@@ -125,7 +132,7 @@ export const getFormOptions = async (req: Request, res: Response) => {
                     en: "Funding source"
                 },
             },
-            fundingHistory: {
+            fundinghistory: {
                 type: "SingleSelect",
                 fi: "Valitse aiempi historia",
                 en: "Select prior history",
@@ -142,13 +149,13 @@ export const getFormOptions = async (req: Request, res: Response) => {
             en: "Provide an estimate of the collaboration’s total financial responsibilities (including self-funding) for the university over its entire duration.",
             options: liability
         },
-        personalInformation: {
+        personalinformation: {
             type: "SingleChoice",
             fi: "Onko mahdollista, että yhteistyössä siirretään henkilötietoja yhteistyökumppaneille?",
             en: "Is it possible that personal data will be transferred to the partner organization during the collaboration?",
             options: personalInformation
         },
-        dualUse: {
+        dualuse: {
             type: "SingleChoice",
             fi: "Onko mahdollista, että yhteistyössä siirtyy sotilaskäyttöön soveltuvaa teknologiaa tai osaamista kumppanille (vrt. Dual Use)?",
             en: "Is it possible that technology or expertise suitable for military use (i.e., Dual Use) will be transferred to the partner organization during the collaboration?",
@@ -166,7 +173,7 @@ export const getFormOptions = async (req: Request, res: Response) => {
             en: "Duration of Collaboration",
             options: duration
         },
-        additionalInformation: {
+        additionalinformation: {
             type: "TextField",
             fi: "Tähän kenttään voi esimerkiksi kirjoittaa tärkeitä lisätietoja yhteistyöstä.",
             en: "In this field, you can enter important additional information about the collaboration.",
