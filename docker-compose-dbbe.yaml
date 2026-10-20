@@ -5,6 +5,10 @@ services:
     image: mariadb:12 # OR: e.g. mariadb:latest OR  mariadb:12.2.2-ubi10
     container_name: hh_secur_db_container
     env_file: .env
+    environment:
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_DATABASE: ${DB_DATABASE}
     ports:
       - "${DB_PORT}:3306"
     volumes:
@@ -27,8 +31,9 @@ services:
         condition: service_healthy
     environment:
       - DB_HOST=hh_secur_db_service
+      - DB_PORT=3306
     ports:
-      - "${BE_SERVER_PORT}:${BE_SERVER_PORT}"
+      - "${PORT}:${PORT}"
     networks:
       - hh_secur_network
 

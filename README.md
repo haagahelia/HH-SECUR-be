@@ -2216,47 +2216,28 @@ DEFAULT_ADMIN_ROLE=admin
 
 </details>
 
-## env variable template
+## Environment variables
 
-Use .env file locally in the root directory and update values to match your environment. Extra user credentials are optional.
+All backend environment variables are listed in [`.env.example`](.env.example) in the project root. It is the single source of truth: if you add a new variable to the code, add it to `.env.example` too.
 
+Create your own `.env` from it:
+
+```bash
+cp .env.example .env
 ```
-PORT=3000
-DB_HOST=localhost
-DB_PORT=3306
-DB_USERNAME=root
-DB_PASSWORD=YourPassword
-DB_DATABASE=YourDatabaseName
-JWT_SECRET=secretForJWTTokenGeneration
-DEFAULT_USER_USERNAME=usernameForDefaultUser
-DEFAULT_USER_PASSWORD=passwordForDefaultUser
-DEFAULT_USER_EMAIL=emailForDefaultUser
-DEFAULT_USER_ROLE=user
-DEFAULT_ADMIN_USERNAME=usernameForDefaultAdmin
-DEFAULT_ADMIN_PASSWORD=passwordForDefaultAdmin
-DEFAULT_ADMIN_EMAIL=emailForDefaultAdmin
-DEFAULT_ADMIN_ROLE=admin
-EXTRA_USER_1_USERNAME=nameForExtraUser1
-EXTRA_USER_1_PASSWORD=passwordForExtraUser1
-EXTRA_USER_1_EMAIL=EmailForExtraUser1
-EXTRA_USER_1_ROLE=user
-EXTRA_USER_2_USERNAME=nameForExtraUser2
-EXTRA_USER_2_PASSWORD=passwordForExtraUser2
-EXTRA_USER_2_EMAIL=EmailForExtraUser2
-EXTRA_USER_2_ROLE=user
-EXTRA_USER_3_USERNAME=nameForExtraUser3
-EXTRA_USER_3_PASSWORD=passwordForExtraUser3
-EXTRA_USER_3_EMAIL=EmailForExtraUser3
-EXTRA_USER_3_ROLE=user
-EXTRA_USER_4_USERNAME=nameForExtraUser4
-EXTRA_USER_4_PASSWORD=passwordForExtraUser4
-EXTRA_USER_4_EMAIL=sEmailForExtraUser4
-EXTRA_USER_4_ROLE=user
-EXTRA_USER_5_USERNAME=nameForExtraUser5
-EXTRA_USER_5_PASSWORD=passwordForExtraUser5
-EXTRA_USER_5_EMAIL=EmailForExtraUser5
-EXTRA_USER_5_ROLE=user
+
+PowerShell:
+
+```powershell
+Copy-Item .env.example .env
 ```
+
+Then fill in your own values.
+
+- `.env` is in `.gitignore`. **Never commit it.** It contains passwords and secrets.
+- `DB_HOST=localhost` is used when running the backend directly with `npm run dev`. With Docker Compose it is overridden automatically (see below).
+- `DEFAULT_USER_*` and `DEFAULT_ADMIN_*` are the credentials used to log in via `/login`.
+- Extra users (`EXTRA_USER_1..5_*`) are created on startup if all four values are set. The placeholder values in `.env.example` are for local development only.
 
 ## Default users (Rahti)
 
@@ -2269,44 +2250,23 @@ The usernames and passwords are now in Teams → DevOps channel → Shared → u
 ## 1. Prerequisites
 
 * Docker Desktop running (check with `docker info`, should return no error)
-* `.env` file in the project root, every developer needs their own copy on their own machine. It's in `.gitignore` (`.gitignore:69-70`) and is not version-controlled, since it contains passwords and secrets, share it with the team through some other channel (not via Git).
+* `.env` file in the project root, created from `.env.example` (see [Environment variables](#environment-variables)). Every developer needs their own copy on their own machine.
 
-## 2. `.env` file contents
+## 2. How Compose uses `.env`
 
-```env
-# be.env
-PORT=3000
-BE_SERVER_PORT=3000
+Both containers read the same `.env` file (`env_file: .env`). Compose sets some values automatically, so you don't need separate variables for them:
 
-# db.env, app-side connection settings (config.ts)
-DB_HOST=localhost
-DB_PORT=3306
-DB_USERNAME=<your-value>
-DB_PASSWORD=<your-value>
-DB_DATABASE=<your-value>
+| Container | Variable | Set to |
+|---|---|---|
+| backend | `DB_HOST` | `hh_secur_db_service` (Docker network service name) |
+| backend | `DB_PORT` | `3306` (MariaDB's internal port) |
+| database | `MARIADB_USER` | value of `DB_USERNAME` |
+| database | `MARIADB_PASSWORD` | value of `DB_PASSWORD` |
+| database | `MARIADB_DATABASE` | value of `DB_DATABASE` |
 
-# db.image.env, MariaDB container's init variables (must be the SAME values as above)
-MARIADB_DATABASE=<same as DB_DATABASE>
-MARIADB_USER=<same as DB_USERNAME>
-MARIADB_PASSWORD=<same as DB_PASSWORD>
-MARIADB_ROOT_PASSWORD=<your-value>
+The backend port on the host is taken from `PORT`.
 
-# auth.env
-JWT_SECRET=<your-value>
-
-# default seed credentials (/defaultuser, /defaultadmin)
-DEFAULT_USER_USERNAME=user
-DEFAULT_USER_EMAIL=user@testing.com
-DEFAULT_USER_PASSWORD=<your-value>
-DEFAULT_USER_ROLE=user
-
-DEFAULT_ADMIN_USERNAME=admin
-DEFAULT_ADMIN_EMAIL=admin@testing.com
-DEFAULT_ADMIN_PASSWORD=<your-value>
-DEFAULT_ADMIN_ROLE=admin
-```
-
-> **Note:** `DB_PORT` must be `3306`, containers always talk to each other on MariaDB's internal port, regardless of the host-side port mapping. `DB_USERNAME` / `DB_PASSWORD` / `DB_DATABASE` must exactly match `MARIADB_USER` / `MARIADB_PASSWORD` / `MARIADB_DATABASE`.
+> **Note:** `DB_USERNAME` must **not** be `root`. The MariaDB image refuses to create a user named `root`, so the database container won't start. Use any other username. The root account's password is set separately with `MARIADB_ROOT_PASSWORD`.
 
 ## 3. Starting it up
 
@@ -2316,19 +2276,19 @@ First time, or whenever the code / Dockerfile / package.json has changed:
 docker compose -f docker-compose-dbbe.yaml up --build
 ```
 
-If the image is already built and nothing has changed since, `--build` isn't needed, plain `up` is enough and starts faster:
+If the image is already built and nothing has changed since, `--build` isn't needed. Plain `up` is enough and starts faster:
 
 ```bash
 docker compose -f docker-compose-dbbe.yaml up
 ```
 
-Both do the same basic sequence:
+Both commands run the same basic sequence:
 
-1. The backend is built from the `Dockerfile` if needed (`npm ci` → `npm run build` → `npm start`)
-2. `hh_secur_db_service` (MariaDB) starts, and it waits until it's healthy (`healthcheck`)
-3. `hh_secur_be_service` starts only once the db is healthy, connecting to it internally via `hh_secur_db_service` (the Docker network's service name, not `localhost`)
+1. The backend is built from the `Dockerfile` if needed (`npm ci` → `npm run build` → `npm start`).
+2. `hh_secur_db_service` (MariaDB) starts, and Compose waits until it is healthy (`healthcheck`).
+3. `hh_secur_be_service` starts once the database is healthy. It connects to the database internally via `hh_secur_db_service`, not `localhost`.
 
-Run in the background by adding `-d` (works with either command):
+Add `-d` to either command to run in the background:
 
 ```bash
 docker compose -f docker-compose-dbbe.yaml up -d
@@ -2349,6 +2309,8 @@ Succsefully connected to database
 API running on 3000
 ```
 
+You should also see `INSERT INTO user` lines for the default user, the default admin and every extra user whose four `EXTRA_USER_n_*` values are set.
+
 ## 5. Testing
 
 ```bash
@@ -2356,6 +2318,8 @@ curl http://localhost:3000/status
 ```
 
 → `{"ok": true}`
+
+> **PowerShell:** `curl` is an alias for `Invoke-WebRequest` there. Use `curl.exe` instead.
 
 The full test flow (login, tokens, default users), in short:
 
@@ -2369,18 +2333,22 @@ The full test flow (login, tokens, default users), in short:
 docker compose -f docker-compose-dbbe.yaml down
 ```
 
-The database persists across restarts via the named volume (`hh_secur_db_data`), including the next `up` without `--build`. Add `-v` if you want a clean/empty database:
+The database persists across restarts in the named volume (`hh_secur_db_data`). Add `-v` if you want a clean, empty database:
 
 ```bash
 docker compose -f docker-compose-dbbe.yaml down -v
 ```
 
+> **Important:** MariaDB reads `MARIADB_*` (and therefore `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE` and `MARIADB_ROOT_PASSWORD`) **only when the volume is empty**. If you change any of these values, run `down -v` before starting again. Otherwise the old credentials are still in use.
+
 ## 7. Common pitfalls (we already hit these)
 
-* Docker Desktop not running → `npipe` error right away.
-* `.dockerignore` must not exclude `package-lock.json`, already fixed at `.dockerignore:48`, but if the `#` in front is ever removed by accident, `npm ci` will fail during the build.
-* `.env` values don't match (`DB_*` vs `MARIADB_*`) → the database connection fails on startup.
-* Forgetting `--build` after a code change → the container starts with the old code and your changes won't show up.
+* **Docker Desktop not running:** you get an `npipe` error right away.
+* **`package-lock.json` excluded from the build:** `.dockerignore` must not exclude it. This is already fixed at `.dockerignore:48`, but if the `#` in front is ever removed by accident, `npm ci` will fail during the build.
+* **`DB_USERNAME=root`:** the database container fails to start. Use a non-root username.
+* **Changed `DB_*` values without `down -v`:** the database still has the old user and password, so the backend gets `Access denied`.
+* **Only `.env.example` updated:** Compose reads `.env`, not `.env.example`. Copy new variables into your own `.env` as well. For example, extra users are skipped silently if their values are missing from `.env`.
+* **Forgetting `--build` after a code change:** the container starts with the old code and your changes won't show up.
 
 
 ## Testing
@@ -2391,7 +2359,7 @@ API tests are written with [Playwright](https://playwright.dev/) (`@playwright/t
 
 - The backend API must be running and reachable (default: `http://localhost:3000`).
 - The database must be running and reachable by the API.
-- The `.env` file must be set up (see variables referenced throughout this README), especially `JWT_SECRET`, `DB_*` and `DEFAULT_USER_*` / `DEFAULT_ADMIN_*`.
+- The `.env` file must be set up from `.env.example` (see [Environment variables](#environment-variables)), especially `JWT_SECRET`, `DB_*` and `DEFAULT_USER_*` / `DEFAULT_ADMIN_*`.
 
 Start the API and database with Docker Compose:
 
@@ -2405,7 +2373,7 @@ Or run them locally instead (requires a running MariaDB instance matching the `D
 npm run dev
 ```
 
-Test data (the default user and admin) is created/reset automatically before the test run via a Playwright `globalSetup` that calls `/defaultuser` and `/defaultadmin` — no manual seeding needed.
+Test data (the default user and admin) is created or reset automatically before the test run by a Playwright `globalSetup` that calls `/defaultuser` and `/defaultadmin`. No manual seeding is needed.
 
 ### Running the tests
 
@@ -2421,8 +2389,14 @@ npm run test:ui
 
 Opens Playwright's UI mode for interactively running and debugging individual tests.
 
-By default tests target `http://localhost:3000` (or `PORT` from `.env`). To point tests at a different URL, set `API_BASE_URL`:
+By default, tests target `http://localhost:3000` (or `PORT` from `.env`). To point tests at a different URL, set `API_BASE_URL`:
 
 ```
 API_BASE_URL=http://localhost:4000 npm test
+```
+
+PowerShell:
+
+```powershell
+$env:API_BASE_URL="http://localhost:4000"; npm test
 ```
