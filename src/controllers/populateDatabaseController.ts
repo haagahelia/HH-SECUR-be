@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import repository from "../data/repository/repository";
 import { addCountryData } from "../utils/countryData.js";
+import { organizations } from "../utils/organizations"; //commented out until deployment works with limited selection
+import { organizationsLimited } from "../utils/organizationsLimited"; //Alternative limited organizations source
 import Duration from "../data/models/Duration";
+import { addExtraUsers } from "./testController";
 
 export const populateDatabase = async (req: Request, res: Response) => {
     await addHHRole();
@@ -17,7 +20,11 @@ export const populateDatabase = async (req: Request, res: Response) => {
     await addLiability();
     await addDualUse();
     await addPersonalInformation();
-    await addFunding();
+    await addFundingOption();
+    await addFundingSource();
+    await addFundingHistory();
+    await addFundingExchange();
+    await addExtraUsers();
     res.status(200).json({ message: "Database populated" });
 }
 
@@ -46,9 +53,9 @@ export async function addHHRole() {
         if (hhRole) {
             hhRole.fi = hhRoles[i].fi;
             hhRole.en = hhRoles[i].en;
-            hhRole.save();
+            await hhRole.save();
         } else {
-            repository.createHHRole(hhRoles[i]);
+            await repository.createHHRole(hhRoles[i]);
         }
     }
 }
@@ -97,9 +104,9 @@ export async function addCollaborationTypes() {
         if (collaborationType) {
             collaborationType.fi = collaborationTypes[i].fi;
             collaborationType.en = collaborationTypes[i].en;
-            collaborationType.save();
+            await collaborationType.save();
         } else {
-            repository.createCollaborationType(collaborationTypes[i]);
+            await repository.createCollaborationType(collaborationTypes[i]);
         }
     }
 }
@@ -126,14 +133,16 @@ export async function addConsortiumTypes() {
         if (consortiumType) {
             consortiumType.fi = consortiumTypes[i].fi;
             consortiumType.en = consortiumTypes[i].en;
-            consortiumType.save();
+            await consortiumType.save();
         } else {
-            repository.createConsortiumType(consortiumTypes[i]);
+            await repository.createConsortiumType(consortiumTypes[i]);
         }
     }
 }
 
 export async function addOrganizations() {
+    /*
+    //Old organizations source
     const organizations = [
         {
             code: "halmstad",
@@ -184,21 +193,56 @@ export async function addOrganizations() {
             en: "Other"
         }
     ]
+*/
+    /*
+        //Real orga
+        for (let i = 0; i < organizations.length; i++) {
+    
+            let organization = await repository.findOrganizationByCode(organizations[i].code)
+            if (organization) {
+                organization.fi = organizations[i].fi;
+                organization.en = organizations[i].en;
+                organization.country_code = organizations[i].country_code;
+                await organization.save();
+            } else {
+                await repository.createOrganization(organizations[i]);
+            }
+        }
+    */
+    await addOrganizationsLimited();
+}
 
+export const addOrganizationsLimited = async () => {
+    let limit = 0;
+    let countryCode = ""
     for (let i = 0; i < organizations.length; i++) {
 
-        let organization = await repository.findOrganizationByCode(organizations[i].code)
-        if (organization) {
-            organization.fi = organizations[i].fi;
-            organization.en = organizations[i].en;
-            organization.country_code = organizations[i].country_code;
-            organization.save();
-        } else {
-            repository.createOrganization(organizations[i]);
+        if (organizations[i].country_code !== countryCode) {
+            countryCode = organizations[i].country_code
+            limit = 0
+        }
+
+        if (limit < 2) {
+            limit++;
+            let organization = await repository.findOrganizationByCode(organizations[i].code)
+            try {
+                if (organization) {
+                    organization.fi = organizations[i].fi;
+                    organization.en = organizations[i].en;
+                    organization.country_code = organizations[i].country_code;
+                    await organization.save();
+                } else {
+                    await repository.createOrganization(organizations[i]);
+                }
+            } catch (error) {
+                limit--;
+                console.log(error)
+            }
         }
     }
 
 }
+
 export async function addOrganizationType() {
     const organizationTypes = [
         {
@@ -233,46 +277,46 @@ export async function addOrganizationType() {
         if (organizationType) {
             organizationType.fi = organizationTypes[i].fi;
             organizationType.en = organizationTypes[i].en;
-            organizationType.save();
+            await organizationType.save();
         } else {
-            repository.createOrganizationType(organizationTypes[i]);
+            await repository.createOrganizationType(organizationTypes[i]);
         }
     }
 }
-export async function addDuration(){
-    const durations= [
+export async function addDuration() {
+    const durations = [
         {
-            code:"option1",
-            fi:"0-24 kk",
-            en:"0-24 months",
-            lowerlimit:0,
-            upperlimit:24
+            code: "option1",
+            fi: "0-24 kk",
+            en: "0-24 months",
+            lowerlimit: 0,
+            upperlimit: 24
         },
         {
-            code:"option2",
-            fi:"24-60 kk",
-            en:"24-60 months",
-            lowerlimit:24,
-            upperlimit:60
+            code: "option2",
+            fi: "24-60 kk",
+            en: "24-60 months",
+            lowerlimit: 24,
+            upperlimit: 60
         },
         {
-            code:"option3",
-            fi:"yli 60 kk",
-            en:"Over 60 months",
-            lowerlimit:60,
-            upperlimit:null
+            code: "option3",
+            fi: "yli 60 kk",
+            en: "Over 60 months",
+            lowerlimit: 60,
+            upperlimit: null
         }
     ]
-    for (let i=0; i<durations.length; i++){
-        let duration= await repository.findDurationByCode(durations[i].code)
-        if (duration){
-            duration.fi= durations[i].fi;
-            duration.en= durations[i].en;
-            duration.lowerlimit= durations[i].lowerlimit;
-            duration.upperlimit=durations[i].upperlimit;
-            duration.save();
+    for (let i = 0; i < durations.length; i++) {
+        let duration = await repository.findDurationByCode(durations[i].code)
+        if (duration) {
+            duration.fi = durations[i].fi;
+            duration.en = durations[i].en;
+            duration.lowerlimit = durations[i].lowerlimit;
+            duration.upperlimit = durations[i].upperlimit;
+            await duration.save();
         } else {
-            repository.createDuration(durations[i]);
+            await repository.createDuration(durations[i]);
         }
     }
 }
@@ -295,9 +339,9 @@ export async function addCollaborationHistory() {
         if (collaborationHistory) {
             collaborationHistory.fi = collaborationHistories[i].fi;
             collaborationHistory.en = collaborationHistories[i].en;
-            collaborationHistory.save();
+            await collaborationHistory.save();
         } else {
-            repository.createCollaborationHistory(collaborationHistories[i]);
+            await repository.createCollaborationHistory(collaborationHistories[i]);
         }
     }
 }
@@ -360,9 +404,9 @@ export async function addEthicsAssessment() {
         if (ethicsAssessment) {
             ethicsAssessment.fi = ethicsAssessments[i].fi;
             ethicsAssessment.en = ethicsAssessments[i].en;
-            ethicsAssessment.save();
+            await ethicsAssessment.save();
         } else {
-            repository.createEthicsAssessment(ethicsAssessments[i]);
+            await repository.createEthicsAssessment(ethicsAssessments[i]);
         }
     }
 }
@@ -395,15 +439,15 @@ export async function addLiability() {
         if (liability) {
             liability.fi = liabilities[i].fi;
             liability.en = liabilities[i].en;
-            liability.save();
+            await liability.save();
         } else {
-            repository.createLiability(liabilities[i]);
+            await repository.createLiability(liabilities[i]);
         }
     }
 }
 
-export async function addFunding() {
-    const fundings = [
+export async function addFundingOption() {
+    const fundingOptions = [
         {
             code: "option1",
             fi: "Kyllä",
@@ -415,14 +459,124 @@ export async function addFunding() {
             en: "No"
         }
     ]
-    for (let i = 0; i < fundings.length; i++) {
-        let funding = await repository.findFundingByCode(fundings[i].code)
+    for (let i = 0; i < fundingOptions.length; i++) {
+        let funding = await repository.findFundingOptionByCode(fundingOptions[i].code)
         if (funding) {
-            funding.fi = fundings[i].fi;
-            funding.en = fundings[i].en;
-            funding.save();
+            funding.fi = fundingOptions[i].fi;
+            funding.en = fundingOptions[i].en;
+            await funding.save();
         } else {
-            repository.createFunding(fundings[i]);
+            await repository.createFundingOption(fundingOptions[i]);
+        }
+    }
+}
+
+export async function addFundingHistory() {
+    const fundingHistory = [
+        {
+            code: "option1",
+            fi: "Kyllä",
+            en: "Yes"
+        },
+        {
+            code: "option2",
+            fi: "Ei",
+            en: "No"
+        }
+    ]
+    for (let i = 0; i < fundingHistory.length; i++) {
+        let funding = await repository.findFundingHistoryByCode(fundingHistory[i].code)
+        if (funding) {
+            funding.fi = fundingHistory[i].fi;
+            funding.en = fundingHistory[i].en;
+            await funding.save();
+        } else {
+            await repository.createFundingHistory(fundingHistory[i]);
+        }
+    }
+}
+
+export async function addFundingSource() {
+    const fundingSources = [
+        {
+            code: "option1",
+            fi: "Suomalainen julkisen sektorin toimija",
+            en: "Finnish public sector entity"
+        },
+        {
+            code: "option2",
+            fi: "Suomalainen säätiö tai vastaava",
+            en: "Finnish foundation or equivalent"
+        },
+        {
+            code: "option3",
+            fi: "Suomalainen yritys",
+            en: "Finnish corporation"
+        },
+        {
+            code: "option4",
+            fi: "Muu suomalainen rahoittaja",
+            en: "Finnish source other than the above"
+        },
+        {
+            code: "option5",
+            fi: "Ulkomainen julkisen sektorin toimija",
+            en: "Foreign public sector entity"
+        },
+        {
+            code: "option6",
+            fi: "Ulkomainen säätiö tai vastaava",
+            en: "Foreign foundation or equivalent"
+        },
+        {
+            code: "option7",
+            fi: "Ulkomainen yritys",
+            en: "Foreign corporation"
+        },
+        {
+            code: "option8",
+            fi: "Muu ulkomainen rahoittaja",
+            en: "Foreign entity other than the above"
+        }
+    ]
+    for (let i = 0; i < fundingSources.length; i++) {
+        let fundingSource = await repository.findFundingSourceByCode(fundingSources[i].code)
+        if (fundingSource) {
+            fundingSource.fi = fundingSources[i].fi;
+            fundingSource.en = fundingSources[i].en;
+            await fundingSource.save();
+        } else {
+            await repository.createFundingSource(fundingSources[i]);
+        }
+    }
+}
+
+export async function addFundingExchange() {
+    const fundingExchanges = [
+        {
+            code: "option1",
+            fi: "Eorumääräinen",
+            en: "In euros"
+        },
+        {
+            code: "option2",
+            fi: "Osittain euromääräinen",
+            en: "Partially in euros"
+        },
+        {
+            code: "option3",
+            fi: "Muussa valuutassa kuin euroissa",
+            en: "In currency other than euros"
+        }
+    ]
+    for (let i = 0; i < fundingExchanges.length; i++) {
+        let fundingExchange = await repository.findFundingExchangeByCode(fundingExchanges[i].code)
+        if (fundingExchange) {
+            fundingExchange.fi = fundingExchanges[i].fi;
+            fundingExchange.en = fundingExchanges[i].en;
+            await fundingExchange.save();
+        } else {
+            await repository.createFundingExchange(fundingExchanges[i]);
         }
     }
 }
@@ -452,9 +606,9 @@ export async function addDualUse() {
         if (dualUse) {
             dualUse.fi = dualUses[i].fi;
             dualUse.en = dualUses[i].en;
-            dualUse.save();
+            await dualUse.save();
         } else {
-            repository.createDualUse(dualUses[i]);
+            await repository.createDualUse(dualUses[i]);
         }
     }
 }
@@ -483,9 +637,9 @@ export async function addPersonalInformation() {
         if (personalInformation) {
             personalInformation.fi = personalInformations[i].fi;
             personalInformation.en = personalInformations[i].en;
-            personalInformation.save();
+            await personalInformation.save();
         } else {
-            repository.createPersonalInformation(personalInformations[i]);
+            await repository.createPersonalInformation(personalInformations[i]);
         }
     }
 }

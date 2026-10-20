@@ -106,7 +106,7 @@ export const countries =[
 
 {
     en: "Austria",
-    fi: "It\u00c3\u00a4valta",
+    fi: "Itävalta",
     code: "AUT",
     dataYear: 2025,
     corruption: 83.49,
@@ -121,7 +121,7 @@ export const countries =[
 
 {
     en: "Azerbaijan",
-    fi: "Azerbaid\u00c5\u00bean",
+    fi: "Azerbaidžan",
     code: "AZE",
     dataYear: 2025,
     corruption: 12.26,
@@ -181,7 +181,7 @@ export const countries =[
 
 {
     en: "Belarus",
-    fi: "Valkoven\u00c3\u00a4j\u00c3\u00a4",
+    fi: "Valkovenäjä",
     code: "BLR",
     dataYear: 2025,
     corruption: 26.89,
@@ -361,7 +361,7 @@ export const countries =[
 
 {
     en: "Cambodia",
-    fi: "Kambod\u00c5\u00bea",
+    fi: "Kambodža",
     code: "KHM",
     dataYear: 2025,
     corruption: 9.43,
@@ -436,7 +436,7 @@ export const countries =[
 
 {
     en: "Chad",
-    fi: "T\u00c5\u00a1ad",
+    fi: "Tšad",
     code: "TCD",
     dataYear: 2025,
     corruption: 4.72,
@@ -571,7 +571,7 @@ export const countries =[
 
 {
     en: "Czechia",
-    fi: "T\u00c5\u00a1ekki",
+    fi: "Tšekki",
     code: "CZE",
     dataYear: 2025,
     corruption: 76.89,
@@ -691,7 +691,7 @@ export const countries =[
 
 {
     en: "Equatorial Guinea",
-    fi: "P\u00c3\u00a4iv\u00c3\u00a4ntasaajan Guinea",
+    fi: "Päiväntasaajan Guinea",
     code: "GNQ",
     dataYear: 2025,
     corruption: 2.83,
@@ -766,7 +766,7 @@ export const countries =[
 
 {
     en: "Fiji",
-    fi: "Fid\u00c5\u00bei",
+    fi: "Fidži",
     code: "FJI",
     dataYear: 2025,
     corruption: 66.04,
@@ -1786,7 +1786,7 @@ export const countries =[
 
 {
     en: "Palestine/West Bank",
-    fi: "Palestiina/L\u00c3\u00a4nsiranta",
+    fi: "Palestiina/Länsiranta",
     code: "PSE",
     dataYear: 2025,
     corruption: 26.42,
@@ -1951,7 +1951,7 @@ export const countries =[
 
 {
     en: "Russia",
-    fi: "Ven\u00c3\u00a4j\u00c3\u00a4",
+    fi: "Venäjä",
     code: "RUS",
     dataYear: 2025,
     corruption: 15.57,
@@ -2161,7 +2161,7 @@ export const countries =[
 
 {
     en: "South Africa",
-    fi: "Etel\u00c3\u00a4-Afrikka",
+    fi: "Etelä-Afrikka",
     code: "ZAF",
     dataYear: 2025,
     corruption: 45.75,
@@ -2176,7 +2176,7 @@ export const countries =[
 
 {
     en: "South Korea",
-    fi: "Etel\u00c3\u00a4-Korea",
+    fi: "Etelä-Korea",
     code: "KOR",
     dataYear: 2025,
     corruption: 79.72,
@@ -2191,7 +2191,7 @@ export const countries =[
 
 {
     en: "South Sudan",
-    fi: "Etel\u00c3\u00a4-Sudan",
+    fi: "Etelä-Sudan",
     code: "SSD",
     dataYear: 2025,
     corruption: 0.0,
@@ -2326,7 +2326,7 @@ export const countries =[
 
 {
     en: "Tajikistan",
-    fi: "Tad\u00c5\u00beikistan",
+    fi: "Tadžikistan",
     code: "TJK",
     dataYear: 2025,
     corruption: 7.55,
@@ -2386,7 +2386,7 @@ export const countries =[
 
 {
     en: "Timor-Leste",
-    fi: "It\u00c3\u00a4-Timor",
+    fi: "Itä-Timor",
     code: "TLS",
     dataYear: 2025,
     corruption: 47.64,
@@ -2460,7 +2460,7 @@ export const countries =[
 },
 
 {
-    en: "T\u00c3\u00bcrkiye",
+    en: "Türkiye",
     fi: "Turkki",
     code: "TUR",
     dataYear: 2025,

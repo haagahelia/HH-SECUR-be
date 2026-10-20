@@ -21,6 +21,10 @@ export function AddHHRoleRepository<TBase extends Constructor<BaseRepository>>(
             });
         }
 
+        async getHHRoles() {
+            return await HHRole.findAll();
+        }
+
     }
 
 }

@@ -10,14 +10,15 @@ console.log("Backend is running");
 
 server.listen(port, async () => {
     try {
-        await repository.sequelizeClient.sync({ force: true });
+        await repository.sequelizeClient.authenticate();
+        await repository.sequelizeClient.drop();
+        await repository.sequelizeClient.sync();
         console.log("Succsefully connected to database")
+        await addDataToAllTables();
     } catch (error) {
         console.log("Database connection failed");
         console.log(error);
     }
-
-    await addDataToAllTables();
 
     console.log(`API running on ${port}`)
 })

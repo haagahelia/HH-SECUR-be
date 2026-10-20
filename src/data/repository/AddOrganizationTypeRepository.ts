@@ -7,12 +7,17 @@ export function AddOrganizationTypeRepository<TBase extends Constructor<BaseRepo
 ) {
     return class extends Base {
 
-        async createOrganizationType(organizationTypeAttributes: { code:string; fi: string; en:string}) {
+        async createOrganizationType(organizationTypeAttributes: { code: string; fi: string; en: string }) {
             return await OrganizationType.create(organizationTypeAttributes);
         }
 
-        async findOrganizationTypeByCode(code:string){
-            return OrganizationType.findOne({where: {code:code,}});
+        async findOrganizationTypeByCode(code: string) {
+            return await OrganizationType.findOne({ where: { code: code, } });
+        }
+
+        async getOrganizationTypes() {
+            return await OrganizationType.findAll();
         }
     }
+
 }

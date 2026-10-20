@@ -538,9 +538,62 @@ Response body:
 
 </summary>
 
-Fetches all reports with collaborationTypes relation included.
+Fetches all reports with `id`, `name`, `risk`, `ownername`, `creatorname`, `country: {code, fi, en}`,`organizations: [{id, fi, en, countrycode}]`, `created_at` and `updated_at` included. Currently only bilateral organizations are supported but the format allows for expanding it to include multilaterals since organizations are returned as an array.
 
 Requires: Authentication
+
+Example response:
+
+```
+
+[
+    {
+        "id": 1,
+        "name": "Sample report",
+        "risk": 1,
+        "ownwername": "User",
+        "creatorname": "User",
+        "country": {
+            "code": "SWE",
+            "fi": "Ruotsi",
+            "en": "Sweden"
+        },
+        "organizations": [
+            {
+                "id": 281,
+                "fi": "Chalmers University of Technology",
+                "en": "Chalmers University of Technology",
+                "country_code": "SWE"
+            }
+        ],
+        "created_at": "2026-10-18T11:30:11.000Z",
+        "updated_at": "2026-10-18T11:30:11.000Z"
+    },
+    {
+        "id": 2,
+        "name": "Sample report 2",
+        "risk": 1,
+        "ownwername": "User",
+        "creatorname": "User",
+        "country": {
+            "code": "SWE",
+            "fi": "Ruotsi",
+            "en": "Sweden"
+        },
+        "organizations": [
+            {
+                "id": 282,
+                "fi": "Jönköping University",
+                "en": "Jönköping University",
+                "country_code": "SWE"
+            }
+        ],
+        "created_at": "2026-10-18T11:30:16.000Z",
+        "updated_at": "2026-10-18T11:30:16.000Z"
+    }
+]
+
+```
 
 </details>
 
@@ -2088,6 +2141,490 @@ Requires: Authentication, Admin access
 
 <summary>
 
+**/formcontent** - GET: Content for most form page selections
+
+</summary>
+
+Includes:
+
+    - name
+
+    - hhRole
+
+    - consortium
+
+    - collaborationHistory
+
+    - organizationType
+
+    - contract
+
+    - collaborationType
+
+    - externalFunding
+
+        - fundingExchange
+
+        - fundingSource
+
+        - fundingHistory
+
+    - liability
+
+    - personalInformation
+
+    - dualUse
+
+    - ethics
+
+    - duration
+
+    - additionalInformation
+
+Reponse: 
+
+```
+
+{
+    "name": {
+        "type": "TextField",
+        "placeholder": {
+            "fi": "Projektin nimi",
+            "en": "Project name"
+        }
+    },
+    "hhrole": {
+        "type": "SingleChoice",
+        "fi": "Haaga-Helia ammattikorkeakoulun rooli yhteistyössä",
+        "en": "Haaga-Helia university of applied sciences role in collaboration",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Yhteistyön koordinaattori",
+                "en": "Collaboration Coordnator"
+            },
+            {
+                "code": "option2",
+                "fi": "Kumppani tai tasaveroinen partner",
+                "en": "Partner"
+            },
+            {
+                "code": "option3",
+                "fi": "Muu",
+                "en": "Other"
+            }
+        ],
+        "other": {
+            "type": "TextField",
+            "placeholder": {
+                "fi": "Tarkenna",
+                "en": "Please specify"
+            }
+        }
+    },
+    "consortium": {
+        "type": "SingleChoice",
+        "fi": "Yhteistyökonsortion koostumus",
+        "en": "Composition of the Collaboration Consortium",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kahdenvälinen",
+                "en": "Bilateral"
+            },
+            {
+                "code": "option2",
+                "fi": "Monenkeskeinen",
+                "en": "Multilateral"
+            }
+        ]
+    },
+    "history": {
+        "type": "SingleChoice",
+        "fi": "Onko yhteistyöorganisaation kanssa tehty onnistunutta yhteistyötä aiemmin?",
+        "en": "Has there been previous successful cooperation with the organization?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kyllä",
+                "en": "Yes"
+            },
+            {
+                "code": "option2",
+                "fi": "Ei",
+                "en": "No"
+            }
+        ]
+    },
+    "organizationtype": {
+        "type": "SingleChoice",
+        "fi": "Yhteistyöorganisaation tyyppi?",
+        "en": "Type of Partner Organization?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "TKI-yhteistyö",
+                "en": "Research Collaboration"
+            },
+            {
+                "code": "option2",
+                "fi": "Koulutus/opetusyhteistyö",
+                "en": "Education/Teaching Collaboration"
+            },
+            {
+                "code": "option3",
+                "fi": "Koulutusvienti",
+                "en": "Export of Education"
+            },
+            {
+                "code": "option4",
+                "fi": "Kansainvälinen opiskelijaliikkuvuus",
+                "en": "International Student Mobility"
+            },
+            {
+                "code": "option5",
+                "fi": "Kansainvälinen henkilöstöliikkuvuus",
+                "en": "International Staff Mobility"
+            },
+            {
+                "code": "option6",
+                "fi": "Yhteistutkintoyhteistyö",
+                "en": "Joint Degree Collaboration"
+            },
+            {
+                "code": "option7",
+                "fi": "Muu",
+                "en": "Other"
+            }
+        ],
+        "other": {
+            "type": "TextField",
+            "placeholder": {
+                "fi": "Tarkenna",
+                "en": "Please specify"
+            }
+        }
+    },
+    "contract": {
+        "type": "SingleChoice",
+        "fi": "Onko kirjallinen sopimus solmittu tai tullaanko sellainen solmimaan ennen yhteistyön aloittamista?",
+        "en": "Has a written agreement been signed, or will one be signed before the collaboration begins?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kyllä",
+                "en": "Yes"
+            },
+            {
+                "code": "option2",
+                "fi": "Ei",
+                "en": "No"
+            }
+        ]
+    },
+    "collaborationtype": {
+        "type": "MultiChoice",
+        "fi": "Yhteistyön muodot?",
+        "en": "Forms of Collaboration",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "TKI-yhteistyö",
+                "en": "Research Collaboration"
+            },
+            {
+                "code": "option2",
+                "fi": "Koulutus/opetusyhteistyö",
+                "en": "Education/Teaching Collaboration"
+            },
+            {
+                "code": "option3",
+                "fi": "Koulutusvienti",
+                "en": "Export of Education"
+            },
+            {
+                "code": "option4",
+                "fi": "Kansainvälinen opiskelijaliikkuvuus",
+                "en": "International Student Mobility"
+            },
+            {
+                "code": "option5",
+                "fi": "Kansainvälinen henkilöstöliikkuvuus",
+                "en": "International Staff Mobility"
+            },
+            {
+                "code": "option6",
+                "fi": "Yhteistutkintoyhteistyö",
+                "en": "Joint Degree Collaboration"
+            },
+            {
+                "code": "option7",
+                "fi": "Muu",
+                "en": "Other"
+            }
+        ],
+        "other": {
+            "type": "TextField",
+            "placeholder": {
+                "fi": "Tarkenna",
+                "en": "Please specify"
+            }
+        }
+    },
+    "funding": {
+        "type": "SingleChoice",
+        "fi": "Sisältyykö yhteistyöhön ulkopuolista rahoitusta?",
+        "en": "Does the collaboration involve external funding?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kyllä",
+                "en": "Yes"
+            },
+            {
+                "code": "option2",
+                "fi": "Ei",
+                "en": "No"
+            }
+        ],
+        "exchange": {
+            "type": "SingleSelect",
+            "fi": "Valitse valuutta",
+            "en": "Select currency",
+            "options": [
+                {
+                    "code": "option1",
+                    "fi": "Eorumääräinen",
+                    "en": "In euros"
+                },
+                {
+                    "code": "option2",
+                    "fi": "Osittain euromääräinen",
+                    "en": "Partially in euros"
+                },
+                {
+                    "code": "option3",
+                    "fi": "Muussa valuutassa kuin euroissa",
+                    "en": "In currency other than euros"
+                }
+            ],
+            "placeholder": {
+                "fi": "Rahoitukseen liittyvä vaihto",
+                "en": "Funding exchange"
+            }
+        },
+        "fundingsource": {
+            "type": "SingleSelect",
+            "fi": "Valitse rahoittajan tyyppi",
+            "en": "Select funding organization type",
+            "options": [
+                {
+                    "code": "option1",
+                    "fi": "Suomalainen julkisen sektorin toimija",
+                    "en": "Finnish public sector entity"
+                },
+                {
+                    "code": "option2",
+                    "fi": "Suomalainen säätiö tai vastaava",
+                    "en": "Finnish foundation or equivalent"
+                },
+                {
+                    "code": "option3",
+                    "fi": "Suomalainen yritys",
+                    "en": "Finnish corporation"
+                },
+                {
+                    "code": "option4",
+                    "fi": "Muu suomalainen rahoittaja",
+                    "en": "Finnish source other than the above"
+                },
+                {
+                    "code": "option5",
+                    "fi": "Ulkomainen julkisen sektorin toimija",
+                    "en": "Foreign public sector entity"
+                },
+                {
+                    "code": "option6",
+                    "fi": "Ulkomainen säätiö tai vastaava",
+                    "en": "Foreign foundation or equivalent"
+                },
+                {
+                    "code": "option7",
+                    "fi": "Ulkomainen yritys",
+                    "en": "Foreign corporation"
+                },
+                {
+                    "code": "option8",
+                    "fi": "Muu ulkomainen rahoittaja",
+                    "en": "Foreign entity other than the above"
+                }
+            ],
+            "placeholder": {
+                "fi": "Rahoituksen lähde",
+                "en": "Funding source"
+            }
+        },
+        "fundinghistory": {
+            "type": "SingleSelect",
+            "fi": "Valitse aiempi historia",
+            "en": "Select prior history",
+            "options": [
+                {
+                    "code": "option1",
+                    "fi": "Kyllä",
+                    "en": "Yes"
+                },
+                {
+                    "code": "option2",
+                    "fi": "Ei",
+                    "en": "No"
+                }
+            ],
+            "placeholder": {
+                "fi": "Aiempi rahoitushistoria",
+                "en": "Funding history"
+            }
+        }
+    },
+    "liability": {
+        "type": "SingleChoice",
+        "fi": "Anna arvio yhteistyön taloudellisista kokonaisvastuista (sis. omarahoitus) sen kokonaiskeston aikana.",
+        "en": "Provide an estimate of the collaboration’s total financial responsibilities (including self-funding) for the university over its entire duration.",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "0-20.000",
+                "en": "0-20.000"
+            },
+            {
+                "code": "option2",
+                "fi": "20.000-50.000",
+                "en": "20.000-50.000"
+            },
+            {
+                "code": "option3",
+                "fi": "Yli 50.000",
+                "en": "Over 50.000"
+            }
+        ]
+    },
+    "personalinformation": {
+        "type": "SingleChoice",
+        "fi": "Onko mahdollista, että yhteistyössä siirretään henkilötietoja yhteistyökumppaneille?",
+        "en": "Is it possible that personal data will be transferred to the partner organization during the collaboration?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kyllä",
+                "en": "Yes"
+            },
+            {
+                "code": "option2",
+                "fi": "Ei",
+                "en": "No"
+            },
+            {
+                "code": "option3",
+                "fi": "Ei tiedossa",
+                "en": "Unknown"
+            }
+        ]
+    },
+    "dualuse": {
+        "type": "SingleChoice",
+        "fi": "Onko mahdollista, että yhteistyössä siirtyy sotilaskäyttöön soveltuvaa teknologiaa tai osaamista kumppanille (vrt. Dual Use)?",
+        "en": "Is it possible that technology or expertise suitable for military use (i.e., Dual Use) will be transferred to the partner organization during the collaboration?",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Kyllä",
+                "en": "Yes"
+            },
+            {
+                "code": "option2",
+                "fi": "Ei",
+                "en": "No"
+            },
+            {
+                "code": "option3",
+                "fi": "Ei tiedossa",
+                "en": "Unknown"
+            }
+        ]
+    },
+    "ethics": {
+        "type": "SingleChoice",
+        "fi": "Arvioi, sisältääkö yhteistyö eettisiä ongelmakohtia (ihmisoikeudet, tasa-arvo, yhdenvertaisuus) tai ristiriitaa Haaga-Helian arvojen kanssa.",
+        "en": "Assess whether the collaboration involves any ethical issues (human rights, equality, non-discrimination) or conflicts with the university's values.",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "Ei missään tapauksessa",
+                "en": "Absolutely not"
+            },
+            {
+                "code": "option2",
+                "fi": "Melko varmasti ei",
+                "en": "Most likely not"
+            },
+            {
+                "code": "option3",
+                "fi": "Ehkä",
+                "en": "Possibly"
+            },
+            {
+                "code": "option4",
+                "fi": "Melko varmasti",
+                "en": "Very likely"
+            },
+            {
+                "code": "option5",
+                "fi": "Varmasti",
+                "en": "Definitely"
+            }
+        ]
+    },
+    "duration": {
+        "type": "SingleChoice",
+        "fi": "Mikä on yhteistyön kesto?",
+        "en": "Duration of Collaboration",
+        "options": [
+            {
+                "code": "option1",
+                "fi": "0-24 kk",
+                "en": "0-24 months"
+            },
+            {
+                "code": "option2",
+                "fi": "24-60 kk",
+                "en": "24-60 months"
+            },
+            {
+                "code": "option3",
+                "fi": "yli 60 kk",
+                "en": "Over 60 months"
+            }
+        ]
+    },
+    "additionalinformation": {
+        "type": "TextField",
+        "fi": "Tähän kenttään voi esimerkiksi kirjoittaa tärkeitä lisätietoja yhteistyöstä.",
+        "en": "In this field, you can enter important additional information about the collaboration.",
+        "placeholder": {
+            "fi": "Lisätietoja",
+            "en": "Additional information"
+        }
+    }
+}
+
+```
+
+</details>
+
+<details>
+
+<summary>
+
 **/tokenstatus** - GET: Check auth token validity
 
 </summary>
@@ -2163,27 +2700,28 @@ DEFAULT_ADMIN_ROLE=admin
 
 </details>
 
-## env variable template
+## Environment variables
 
-Use .env file locally in the root directory and update values to match your environment.
+All backend environment variables are listed in [`.env.example`](.env.example) in the project root. It is the single source of truth: if you add a new variable to the code, add it to `.env.example` too.
 
+Create your own `.env` from it:
+
+```bash
+cp .env.example .env
 ```
-PORT=3000
-DB_HOST=localhost
-DB_PORT=3306
-DB_USERNAME=root
-DB_PASSWORD=YourPassword
-DB_DATABASE=YourDatabaseName
-JWT_SECRET=secretForJWTTokenGeneration
-DEFAULT_USER_USERNAME=usernameForDefaultUser
-DEFAULT_USER_PASSWORD=passwordForDefaultUser
-DEFAULT_USER_EMAIL=emailForDefaultUser
-DEFAULT_USER_ROLE=user
-DEFAULT_ADMIN_USERNAME=usernameForDefaultAdmin
-DEFAULT_ADMIN_PASSWORD=passwordForDefaultAdmin
-DEFAULT_ADMIN_EMAIL=emailForDefaultAdmin
-DEFAULT_ADMIN_ROLE=admin
+
+PowerShell:
+
+```powershell
+Copy-Item .env.example .env
 ```
+
+Then fill in your own values.
+
+- `.env` is in `.gitignore`. **Never commit it.** It contains passwords and secrets.
+- `DB_HOST=localhost` is used when running the backend directly with `npm run dev`. With Docker Compose it is overridden automatically (see below).
+- `DEFAULT_USER_*` and `DEFAULT_ADMIN_*` are the credentials used to log in via `/login`.
+- Extra users (`EXTRA_USER_1..5_*`) are created on startup if all four values are set. The placeholder values in `.env.example` are for local development only.
 
 ## Default users (Rahti)
 
@@ -2196,44 +2734,23 @@ The usernames and passwords are now in Teams → DevOps channel → Shared → u
 ## 1. Prerequisites
 
 * Docker Desktop running (check with `docker info`, should return no error)
-* `.env` file in the project root, every developer needs their own copy on their own machine. It's in `.gitignore` (`.gitignore:69-70`) and is not version-controlled, since it contains passwords and secrets, share it with the team through some other channel (not via Git).
+* `.env` file in the project root, created from `.env.example` (see [Environment variables](#environment-variables)). Every developer needs their own copy on their own machine.
 
-## 2. `.env` file contents
+## 2. How Compose uses `.env`
 
-```env
-# be.env
-PORT=3000
-BE_SERVER_PORT=3000
+Both containers read the same `.env` file (`env_file: .env`). Compose sets some values automatically, so you don't need separate variables for them:
 
-# db.env, app-side connection settings (config.ts)
-DB_HOST=localhost
-DB_PORT=3306
-DB_USERNAME=<your-value>
-DB_PASSWORD=<your-value>
-DB_DATABASE=<your-value>
+| Container | Variable | Set to |
+|---|---|---|
+| backend | `DB_HOST` | `hh_secur_db_service` (Docker network service name) |
+| backend | `DB_PORT` | `3306` (MariaDB's internal port) |
+| database | `MARIADB_USER` | value of `DB_USERNAME` |
+| database | `MARIADB_PASSWORD` | value of `DB_PASSWORD` |
+| database | `MARIADB_DATABASE` | value of `DB_DATABASE` |
 
-# db.image.env, MariaDB container's init variables (must be the SAME values as above)
-MARIADB_DATABASE=<same as DB_DATABASE>
-MARIADB_USER=<same as DB_USERNAME>
-MARIADB_PASSWORD=<same as DB_PASSWORD>
-MARIADB_ROOT_PASSWORD=<your-value>
+The backend port on the host is taken from `PORT`.
 
-# auth.env
-JWT_SECRET=<your-value>
-
-# default seed credentials (/defaultuser, /defaultadmin)
-DEFAULT_USER_USERNAME=user
-DEFAULT_USER_EMAIL=user@testing.com
-DEFAULT_USER_PASSWORD=<your-value>
-DEFAULT_USER_ROLE=user
-
-DEFAULT_ADMIN_USERNAME=admin
-DEFAULT_ADMIN_EMAIL=admin@testing.com
-DEFAULT_ADMIN_PASSWORD=<your-value>
-DEFAULT_ADMIN_ROLE=admin
-```
-
-> **Note:** `DB_PORT` must be `3306`, containers always talk to each other on MariaDB's internal port, regardless of the host-side port mapping. `DB_USERNAME` / `DB_PASSWORD` / `DB_DATABASE` must exactly match `MARIADB_USER` / `MARIADB_PASSWORD` / `MARIADB_DATABASE`.
+> **Note:** `DB_USERNAME` must **not** be `root`. The MariaDB image refuses to create a user named `root`, so the database container won't start. Use any other username. The root account's password is set separately with `MARIADB_ROOT_PASSWORD`.
 
 ## 3. Starting it up
 
@@ -2243,19 +2760,19 @@ First time, or whenever the code / Dockerfile / package.json has changed:
 docker compose -f docker-compose-dbbe.yaml up --build
 ```
 
-If the image is already built and nothing has changed since, `--build` isn't needed, plain `up` is enough and starts faster:
+If the image is already built and nothing has changed since, `--build` isn't needed. Plain `up` is enough and starts faster:
 
 ```bash
 docker compose -f docker-compose-dbbe.yaml up
 ```
 
-Both do the same basic sequence:
+Both commands run the same basic sequence:
 
-1. The backend is built from the `Dockerfile` if needed (`npm ci` → `npm run build` → `npm start`)
-2. `hh_secur_db_service` (MariaDB) starts, and it waits until it's healthy (`healthcheck`)
-3. `hh_secur_be_service` starts only once the db is healthy, connecting to it internally via `hh_secur_db_service` (the Docker network's service name, not `localhost`)
+1. The backend is built from the `Dockerfile` if needed (`npm ci` → `npm run build` → `npm start`).
+2. `hh_secur_db_service` (MariaDB) starts, and Compose waits until it is healthy (`healthcheck`).
+3. `hh_secur_be_service` starts once the database is healthy. It connects to the database internally via `hh_secur_db_service`, not `localhost`.
 
-Run in the background by adding `-d` (works with either command):
+Add `-d` to either command to run in the background:
 
 ```bash
 docker compose -f docker-compose-dbbe.yaml up -d
@@ -2276,6 +2793,8 @@ Succsefully connected to database
 API running on 3000
 ```
 
+You should also see `INSERT INTO user` lines for the default user, the default admin and every extra user whose four `EXTRA_USER_n_*` values are set.
+
 ## 5. Testing
 
 ```bash
@@ -2283,6 +2802,8 @@ curl http://localhost:3000/status
 ```
 
 → `{"ok": true}`
+
+> **PowerShell:** `curl` is an alias for `Invoke-WebRequest` there. Use `curl.exe` instead.
 
 The full test flow (login, tokens, default users), in short:
 
@@ -2296,18 +2817,22 @@ The full test flow (login, tokens, default users), in short:
 docker compose -f docker-compose-dbbe.yaml down
 ```
 
-The database persists across restarts via the named volume (`hh_secur_db_data`), including the next `up` without `--build`. Add `-v` if you want a clean/empty database:
+The database persists across restarts in the named volume (`hh_secur_db_data`). Add `-v` if you want a clean, empty database:
 
 ```bash
 docker compose -f docker-compose-dbbe.yaml down -v
 ```
 
+> **Important:** MariaDB reads `MARIADB_*` (and therefore `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE` and `MARIADB_ROOT_PASSWORD`) **only when the volume is empty**. If you change any of these values, run `down -v` before starting again. Otherwise the old credentials are still in use.
+
 ## 7. Common pitfalls (we already hit these)
 
-* Docker Desktop not running → `npipe` error right away.
-* `.dockerignore` must not exclude `package-lock.json`, already fixed at `.dockerignore:48`, but if the `#` in front is ever removed by accident, `npm ci` will fail during the build.
-* `.env` values don't match (`DB_*` vs `MARIADB_*`) → the database connection fails on startup.
-* Forgetting `--build` after a code change → the container starts with the old code and your changes won't show up.
+* **Docker Desktop not running:** you get an `npipe` error right away.
+* **`package-lock.json` excluded from the build:** `.dockerignore` must not exclude it. This is already fixed at `.dockerignore:48`, but if the `#` in front is ever removed by accident, `npm ci` will fail during the build.
+* **`DB_USERNAME=root`:** the database container fails to start. Use a non-root username.
+* **Changed `DB_*` values without `down -v`:** the database still has the old user and password, so the backend gets `Access denied`.
+* **Only `.env.example` updated:** Compose reads `.env`, not `.env.example`. Copy new variables into your own `.env` as well. For example, extra users are skipped silently if their values are missing from `.env`.
+* **Forgetting `--build` after a code change:** the container starts with the old code and your changes won't show up.
 
 
 ## Testing
@@ -2318,7 +2843,7 @@ API tests are written with [Playwright](https://playwright.dev/) (`@playwright/t
 
 - The backend API must be running and reachable (default: `http://localhost:3000`).
 - The database must be running and reachable by the API.
-- The `.env` file must be set up (see variables referenced throughout this README), especially `JWT_SECRET`, `DB_*` and `DEFAULT_USER_*` / `DEFAULT_ADMIN_*`.
+- The `.env` file must be set up from `.env.example` (see [Environment variables](#environment-variables)), especially `JWT_SECRET`, `DB_*` and `DEFAULT_USER_*` / `DEFAULT_ADMIN_*`.
 
 Start the API and database with Docker Compose:
 
@@ -2332,7 +2857,7 @@ Or run them locally instead (requires a running MariaDB instance matching the `D
 npm run dev
 ```
 
-Test data (the default user and admin) is created/reset automatically before the test run via a Playwright `globalSetup` that calls `/defaultuser` and `/defaultadmin` — no manual seeding needed.
+Test data (the default user and admin) is created or reset automatically before the test run by a Playwright `globalSetup` that calls `/defaultuser` and `/defaultadmin`. No manual seeding is needed.
 
 ### Running the tests
 
@@ -2348,8 +2873,14 @@ npm run test:ui
 
 Opens Playwright's UI mode for interactively running and debugging individual tests.
 
-By default tests target `http://localhost:3000` (or `PORT` from `.env`). To point tests at a different URL, set `API_BASE_URL`:
+By default, tests target `http://localhost:3000` (or `PORT` from `.env`). To point tests at a different URL, set `API_BASE_URL`:
 
 ```
 API_BASE_URL=http://localhost:4000 npm test
+```
+
+PowerShell:
+
+```powershell
+$env:API_BASE_URL="http://localhost:4000"; npm test
 ```

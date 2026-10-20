@@ -1,12 +1,16 @@
 import CollaborationHistory from "../models/CollaborationHistory.js";
 import CollaborationType from "../models/CollaborationType.js";
-import ConsortiumType from "../models/ConsortiumType.js";
+import Consortium from "../models/Consortium.js";
 import ContractInfo from "../models/ContractInfo.js";
 import Country from "../models/Country.js";
 import DualUse from "../models/DualUse.js";
 import Duration from "../models/Duration.js";
 import EthicsAssessment from "../models/EthicsAssessment.js";
 import Funding from "../models/Funding.js";
+import FundingExchange from "../models/FundingExchange.js";
+import FundingHistory from "../models/FundingHistory.js";
+import FundingOption from "../models/FundingOption.js";
+import FundingSource from "../models/FundingSource.js";
 import HHRole from "../models/HHRole.js";
 import Liability from "../models/Liability.js";
 import Organization from "../models/Organization.js";
@@ -26,7 +30,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
         async createReport(reportAttributes: {
             name: string,
             collaborationHistoryId: number,
-            consortiumTypeId: number,
+            consortiumId: number,
             contractInfoId: number,
             countryId: number,
             dualUseId: number,
@@ -35,7 +39,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
             hhroleId: number,
             liabilityId: number,
             fundingId: number,
-            organizationId: number,
+            fundingSourceId?: number | null,
             organizationTypeId: number,
             personalInformationId: number,
             userId: number,
@@ -45,9 +49,15 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
 
         async getReports() {
             return await Report.findAll({
-                include: [{ model: CollaborationType }]
-            })
+                include: [{ model: ReportSnapshot },
+                { model: CollaborationType },
+                { model: Country },
+                {
+                    model: Consortium,
+                    include: [{ model: Organization }]
 
+                }]
+            })
         }
 
         async findReportById(id: number) {
@@ -55,20 +65,36 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
                 include: [
                     { model: ReportSnapshot },
                     { model: CollaborationHistory },
-                    { model: CollaborationType },
-                    { model: ConsortiumType },
+                    {
+                        model: Consortium,
+                        include: [{ 
+                            model: Organization,
+                        }]
+
+                    },
                     { model: ContractInfo },
                     { model: Country },
+                    { model: EthicsAssessment },
                     { model: DualUse },
                     { model: Duration },
-                    { model: EthicsAssessment },
                     { model: HHRole },
                     { model: Liability },
-                    { model: Funding },
-                    { model: Organization },
+                    {
+                        model: Funding,
+                        include: [
+                            { model: FundingOption },
+                            { model: FundingSource },
+                            { model: FundingHistory },
+                            { model: FundingExchange },
+                        ]
+                    },
                     { model: OrganizationType },
                     { model: PersonalInformation },
-                    { model: User }
+                    {
+                        model: User, attributes: {
+                            exclude: ["password_hash"],
+                        }
+                    }
                 ],
                 raw: false
             });

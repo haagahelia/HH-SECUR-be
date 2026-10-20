@@ -21,6 +21,10 @@ export function AddEthicsAssessmentRepository<TBase extends Constructor<BaseRepo
             });
         }
 
+        async getEthicsAssessments(){
+            return await EthicsAssessment.findAll();
+        }
+
     }
 
 }

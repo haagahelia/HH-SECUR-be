@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
 import { riskResultDescriptions } from "./riskResultDescriptions";
 import repository from "../data/repository/repository";
-import Report from "../data/models/Report";
 import ReportSnapshot from "../data/models/ReportSnapshot";
-import { snapshot } from "node:test";
-import OrganizationType from "../data/models/OrganizationType";
-import CollaborationType from "../data/models/CollaborationType";
+import { ReportChoiceIds, ReportCreationAttributes } from "../controllers/riskCalculationController";
+import FundingExchange from "../data/models/FundingExchange";
 
 type CountryRisk = {
     "overall": 0 | 1 | 2 | 3,
@@ -70,7 +68,7 @@ type ReportChoices = {
 }
 
 export const parseRiskPayload = (req: Request, res: Response) => {
-    const requiredFields = ["country", "organizationtype", "hhrole", "collaborationtype", "history", "contract", "funding", "liability", "exchange", "personalinformation", "dualuse", "ethics", "duration"]
+    const requiredFields = ["country", "organizationtype", "hhrole", "collaborationtype", "history", "contract", "funding", "liability", "personalinformation", "dualuse", "ethics", "duration"]
     let missingFields: string[] = [];
     for (let i = 0; i < requiredFields.length; i++) {
         if (!req.body[requiredFields[i]]) {
@@ -128,29 +126,29 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
 
     const reportChoicesRaw = {
         country: report.country?.code,
-        organization: report.organization?.id,
+        //organization: report.organization?.id,
         organizationtype: report.organizationType?.code,
         hhrole: report.hhrole?.code,
         collaborationtype: collaborationTypes,
         history: report.collaborationHistory?.code,
         contract: report.contractInfo?.code,
-        funding: report.funding?.code,
+        funding: report.funding?.fundingOption?.code,
         liability: report.liability?.code,
-        exchange: "placeholder", //report.exchange?.code,
+        exchange: report.funding?.fundingExchange?.code,
         personalinformation: report.personalInformation?.code,
         dualuse: report.dualUse?.code,
         ethics: report.ethicsAssessment?.code,
         duration: report.duration?.code,
         name: report.name,
-        fundinghistory: "placeholder", //report.fundinghistory?.code,
-        fundingsource: "placeholder", //report.fundingsource?.code,
-        consortium: report.consortiumType?.code,
+        fundinghistory: report.funding?.fundingHistory?.code,
+        fundingsource: report.funding?.fundingSource?.code,
+        //consortium: report.consortiumType?.code,
         ownerusername: reportSnapshots && reportSnapshots[0].ownerUsername ? reportSnapshots[0].ownerUsername : "",
         creatorusername: reportSnapshots && reportSnapshots[0].creatorUsername ? reportSnapshots[0].creatorUsername : "",
         organizationname: reportSnapshots && reportSnapshots[0].organizationName ? reportSnapshots[0].organizationName : "",
         organizationother: reportSnapshots && reportSnapshots[0].organizationOther ? reportSnapshots[0].organizationOther : "",
-        collaborationtypeother: reportSnapshots && reportSnapshots[0].collaborationOther ? reportSnapshots[0].collaborationOther: "",
-        additionalinformation: reportSnapshots && reportSnapshots[0].additionalInformation ? reportSnapshots[0].additionalInformation: "",
+        collaborationtypeother: reportSnapshots && reportSnapshots[0].collaborationOther ? reportSnapshots[0].collaborationOther : "",
+        additionalinformation: reportSnapshots && reportSnapshots[0].additionalInformation ? reportSnapshots[0].additionalInformation : "",
     }
 
     const reportChoices = generateReportChoices(reportChoicesRaw);
@@ -158,25 +156,7 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
     return reportChoices;
 }
 
-type ReportCreationAttributes = {
-    name: string,
-    userId: number,
-    collaborationHistoryId: number,
-    consortiumTypeId: number,
-    contractInfoId: number,
-    countryId: number,
-    dualUseId: number,
-    durationId: number,
-    ethicsAssessmentId: number,
-    hhroleId: number,
-    liabilityId: number,
-    fundingId: number,
-    organizationId: number,
-    organizationTypeId: number,
-    personalInformationId: number,
-}
-
-export const validateRiskOptions = async (req: Request, res: Response): Promise<ReportCreationAttributes | null> => {
+export const validateRiskOptions = async (req: Request, res: Response): Promise<ReportChoiceIds | null> => {
 
     const collaborationHistoryCode = req.body.history;
     const collaborationHistory = await repository.findCollaborationHistoryByCode(collaborationHistoryCode);
@@ -258,7 +238,7 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
 
 
     const fundingCode = req.body.funding;
-    const funding = await repository.findFundingByCode(fundingCode);
+    const funding = await repository.findFundingOptionByCode(fundingCode);
     if (!funding) {
         res.status(404).json({ message: `Code ${funding} is invalid for field funding` })
         return null;
@@ -305,11 +285,12 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         return null;
     }
 
-    let reportCreationAttrbiutes: ReportCreationAttributes = {
+    let reportChoiceIds: ReportChoiceIds = {
         name: name,
         userId: ownerUser.id,
         collaborationHistoryId: collaborationHistory.id,
         consortiumTypeId: consortiumType.id,
+        organizationIds: [],
         contractInfoId: contractInfo.id,
         countryId: country.id,
         dualUseId: dualUse.id,
@@ -317,13 +298,16 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         ethicsAssessmentId: ethicsAssessment.id,
         hhroleId: hhrole.id,
         liabilityId: liability.id,
-        fundingId: funding.id,
+        fundingTypeId: funding.id,
+        fundingExchangeId: funding.code === "option2" ? null : null,
+        fundingHistoryId: funding.code === "option2" ? null : null,
+        fundingSourceId: funding.code === "option2" ? null : null,
         organizationId: organization.id,
         organizationTypeId: organizationType.id,
         personalInformationId: personalInformation.id
     }
 
-    return reportCreationAttrbiutes;
+    return reportChoiceIds;
 }
 
 export const calculateRisk = async (req: Request) => {
@@ -376,106 +360,7 @@ export const calculateRisk = async (req: Request) => {
         collaborationtypeother: collaborationtypeOptional,
         additionalinformation: additionalinformationOptional,
     }
-    /* //Moved to a separate component, can be removed once confirmed to work for a while
-        const report = {
-            name: name,
-            collaboration: {
-                title: riskResultDescriptions.collaboration.title,
-                risk: collaborationRisk,
-                description: riskResultDescriptions.collaboration[collaborationRisk]
-            },
-            country: {
-                overall: {
-                    title: riskResultDescriptions.countryOverall.title,
-                    risk: countryRisk.overall,
-                    description: riskResultDescriptions.countryOverall[countryRisk.overall]
-                },
-                corruption: {
-                    title: riskResultDescriptions.countryCorruption.title,
-                    risk: countryRisk.corruption,
-                    description: riskResultDescriptions.countryCorruption[countryRisk.corruption]
-                },
-                security: {
-                    title: riskResultDescriptions.countrySecurity.title,
-                    risk: countryRisk.security,
-                    description: riskResultDescriptions.countrySecurity[countryRisk.security]
-                },
-                academicfreedom: {
-                    title: riskResultDescriptions.countryAcademic.title,
-                    risk: countryRisk.academicfreedom,
-                    description: riskResultDescriptions.countryAcademic[countryRisk.academicfreedom]
-    
-                },
-                politicalstability: {
-                    title: riskResultDescriptions.countryPolitical.title,
-                    risk: countryRisk.politicalstability,
-                    description: riskResultDescriptions.countryPolitical[countryRisk.politicalstability]
-                },
-                development: {
-                    title: riskResultDescriptions.countryDevelopment.title,
-                    risk: countryRisk.development,
-                    description: riskResultDescriptions.countryDevelopment[countryRisk.development]
-                },
-                gdpr: {
-                    title: riskResultDescriptions.countryGdpr.title,
-                    risk: countryRisk.gdpr,
-                    description: riskResultDescriptions.countryGdpr[countryRisk.gdpr]
-                },
-                sanctions: {
-                    title: riskResultDescriptions.countrySanctions.title,
-                    risk: countryRisk.sanctions,
-                    description: riskResultDescriptions.countrySanctions[countryRisk.sanctions]
-                },
-                ruleoflaw: {
-                    title: riskResultDescriptions.countryLaw.title,
-                    risk: countryRisk.ruleoflaw,
-                    description: riskResultDescriptions.countryLaw[countryRisk.ruleoflaw]
-                }
-    
-            },
-            organization: {
-                title: riskResultDescriptions.organization.title,
-                risk: organizationRisk,
-                description: riskResultDescriptions.organization[organizationRisk]
-            },
-            financial: {
-                overall: {
-                    title: riskResultDescriptions.financial.title,
-                    risk: financialRisk.overall,
-                    description: riskResultDescriptions.financial[financialRisk.overall]
-                },
-                exchange: {
-                    title: riskResultDescriptions.exchangeRate.title,
-                    risk: financialRisk.exchange,
-                    description: riskResultDescriptions.exchangeRate[financialRisk.exchange]
-                },
-                scope: {
-                    title: riskResultDescriptions.economicScope.title,
-                    risk: financialRisk.scope,
-                    description: riskResultDescriptions.economicScope[financialRisk.scope]
-                }
-    
-            },
-            dualuse: {
-                title: riskResultDescriptions.dualUse.title,
-                risk: dualUseRisk,
-                description: riskResultDescriptions.dualUse[dualUseRisk]
-            },
-            ethics: {
-                title: riskResultDescriptions.ethics.title,
-                risk: ethicsRisk,
-                description: riskResultDescriptions.ethics[ethicsRisk]
-            },
-            organizationname: organizationNameOptional,
-            organizationother: organizationOptional,
-            collaborationtypeother: collaborationtypeOptional,
-            additionalinformation: additionalinformationOptional,
-            realCalculationImpementedFor: [
-                "Functionanility that was present in frontend should be fully implemented. Leaving this field here to be reused when currently missing functionality has been mapped and is being implemented in future sprints."
-            ]
-        }
-    
-        */
+   
     const report = generateVerboseReport(reportRisks);
     return report;
 }
@@ -915,7 +800,9 @@ const calculateFinancialRisk = (liability: any, funding: any, exchange: any, fun
         financialRisk.scope = 3;
     }
 
-    if (exchange === "option1") {
+    if (funding === "option2") {
+        financialRisk.exchange = 1
+    } else if (exchange === "option1") {
         financialRisk.exchange = 1;
     } else if (exchange === "option2") {
         financialRisk.exchange = 2;
@@ -930,8 +817,8 @@ const calculateFinancialRisk = (liability: any, funding: any, exchange: any, fun
 
 const calculateFinancialRiskOverall = (scope: number, exchange: number, funding: any, fundinghistory: any, fundingsource: any): 0 | 1 | 2 | 3 => {
     let additionalRisk = 0;
-    if (!funding || (funding && (!fundinghistory || !fundingsource))) {
-        //return 0; //remove comment once front end side has been implemented
+    if (!funding || (funding === "option1" && (!fundinghistory || !fundingsource))) {
+        return 0; //remove comment once front end side has been implemented
     } else if (funding === "option2") {
         additionalRisk = 0;
     } else if (fundinghistory === "option1") {

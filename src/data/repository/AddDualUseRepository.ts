@@ -21,6 +21,10 @@ export function AddDualUseRepository<TBase extends Constructor<BaseRepository>>(
             });
         }
 
+        async getDualUses() {
+            return await DualUse.findAll();
+        }
+
     }
 
 }

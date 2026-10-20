@@ -17,5 +17,9 @@ export function AddDurationRepository<TBase extends Constructor<BaseRepository>>
                 },
             });
         }
+
+        async getDurations(){
+            return await Duration.findAll();
+        }
     }
 }

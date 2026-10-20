@@ -17,6 +17,8 @@ import OrganizationType from "./OrganizationType";
 import PersonalInformation from "./PersonalInformation";
 import User from "./User";
 import Funding from "./Funding";
+import FundingSource from "./FundingSource";
+import Consortium from "./Consortium";
 
 
 @Table({
@@ -52,13 +54,13 @@ export default class Report extends Model<
     })
     declare collaborationHistoryId: number;
 
-    @ForeignKey(() => ConsortiumType)
+    @ForeignKey(() => Consortium)
     @AllowNull(true)
     @Column({
         type: DataType.BIGINT,
-        field: "consortium_type_id",
+        field: "consortium_id",
     })
-    declare consortiumTypeId: number;
+    declare consortiumId: number;
 
     @ForeignKey(() => ContractInfo)
     @AllowNull(true)
@@ -124,6 +126,16 @@ export default class Report extends Model<
     })
     declare fundingId: number;
 
+    /*
+    @ForeignKey(() => FundingSource)
+    @AllowNull(true)
+    @Column({
+        type: DataType.BIGINT,
+        field: "funding_source_id",
+    })
+    declare fundingSourceId: number | null;
+*/
+/*
     @ForeignKey(() => Organization)
     @AllowNull(true)
     @Column({
@@ -131,6 +143,8 @@ export default class Report extends Model<
         field: "organization_id",
     })
     declare organizationId: number;
+
+    */
 
     @ForeignKey(() => OrganizationType)
     @AllowNull(true)
@@ -168,8 +182,8 @@ export default class Report extends Model<
     @BelongsTo(() => CollaborationHistory)
     declare collaborationHistory?: NonAttribute<CollaborationHistory>;
 
-    @BelongsTo(() => ConsortiumType)
-    declare consortiumType?: NonAttribute<ConsortiumType>;
+    @BelongsTo(() => Consortium)
+    declare consortium?: NonAttribute<Consortium>;
 
     @BelongsTo(() => ContractInfo)
     declare contractInfo?: NonAttribute<ContractInfo>;
@@ -195,8 +209,15 @@ export default class Report extends Model<
     @BelongsTo(() => Funding)
     declare funding?: NonAttribute<Funding>;
 
+    /*
+    @BelongsTo(() => FundingSource)
+    declare fundingSource?: NonAttribute<FundingSource>;
+*/
+/*
     @BelongsTo(() => Organization)
-    declare organization?: NonAttribute<OrganizationType>;
+    declare organization?: NonAttribute<Organization>;
+
+    */
 
     @BelongsTo(() => OrganizationType)
     declare organizationType?: NonAttribute<OrganizationType>;
