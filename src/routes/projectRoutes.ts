@@ -15,5 +15,5 @@ export const createProjectRoutes = (app: Express) => {
 
     app.patch("/reports/:id", authenticate, patchReport);
 
-    app.delete("/reports/:id", authenticate, requireAdmin, deleteReportById);
+    app.delete("/reports/:id", authenticate, deleteReportById);
 }
