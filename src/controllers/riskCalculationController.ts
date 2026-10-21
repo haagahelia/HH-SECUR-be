@@ -52,6 +52,7 @@ export type ReportChoiceIds = {
     collaborationHistoryId: number,
     consortiumTypeId: number,
     organizationIds: number[],
+    collaborationTypeIds: number[],
     contractInfoId: number,
     countryId: number,
     dualUseId: number,
@@ -63,7 +64,6 @@ export type ReportChoiceIds = {
     fundingExchangeId: number | null,
     fundingHistoryId: number | null,
     fundingSourceId: number | null,
-    organizationId: number,
     organizationTypeId: number,
     personalInformationId: number,
 }
@@ -112,29 +112,18 @@ export const patchReport = async (req: Request, res: Response) => {
         return;
     }
 
-    const collaborationTypeCodes = req.body.collaborationtype;
-    if (!collaborationTypeCodes) {
-        res.status(404).json({ message: `Collaborationtype codes required` })
-        return;
-    }
-
     let collaborationTypes = [];
-    for (let i = 0; i < collaborationTypeCodes.length; i++) {
-        const collaborationType = await repository.findCollaborationTypeByCode(collaborationTypeCodes[i]);
+    for (let i = 0; i < reportChoiceIds.collaborationTypeIds.length; i++) {
+        const collaborationType = await repository.getCollaborationType(reportChoiceIds.collaborationTypeIds[i]);
         if (!collaborationType) {
-            res.status(404).json({ message: `Code ${collaborationTypeCodes[i]} is not a valid code for collaboration type` })
+            res.status(404).json({ message: `Id ${reportChoiceIds.collaborationTypeIds[i]} is not a valid code for collaboration type` })
             return;
         }
         collaborationTypes.push(collaborationType);
     }
 
 
-    if (Number.isNaN(reportId)) {
-        res.status(400).json({
-            message: `Requested id ${reportIdRaw} is not a number`
-        })
-        return;
-    }
+
     report = await repository.findReportById(reportId);
     if (!report) {
         res.status(404).json({
@@ -178,36 +167,18 @@ export const patchReport = async (req: Request, res: Response) => {
     if (!consortiumType) {
         await funding.destroy();
         res.status(404).json({
-            message: `Id ${reportChoiceIds.consortiumTypeId} is invalid for funding`
+            message: `Id ${reportChoiceIds.consortiumTypeId} is invalid for consortiumtype`
         })
         return;
     }
-    let consortium = await repository.getConsortium(report.consortiumId);
 
-    const organization = await repository.findOrganizationById(req.body.organization)
-    let organizations = []
-    if (!organization) {
-        res.status(404).json({
-            message: `Id ${reportChoiceIds.organizationId} is invalid for corganiztaion`
-        })
-        return;
-    }
-    organizations.push(organization);
-
-    if (!consortium) {
-        consortium = await repository.createConsortium({ consortiumTypeId: consortiumType.id });
-    }
-
-    consortium?.set({ consortiumTypeId: consortiumType.id })
-    await consortium?.$set("organizations", organizations)
-
-    await consortium.save();
+    let consortiumId = await generateConsortium(req, res, reportChoiceIds, report.consortiumId)
 
     report.set({
         name: reportChoiceIds.name,
         collaborationHistoryId: reportChoiceIds.collaborationHistoryId,
         contractInfoId: reportChoiceIds.contractInfoId,
-        consortiumId: consortium.id,
+        consortiumId: consortiumId,
         countryId: reportChoiceIds.countryId,
         dualUseId: reportChoiceIds.dualUseId,
         durationId: reportChoiceIds.durationId,
@@ -308,17 +279,11 @@ export const saveReport = async (req: Request, res: Response) => {
         return;
     }
 
-    const collaborationTypeCodes = req.body.collaborationtype;
-    if (!collaborationTypeCodes) {
-        res.status(404).json({ message: `Collaborationtype codes required` })
-        return;
-    }
-
     let collaborationTypes = [];
-    for (let i = 0; i < collaborationTypeCodes.length; i++) {
-        const collaborationType = await repository.findCollaborationTypeByCode(collaborationTypeCodes[i]);
+    for (let i = 0; i < reportChoiceIds.collaborationTypeIds.length; i++) {
+        const collaborationType = await repository.getCollaborationType(reportChoiceIds.collaborationTypeIds[i]);
         if (!collaborationType) {
-            res.status(404).json({ message: `Code ${collaborationTypeCodes[i]} is not a valid code for collaboration type` })
+            res.status(404).json({ message: `Code ${reportChoiceIds.collaborationTypeIds[i]} is not a valid code for collaboration type` })
             return;
         }
         collaborationTypes.push(collaborationType);
@@ -360,32 +325,15 @@ export const saveReport = async (req: Request, res: Response) => {
     const funding = await repository.createFunding(fundingCreationAttributes);
     reportChoiceIds.fundingTypeId = funding.id;
 
-    const consortiumType = await repository.getConsortiumType(reportChoiceIds.consortiumTypeId)
-    if (!consortiumType) {
-        res.status(404).json({
-            message: `Id ${reportChoiceIds.consortiumTypeId} is invalid for consortium`
-        })
+    const consortiumId = await generateConsortium(req, res, reportChoiceIds, null)
+    if (!consortiumId) {
         return;
     }
-    let consortium = await repository.createConsortium({ consortiumTypeId: consortiumType.id })
-    const organization = await repository.findOrganizationById(req.body.organization)
-    let organizations = []
-    if (!organization) {
-        res.status(404).json({
-            message: `Id ${reportChoiceIds.organizationId} is invalid for corganiztaion`
-        })
-        return;
-    }
-    organizations.push(organization);
-    await consortium?.$set("organizations", organizations)
-
-    consortium.save();
-
     const reportCreationAttributes: ReportCreationAttributes = {
         name: reportChoiceIds.name,
         userId: reportChoiceIds.userId,
         collaborationHistoryId: reportChoiceIds.collaborationHistoryId,
-        consortiumId: consortium.id,
+        consortiumId: consortiumId,
         contractInfoId: reportChoiceIds.contractInfoId,
         countryId: reportChoiceIds.countryId,
         dualUseId: reportChoiceIds.dualUseId,
@@ -398,25 +346,6 @@ export const saveReport = async (req: Request, res: Response) => {
         personalInformationId: reportChoiceIds.personalInformationId,
     }
 
-    /*
-    name: string,
-    userId: number,
-    collaborationHistoryId: number,
-    consortiumId: number,
-    contractInfoId: number,
-    countryId: number,
-    dualUseId: number,
-    durationId: number,
-    ethicsAssessmentId: number,
-    hhroleId: number,
-    liabilityId: number,
-    fundingId: number,
-    organizationId: number,
-    organizationTypeId: number,
-    personalInformationId: number,
-    */
-
-    reportCreationAttributes.consortiumId = consortium.id;
 
     report = await repository.createReport(reportCreationAttributes);
     reportId = report.id;
@@ -498,6 +427,38 @@ export const saveReport = async (req: Request, res: Response) => {
             message: "Something went wrong"
         })
     }
+}
+
+export const generateConsortium = async (req: Request, res: Response, choiceIds: ReportChoiceIds, consortiumId: number | null) => {
+
+    const consortium = consortiumId ? await repository.getConsortium(consortiumId) : await repository.createConsortium({ consortiumTypeId: choiceIds.consortiumTypeId })
+    let organization = await repository.findOrganizationById(choiceIds.organizationIds[0])
+    if (!organization) {
+        res.status(422).json({
+            message: `Id ${choiceIds.organizationIds[0]} invalid for organization}`
+        })
+        return;
+    }
+    let organizations = [organization];
+    if (req.body.consortium === "option2") { //multilateral consortium
+        for (let i = 1; i < req.body.organization.length; i++) { //starts from 1, index 0 added on array initialization
+            organization = await repository.findOrganizationById(choiceIds.organizationIds[i])
+            if (!organization) {
+                res.status(422).json({
+                    message: `Id ${choiceIds.organizationIds[i]} invalid for organization}`
+                })
+                return;
+            }
+            organizations.push(organization);
+        }
+    }
+    consortium?.set({ consortiumTypeId: choiceIds.consortiumTypeId })
+    await consortium?.$set("organizations", organizations)
+
+    await consortium?.save();
+
+    return consortium?.id
+
 }
 
 export const getReports = async (req: Request, res: Response) => {

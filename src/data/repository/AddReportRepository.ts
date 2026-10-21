@@ -65,6 +65,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
                 include: [
                     { model: ReportSnapshot },
                     { model: CollaborationHistory },
+                    { model: CollaborationType },
                     {
                         model: Consortium,
                         include: [{ 

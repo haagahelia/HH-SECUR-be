@@ -15,6 +15,10 @@ export function AddCollaborationTypeRepository<TBase extends Constructor<BaseRep
             return await CollaborationType.findOne({ where: { code } });
         }
 
+        async getCollaborationType(id: number) {
+            return await CollaborationType.findByPk(id);
+        }
+
         async getCollaborationTypes() {
             return await CollaborationType.findAll();
         }

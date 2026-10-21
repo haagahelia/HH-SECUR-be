@@ -220,7 +220,7 @@ Request body:
     "ownerusername": "User",
     "creatorusername": "Admin",
     "country": "CHN",
-    "organization": 1,
+    "organization": [1, 2, 3],
     "hhrole": "option1",
     "consortium": "option1"
     "organizationtype": "option1",
@@ -270,7 +270,7 @@ name: project name field content,
 ownerusername: valid username of project owner,
 creatorusername: valid username of current user,
 country: 3 letter country code
-organization: organization number id
+organization: Array of organization number ids or a single organization id number #If bilateral consortium is selected, numbers after the first one will be ignored
 hhrole: option1 | option2 | option3 # Collaboration coordinator | Partner  Other
 consortium: option1 | option2 # Bilateral | Multilateral
 history: option1 | option2 # Yes | No

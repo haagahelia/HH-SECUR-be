@@ -41,10 +41,10 @@ type ReportRisks = {
 
 type ReportChoices = {
     country: string | null
-    organization: string | null,
+    organization: string | string[] | null,
     organizationtype: string | null,
     hhrole: string | null,
-    collaborationtype: string[] | null,
+    collaborationtype: string | string[] | null,
     history: string | null,
     contract: string | null,
     funding: string | null,
@@ -123,10 +123,11 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
     }
 
     const collaborationTypes = report.collaborationTypes ? report.collaborationTypes.map(type => { return type.code }) : []
+    const organizations = report.consortium?.organizations ? report.consortium.organizations.map(organizations => { return organizations.id}) : []
 
     const reportChoicesRaw = {
         country: report.country?.code,
-        //organization: report.organization?.id,
+        organization: organizations,
         organizationtype: report.organizationType?.code,
         hhrole: report.hhrole?.code,
         collaborationtype: collaborationTypes,
@@ -142,7 +143,7 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
         name: report.name,
         fundinghistory: report.funding?.fundingHistory?.code,
         fundingsource: report.funding?.fundingSource?.code,
-        //consortium: report.consortiumType?.code,
+        consortium: report.consortium?.consortiumType?.code,
         ownerusername: reportSnapshots && reportSnapshots[0].ownerUsername ? reportSnapshots[0].ownerUsername : "",
         creatorusername: reportSnapshots && reportSnapshots[0].creatorUsername ? reportSnapshots[0].creatorUsername : "",
         organizationname: reportSnapshots && reportSnapshots[0].organizationName ? reportSnapshots[0].organizationName : "",
@@ -165,8 +166,8 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         return null;
     }
 
-    const collaborationTypeCodes = req.body.collaborationtype;
-    if (!collaborationTypeCodes) {
+    const collaborationTypeCodes = Array.isArray(req.body.collaborationtype) ? req.body.collaborationtype : [req.body.collaborationtype];;
+    if (collaborationTypeCodes.length == 0) {
         res.status(404).json({ message: `Collaborationtype codes required` })
         return null;
     }
@@ -244,13 +245,6 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         return null;
     }
 
-    const organizationId = req.body.organization;
-    const organization = await repository.findOrganizationById(organizationId);
-    if (!organization) {
-        res.status(404).json({ message: `Id ${organizationId} is invalid for field organization` })
-        return null;
-    }
-
     const organizationTypeCode = req.body.organizationtype;
     const organizationType = await repository.findOrganizationTypeByCode(organizationTypeCode);
     if (!organizationType) {
@@ -285,12 +279,42 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         return null;
     }
 
+
+    const organizationIds = Array.isArray(req.body.organization) ? req.body.organization : [req.body.organization];
+    let organization = await repository.findOrganizationById(organizationIds[0]);
+    if (!organization) {
+        res.status(404).json({ message: `Id ${organizationIds[0]} is invalid for field organization` })
+        return null;
+    } else if (consortiumTypeCode === "option2") { //multilateral consortium 
+        for (let i = 1; i < organizationIds.length; i++) {
+            organization = await repository.findOrganizationById(organizationIds[0]);
+            if (!organization) {
+                res.status(404).json({ message: `Id ${organizationIds[i]} is invalid for field organization` })
+                return null;
+            }
+        }
+    }
+
+    let collaborationTypeIds = [];
+    for (let i = 0; i < collaborationTypeCodes.length; i++) {
+        const collaborationType = await repository.findCollaborationTypeByCode(collaborationTypeCodes[i]);
+        if (!collaborationType) {
+            res.status(404).json({
+                message: `Id ${collaborationTypeCodes[i]} is invalid for collaborationtype`,
+                codes: collaborationTypeCodes
+            })
+            return null;
+        }
+        collaborationTypeIds.push(collaborationType.id);
+    }
+
     let reportChoiceIds: ReportChoiceIds = {
         name: name,
         userId: ownerUser.id,
         collaborationHistoryId: collaborationHistory.id,
         consortiumTypeId: consortiumType.id,
-        organizationIds: [],
+        organizationIds: organizationIds,
+        collaborationTypeIds: collaborationTypeIds,
         contractInfoId: contractInfo.id,
         countryId: country.id,
         dualUseId: dualUse.id,
@@ -302,7 +326,6 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         fundingExchangeId: funding.code === "option2" ? null : null,
         fundingHistoryId: funding.code === "option2" ? null : null,
         fundingSourceId: funding.code === "option2" ? null : null,
-        organizationId: organization.id,
         organizationTypeId: organizationType.id,
         personalInformationId: personalInformation.id
     }
@@ -360,7 +383,7 @@ export const calculateRisk = async (req: Request) => {
         collaborationtypeother: collaborationtypeOptional,
         additionalinformation: additionalinformationOptional,
     }
-   
+
     const report = generateVerboseReport(reportRisks);
     return report;
 }
