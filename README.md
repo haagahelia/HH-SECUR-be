@@ -538,7 +538,7 @@ Response body:
 
 </summary>
 
-Fetches all reports with `id`, `name`, `risk`, `ownername`, `creatorname`, `country: {code, fi, en}`,`organizations: [{id, fi, en, countrycode}]`, `created_at` and `updated_at` included. Currently only bilateral organizations are supported but the format allows for expanding it to include multilaterals since organizations are returned as an array.
+Fetches all reports with `id`, `name`, `risk`, `ownername`, `creatorname`, `country: {code, fi, en}`,`organizations: [{id, fi, en, countrycode}]`, `created_at` and `updated_at` included.
 
 Requires: Authentication
 
@@ -2133,7 +2133,7 @@ Report and choices content can be used fill results and form pages.
 
 </summary>
 
-Requires: Authentication, Admin access
+Requires: Authentication (requirement for ownership or admin status to be added later)
 
 </details>
 
