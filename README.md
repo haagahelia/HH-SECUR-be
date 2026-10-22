@@ -222,15 +222,15 @@ Request body:
     "country": "CHN",
     "organization": [1, 2, 3],
     "hhrole": "option1",
-    "consortium": "option1"
+    "consortium": "option1",
     "organizationtype": "option1",
     "history": "option1",
     "contract": "option1",
-    "collaborationtype": ["option1", "option2"]´
+    "collaborationtype": ["option1", "option2"],
     "funding": "option1",
-    "exhange": "option1"
+    "exchange": "option1",
     "fundinghistory": "option1",
-    "fundingsource": "option1"
+    "fundingsource": "option1",
     "liability": "option1",
     "personalinformation": "option1",
     "dualuse": "option1",
