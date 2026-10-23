@@ -116,14 +116,14 @@ export const generateReportChoices = (choices: any) => {
 
 export const getReportChoicesFromReport = async (id: number): Promise<ReportChoices> => {
     const report = await repository.findReportById(id);
-    const reportSnapshots = report?.reportSnapshots;
+    const reportSnapshot = report?.reportSnapshots ? report?.reportSnapshots[0] : null;
 
     if (!report) {
         return generateReportChoices({});
     }
 
     const collaborationTypes = report.collaborationTypes ? report.collaborationTypes.map(type => { return type.code }) : []
-    const organizations = report.consortium?.organizations ? report.consortium.organizations.map(organizations => { return organizations.id}) : []
+    const organizations = report.consortium?.organizations ? report.consortium.organizations.map(organizations => { return organizations.id }) : []
 
     const reportChoicesRaw = {
         country: report.country?.code,
@@ -144,12 +144,12 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
         fundinghistory: report.funding?.fundingHistory?.code,
         fundingsource: report.funding?.fundingSource?.code,
         consortium: report.consortium?.consortiumType?.code,
-        ownerusername: reportSnapshots && reportSnapshots[0].ownerUsername ? reportSnapshots[0].ownerUsername : "",
-        creatorusername: reportSnapshots && reportSnapshots[0].creatorUsername ? reportSnapshots[0].creatorUsername : "",
-        organizationname: reportSnapshots && reportSnapshots[0].organizationName ? reportSnapshots[0].organizationName : "",
-        organizationother: reportSnapshots && reportSnapshots[0].organizationOther ? reportSnapshots[0].organizationOther : "",
-        collaborationtypeother: reportSnapshots && reportSnapshots[0].collaborationOther ? reportSnapshots[0].collaborationOther : "",
-        additionalinformation: reportSnapshots && reportSnapshots[0].additionalInformation ? reportSnapshots[0].additionalInformation : "",
+        ownerusername: reportSnapshot?.ownerUsername ? reportSnapshot.ownerUsername : "",
+        creatorusername: reportSnapshot?.creatorUsername ? reportSnapshot.creatorUsername : "",
+        organizationname: reportSnapshot?.organizationName ? reportSnapshot.organizationName : "",
+        organizationother: reportSnapshot?.organizationOther ? reportSnapshot.organizationOther : "",
+        collaborationtypeother: reportSnapshot?.collaborationOther ? reportSnapshot.collaborationOther : "",
+        additionalinformation: reportSnapshot?.additionalInformation ? reportSnapshot.additionalInformation : "",
     }
 
     const reportChoices = generateReportChoices(reportChoicesRaw);

@@ -68,6 +68,52 @@ export type ReportChoiceIds = {
     personalInformationId: number,
 }
 
+export const reportChoicesDebug = async (id: number, res: Response) => {
+    const report = await repository.findReportById(id);
+    const reportSnapshots = report?.reportSnapshots;
+
+    if (!report) {
+        return generateReportChoices({});
+    }
+
+    const collaborationTypes = report.collaborationTypes ? report.collaborationTypes.map(type => { return type.code }) : []
+    const organizations = report.consortium?.organizations ? report.consortium.organizations.map(organizations => { return organizations.id }) : []
+
+    const reportChoicesRaw = {
+        country: report.country?.code,
+        organization: organizations,
+        organizationtype: report.organizationType?.code,
+        hhrole: report.hhrole?.code,
+        collaborationtype: collaborationTypes,
+        history: report.collaborationHistory?.code,
+        contract: report.contractInfo?.code,
+        funding: report.funding?.fundingOption?.code,
+        liability: report.liability?.code,
+        exchange: report.funding?.fundingExchange?.code,
+        personalinformation: report.personalInformation?.code,
+        dualuse: report.dualUse?.code,
+        ethics: report.ethicsAssessment?.code,
+        duration: report.duration?.code,
+        name: report.name,
+        fundinghistory: report.funding?.fundingHistory?.code,
+        fundingsource: report.funding?.fundingSource?.code,
+        consortium: report.consortium?.consortiumType?.code,
+        ownerusername: reportSnapshots && reportSnapshots[0].ownerUsername ? reportSnapshots[0].ownerUsername : "",
+        creatorusername: reportSnapshots && reportSnapshots[0].creatorUsername ? reportSnapshots[0].creatorUsername : "",
+        organizationname: reportSnapshots && reportSnapshots[0].organizationName ? reportSnapshots[0].organizationName : "",
+        organizationother: reportSnapshots && reportSnapshots[0].organizationOther ? reportSnapshots[0].organizationOther : "",
+        collaborationtypeother: reportSnapshots && reportSnapshots[0].collaborationOther ? reportSnapshots[0].collaborationOther : "",
+        additionalinformation: reportSnapshots && reportSnapshots[0].additionalInformation ? reportSnapshots[0].additionalInformation : "",
+    }
+
+    const reportChoices = generateReportChoices(reportChoicesRaw);
+    res.status(200).json({
+        debug: true,
+        reportSnapshots
+    })
+    return;
+}
+
 
 
 export const generateReport = async (req: Request, res: Response) => {
@@ -496,6 +542,7 @@ export const getReports = async (req: Request, res: Response) => {
 }
 
 export const getReportById = async (req: Request, res: Response) => {
+
     const idRaw = (req.params.id);
     const id = parseInt(idRaw as string);
     let verboseReport = {};
@@ -527,6 +574,7 @@ export const getReportById = async (req: Request, res: Response) => {
             })
         }
     }
+
 }
 
 export const deleteReportById = async (req: Request, res: Response) => {
