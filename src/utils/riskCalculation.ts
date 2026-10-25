@@ -25,8 +25,8 @@ type FinancialRisk = {
 
 type ReportRisks = {
     name: string,
-    ownername: string,
-    creatorname: string,
+    ownerusername: string,
+    creatorusername: string,
     collaboration: 0 | 1 | 2 | 3,
     country: CountryRisk,
     organization: 0 | 1 | 2 | 3,
@@ -288,17 +288,23 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         return null;
     }
 
-    const ownerUsername = req.body.ownername;
+    let ownerUsername = req.body.ownerusername;
+    if (!ownerUsername) {
+        ownerUsername = req.body.ownername;
+    }
     const ownerUser = await repository.findByUsername(ownerUsername);
     if (!ownerUser) {
-        res.status(404).json({ message: `Username ${ownerUsername} is invalid for field ownerusername` })
+        res.status(404).json({ message: `Username ${ownerUsername} is invalid for field ownername` })
         return null;
     }
 
-    const creatorUsername = req.body.creatorname;
+    let creatorUsername = req.body.creatorusername;
+    if (!creatorUsername) {
+        creatorUsername = req.body.creatorname;
+    }
     const creatorUser = await repository.findByUsername(creatorUsername);
     if (!creatorUser) {
-        res.status(404).json({ message: `Username ${creatorUsername} is invalid for field creatorusername` })
+        res.status(404).json({ message: `Username ${creatorUsername} is invalid for field creatorname` })
         return null;
     }
 
@@ -363,7 +369,7 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
 }
 
 export const calculateRisk = async (req: Request) => {
-    const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, collaborationtypeother, additionalinformation, name, fundinghistory, fundingsource, consortium, organizationname, ownername, creatorname } = req.body;
+    const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, collaborationtypeother, additionalinformation, name, fundinghistory, fundingsource, consortium, organizationname, ownername, creatorname, ownerusername, creatorusername } = req.body;
     const dualUseRisk = calculateDualUseRisk(dualuse);
     const countryRisk = await calculateCountryRisk(country, personalinformation);
     const ethicsRisk = calculateEthicsRisk(ethics);
@@ -393,14 +399,20 @@ export const calculateRisk = async (req: Request) => {
     if (ownername) {
         ownerName = ownername;
     }
+    if (ownerusername) {
+        ownerName = ownerusername;
+    }
     if (creatorname) {
         creatorName = creatorname;
+    }
+    if (creatorusername) {
+        creatorName = creatorusername;
     }
 
     const reportRisks: ReportRisks = {
         name: name,
-        ownername: ownerName,
-        creatorname: creatorName,
+        ownerusername: ownerName,
+        creatorusername: creatorName,
         collaboration: collaborationRisk,
         country: countryRisk,
         organization: organizationRisk,
@@ -421,8 +433,8 @@ export const generateVerboseReport = (risks: ReportRisks) => {
 
     const report = {
         name: risks.name,
-        ownername: risks.ownername,
-        creatorname: risks.creatorname,
+        ownername: risks.ownerusername,
+        creatorname: risks.creatorusername,
         collaboration: {
             title: riskResultDescriptions.collaboration.title,
             risk: risks.collaboration,
@@ -523,8 +535,8 @@ export const getReportRisksFromReportSnapshot = (reportSnapshot: ReportSnapshot)
 
     const reportRisks: ReportRisks = {
         name: reportSnapshot.name,
-        ownername: reportSnapshot.ownerUsername,
-        creatorname: reportSnapshot.creatorUsername,
+        ownerusername: reportSnapshot.ownerUsername,
+        creatorusername: reportSnapshot.creatorUsername,
         collaboration: reportSnapshot.collaboration as 0 | 1 | 2 | 3,
         country: {
             overall: reportSnapshot.countryOverall as 0 | 1 | 2 | 3,

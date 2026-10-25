@@ -253,11 +253,17 @@ export const patchReport = async (req: Request, res: Response) => {
     }
     let ownerUsername = req.body.ownerusername;
     if (!ownerUsername) {
-        ownerUsername = "PlaceholderOwnerUsername";
+        ownerUsername = req.body.ownername;
+        if (!ownerUsername) {
+            ownerUsername = "PlaceholderOwnerUsername";
+        }
     }
     let creatorUsername = req.body.creatorusername;
     if (!creatorUsername) {
-        creatorUsername = "PlaceholderCreatorUsername";
+        creatorUsername = req.body.creatorname;
+        if (!creatorUsername) {
+            creatorUsername = "PlaceholderCreatorUsername";
+        }
     }
     let organizationName = "";
     const organizationOther = await repository.findOrganizationById(req.body.organization)
@@ -413,11 +419,17 @@ export const saveReport = async (req: Request, res: Response) => {
     }
     let ownerUsername = req.body.ownerusername;
     if (!ownerUsername) {
-        ownerUsername = "PlaceholderOwnerUsername";
+        ownerUsername = req.body.ownername;
+        if (!ownerUsername) {
+            ownerUsername = "PlaceholderOwnerUsername";
+        }
     }
     let creatorUsername = req.body.creatorusername;
     if (!creatorUsername) {
-        creatorUsername = "PlaceholderCreatorUsername";
+        creatorUsername = req.body.creatorname;
+        if (!creatorUsername) {
+            creatorUsername = "PlaceholderCreatorUsername";
+        }
     }
     let organizationName = "";
     const organizationOther = await repository.findOrganizationById(req.body.organization)
