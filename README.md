@@ -236,7 +236,8 @@ Request body:
     "dualuse": "option1",
     "ethics": "option1",
     "duration": "option1",
-    "organizationother": "specify organization",
+    "organizationname": "Name of organization if other is chosen",
+    "organizationtypeother": "specify organization",
     "collaborationtypeother": "specify collaboration type",
     "additionalinformation": "additional description"
 
@@ -267,8 +268,8 @@ Valid values #descriptions after:
 
 ```
 name: project name field content,
-ownerusername: valid username of project owner,
-creatorusername: valid username of current user,
+ownername: valid username of project owner,
+creatorname: valid username of current user,
 country: 3 letter country code
 organization: Array of organization number ids or a single organization id number #If bilateral consortium is selected, numbers after the first one will be ignored
 hhrole: option1 | option2 | option3 # Collaboration coordinator | Partner  Other
@@ -282,13 +283,14 @@ exchange: option1 | option2 | option3 # In euros | Partially in euros | In curre
 fundinghistory: option1 | option2 #Yes | No
 fundingsource: option1 | option2 | option3 | option4 | option5 | option6 | option7 | option 8 # Finnish public sector entity | Finnish foundation or equivalent | Finnish corpororation | Finnish source other than the above | Foreign public sector entity | Foreign foundation or equivalent | Foreign corporation | Foreign entity other than the above
 liability: option1 | option2 | option3  # 0-20.000 | 20.000 | Over 50.000
-personalinformation: option1 | option2 # Yes | No | Unkown
+personalinformation: option1 | option2 | option3 # Yes | No | Unkown
 dualuse: option1 | option2 | option3 # Yes | No | Unkown
 ethics: option1 | option2 | option3 | option4 | option5 # Absolutely not | Most likely not | Possibly | Very likely | Definitely
 duration: option1 | option2 | option3 # 0-24 months | 24-60 months | Over 60 Months
-organizationother: any text
-collaborationother: any text
-additionalinformation: any text
+organizationname: any text #Name of organization if other is chosen for organization selection
+organizationtypeother: any text #Type of organization if other is chosen for organization type selection
+collaborationother: any text #Type of collaboration of other is chosen for collaboration type
+additionalinformation: any text #Additional information about the project
 
 ```
 

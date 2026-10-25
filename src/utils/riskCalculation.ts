@@ -34,7 +34,7 @@ type ReportRisks = {
     dualuse: 0 | 1 | 2 | 3,
     ethics: 0 | 1 | 2 | 3,
     organizationname: string,
-    organizationother: string,
+    organizationtypeother: string,
     collaborationtypeother: string,
     additionalinformation: string,
 }
@@ -54,7 +54,7 @@ type ReportChoices = {
     dualuse: string | null,
     ethics: string | null,
     duration: string | null,
-    organizationother: string | null,
+    organizationtypeother: string | null,
     collaborationtypeother: string | null,
     additionalinformation: string | null,
     name: string | null,
@@ -64,6 +64,35 @@ type ReportChoices = {
     organizationname: string | null,
     ownerusername: string | null,
     creatorusername: string | null
+
+}
+
+//TODO: add stricter type definitions and fix code to accommodate
+type ReportChoicesRaw = {
+    country: string | null | undefined
+    organization: string | string[] | [] | any | null | undefined,
+    organizationtype: string | null| undefined,
+    hhrole: string | null| undefined,
+    collaborationtype: string | string[] | [] | null| undefined,
+    history: string | null| undefined,
+    contract: string | null| undefined,
+    funding: string | null| undefined,
+    liability: string | null| undefined,
+    exchange: string | null| undefined,
+    personalinformation: string | null| undefined,
+    dualuse: string | null| undefined,
+    ethics: string | null| undefined,
+    duration: string | null| undefined,
+    organizationtypeother: string | null| undefined,
+    collaborationtypeother: string | null| undefined,
+    additionalinformation: string | null| undefined,
+    name: string | null| undefined,
+    fundinghistory: string | null| undefined,
+    fundingsource: string | null| undefined,
+    consortium: string | null| undefined,
+    organizationname: string | null| undefined,
+    ownerusername: string | null | undefined,
+    creatorusername: string | null| undefined
 
 }
 
@@ -83,7 +112,7 @@ export const parseRiskPayload = (req: Request, res: Response) => {
     }
 }
 
-export const generateReportChoices = (choices: any) => {
+export const generateReportChoices = (choices: ReportChoicesRaw) => {
     const reportChoices: ReportChoices = {
         country: choices.country ? choices.country : "",
         organization: choices.organization ? choices.organization : "",
@@ -99,7 +128,7 @@ export const generateReportChoices = (choices: any) => {
         dualuse: choices.dualuse ? choices.dualuse : "",
         ethics: choices.ethics ? choices.ethics : "",
         duration: choices.duration ? choices.duration : "",
-        organizationother: choices.organizationother ? choices.organizationother : "",
+        organizationtypeother: choices.organizationtypeother ? choices.organizationtypeother : "",
         collaborationtypeother: choices.collaborationtypeother ? choices.collaborationtypeother : "",
         additionalinformation: choices.additionalinformation ? choices.additionalinformation : "",
         name: choices.name ? choices.name : "",
@@ -114,18 +143,18 @@ export const generateReportChoices = (choices: any) => {
     return reportChoices;
 }
 
-export const getReportChoicesFromReport = async (id: number): Promise<ReportChoices> => {
+export const getReportChoicesFromReport = async (id: number): Promise<ReportChoices | null> => {
     const report = await repository.findReportById(id);
     const reportSnapshot = report?.reportSnapshots ? report?.reportSnapshots[0] : null;
 
     if (!report) {
-        return generateReportChoices({});
+        return null;
     }
 
     const collaborationTypes = report.collaborationTypes ? report.collaborationTypes.map(type => { return type.code }) : []
     const organizations = report.consortium?.organizations ? report.consortium.organizations.map(organizations => { return organizations.id }) : []
 
-    const reportChoicesRaw = {
+    const reportChoicesRaw: ReportChoicesRaw = {
         country: report.country?.code,
         organization: organizations,
         organizationtype: report.organizationType?.code,
@@ -147,7 +176,7 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
         ownerusername: reportSnapshot?.ownerUsername ? reportSnapshot.ownerUsername : "",
         creatorusername: reportSnapshot?.creatorUsername ? reportSnapshot.creatorUsername : "",
         organizationname: reportSnapshot?.organizationName ? reportSnapshot.organizationName : "",
-        organizationother: reportSnapshot?.organizationOther ? reportSnapshot.organizationOther : "",
+        organizationtypeother: reportSnapshot?.organizationOther ? reportSnapshot.organizationOther : "",
         collaborationtypeother: reportSnapshot?.collaborationOther ? reportSnapshot.collaborationOther : "",
         additionalinformation: reportSnapshot?.additionalInformation ? reportSnapshot.additionalInformation : "",
     }
@@ -259,14 +288,14 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         return null;
     }
 
-    const ownerUsername = req.body.ownerusername;
+    const ownerUsername = req.body.ownername;
     const ownerUser = await repository.findByUsername(ownerUsername);
     if (!ownerUser) {
         res.status(404).json({ message: `Username ${ownerUsername} is invalid for field ownerusername` })
         return null;
     }
 
-    const creatorUsername = req.body.ownerusername;
+    const creatorUsername = req.body.creatorname;
     const creatorUser = await repository.findByUsername(creatorUsername);
     if (!creatorUser) {
         res.status(404).json({ message: `Username ${creatorUsername} is invalid for field creatorusername` })
@@ -379,7 +408,7 @@ export const calculateRisk = async (req: Request) => {
         dualuse: dualUseRisk,
         ethics: ethicsRisk,
         organizationname: organizationNameOptional,
-        organizationother: organizationOptional,
+        organizationtypeother: organizationOptional,
         collaborationtypeother: collaborationtypeOptional,
         additionalinformation: additionalinformationOptional,
     }
@@ -482,7 +511,7 @@ export const generateVerboseReport = (risks: ReportRisks) => {
             description: riskResultDescriptions.ethics[risks.ethics]
         },
         organizationname: risks.organizationname,
-        organizationother: risks.organizationother,
+        organizationtypeother: risks.organizationtypeother,
         collaborationtypeother: risks.collaborationtypeother,
         additionalinformation: risks.additionalinformation
     }
@@ -517,7 +546,7 @@ export const getReportRisksFromReportSnapshot = (reportSnapshot: ReportSnapshot)
         dualuse: reportSnapshot.dualUse as 0 | 1 | 2 | 3,
         ethics: reportSnapshot.ethics as 0 | 1 | 2 | 3,
         organizationname: reportSnapshot.organizationName,
-        organizationother: reportSnapshot.organizationOther,
+        organizationtypeother: reportSnapshot.organizationOther,
         collaborationtypeother: reportSnapshot.collaborationOther,
         additionalinformation: reportSnapshot.additionalInformation,
     }

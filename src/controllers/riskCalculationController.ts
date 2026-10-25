@@ -68,6 +68,7 @@ export type ReportChoiceIds = {
     personalInformationId: number,
 }
 
+/*
 export const reportChoicesDebug = async (id: number, res: Response) => {
     const report = await repository.findReportById(id);
     const reportSnapshots = report?.reportSnapshots;
@@ -98,10 +99,10 @@ export const reportChoicesDebug = async (id: number, res: Response) => {
         fundinghistory: report.funding?.fundingHistory?.code,
         fundingsource: report.funding?.fundingSource?.code,
         consortium: report.consortium?.consortiumType?.code,
-        ownerusername: reportSnapshots && reportSnapshots[0].ownerUsername ? reportSnapshots[0].ownerUsername : "",
-        creatorusername: reportSnapshots && reportSnapshots[0].creatorUsername ? reportSnapshots[0].creatorUsername : "",
+        ownername: reportSnapshots && reportSnapshots[0].ownerUsername ? reportSnapshots[0].ownerUsername : "",
+        creatorname: reportSnapshots && reportSnapshots[0].creatorUsername ? reportSnapshots[0].creatorUsername : "",
         organizationname: reportSnapshots && reportSnapshots[0].organizationName ? reportSnapshots[0].organizationName : "",
-        organizationother: reportSnapshots && reportSnapshots[0].organizationOther ? reportSnapshots[0].organizationOther : "",
+        organizationtypeother: reportSnapshots && reportSnapshots[0].organizationOther ? reportSnapshots[0].organizationOther : "",
         collaborationtypeother: reportSnapshots && reportSnapshots[0].collaborationOther ? reportSnapshots[0].collaborationOther : "",
         additionalinformation: reportSnapshots && reportSnapshots[0].additionalInformation ? reportSnapshots[0].additionalInformation : "",
     }
@@ -113,7 +114,7 @@ export const reportChoicesDebug = async (id: number, res: Response) => {
     })
     return;
 }
-
+*/
 
 
 export const generateReport = async (req: Request, res: Response) => {
@@ -273,7 +274,7 @@ export const patchReport = async (req: Request, res: Response) => {
         creatorUsername: creatorUsername,
         organizationName: organizationName,
         additionalInformation: reportRisks.additionalinformation,
-        organizationOther: reportRisks.organizationother,
+        organizationOther: reportRisks.organizationtypeother,
         collaborationOther: reportRisks.collaborationtypeother,
         collaboration: reportRisks.collaboration.risk,
         countryOverall: reportRisks.country.overall.risk,
@@ -433,7 +434,7 @@ export const saveReport = async (req: Request, res: Response) => {
         creatorUsername: creatorUsername,
         organizationName: organizationName,
         additionalInformation: reportRisks.additionalinformation,
-        organizationOther: reportRisks.organizationother,
+        organizationOther: reportRisks.organizationtypeother,
         collaborationOther: reportRisks.collaborationtypeother,
         collaboration: reportRisks.collaboration.risk,
         countryOverall: reportRisks.country.overall.risk,
