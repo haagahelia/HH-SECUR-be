@@ -71,28 +71,28 @@ type ReportChoices = {
 type ReportChoicesRaw = {
     country: string | null | undefined
     organization: string | string[] | [] | any | null | undefined,
-    organizationtype: string | null| undefined,
-    hhrole: string | null| undefined,
-    collaborationtype: string | string[] | [] | null| undefined,
-    history: string | null| undefined,
-    contract: string | null| undefined,
-    funding: string | null| undefined,
-    liability: string | null| undefined,
-    exchange: string | null| undefined,
-    personalinformation: string | null| undefined,
-    dualuse: string | null| undefined,
-    ethics: string | null| undefined,
-    duration: string | null| undefined,
-    organizationtypeother: string | null| undefined,
-    collaborationtypeother: string | null| undefined,
-    additionalinformation: string | null| undefined,
-    name: string | null| undefined,
-    fundinghistory: string | null| undefined,
-    fundingsource: string | null| undefined,
-    consortium: string | null| undefined,
-    organizationname: string | null| undefined,
+    organizationtype: string | null | undefined,
+    hhrole: string | null | undefined,
+    collaborationtype: string | string[] | [] | null | undefined,
+    history: string | null | undefined,
+    contract: string | null | undefined,
+    funding: string | null | undefined,
+    liability: string | null | undefined,
+    exchange: string | null | undefined,
+    personalinformation: string | null | undefined,
+    dualuse: string | null | undefined,
+    ethics: string | null | undefined,
+    duration: string | null | undefined,
+    organizationtypeother: string | null | undefined,
+    collaborationtypeother: string | null | undefined,
+    additionalinformation: string | null | undefined,
+    name: string | null | undefined,
+    fundinghistory: string | null | undefined,
+    fundingsource: string | null | undefined,
+    consortium: string | null | undefined,
+    organizationname: string | null | undefined,
     ownerusername: string | null | undefined,
-    creatorusername: string | null| undefined
+    creatorusername: string | null | undefined
 
 }
 
@@ -369,7 +369,7 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
 }
 
 export const calculateRisk = async (req: Request) => {
-    const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, collaborationtypeother, additionalinformation, name, fundinghistory, fundingsource, consortium, organizationname, ownername, creatorname, ownerusername, creatorusername } = req.body;
+    const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, organizationtypeother, collaborationtypeother, additionalinformation, name, fundinghistory, fundingsource, consortium, organizationname, ownername, creatorname, ownerusername, creatorusername } = req.body;
     const dualUseRisk = calculateDualUseRisk(dualuse);
     const countryRisk = await calculateCountryRisk(country, personalinformation);
     const ethicsRisk = calculateEthicsRisk(ethics);
@@ -386,7 +386,11 @@ export const calculateRisk = async (req: Request) => {
         collaborationtypeOptional = collaborationtypeother;
     }
     if (organizationtype === "option5") {
-        organizationOptional = organizationother;
+        if (organizationtypeother) {
+            organizationOptional = organizationtypeother;
+        } else if (organizationother) {
+            organizationOptional = organizationother;
+        }
     }
     if (additionalinformation) {
         additionalinformationOptional = additionalinformation;

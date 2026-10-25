@@ -268,8 +268,8 @@ Valid values #descriptions after:
 
 ```
 name: project name field content,
-ownername: valid username of project owner,
-creatorname: valid username of current user,
+ownerusername: valid username of project owner,
+creatorusername: valid username of current user,
 country: 3 letter country code
 organization: Array of organization number ids or a single organization id number #If bilateral consortium is selected, numbers after the first one will be ignored
 hhrole: option1 | option2 | option3 # Collaboration coordinator | Partner  Other
