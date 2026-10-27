@@ -68,57 +68,8 @@ export type ReportChoiceIds = {
     personalInformationId: number,
 }
 
-/*
-export const reportChoicesDebug = async (id: number, res: Response) => {
-    const report = await repository.findReportById(id);
-    const reportSnapshots = report?.reportSnapshots;
-
-    if (!report) {
-        return generateReportChoices({});
-    }
-
-    const collaborationTypes = report.collaborationTypes ? report.collaborationTypes.map(type => { return type.code }) : []
-    const organizations = report.consortium?.organizations ? report.consortium.organizations.map(organizations => { return organizations.id }) : []
-
-    const reportChoicesRaw = {
-        country: report.country?.code,
-        organization: organizations,
-        organizationtype: report.organizationType?.code,
-        hhrole: report.hhrole?.code,
-        collaborationtype: collaborationTypes,
-        history: report.collaborationHistory?.code,
-        contract: report.contractInfo?.code,
-        funding: report.funding?.fundingOption?.code,
-        liability: report.liability?.code,
-        exchange: report.funding?.fundingExchange?.code,
-        personalinformation: report.personalInformation?.code,
-        dualuse: report.dualUse?.code,
-        ethics: report.ethicsAssessment?.code,
-        duration: report.duration?.code,
-        name: report.name,
-        fundinghistory: report.funding?.fundingHistory?.code,
-        fundingsource: report.funding?.fundingSource?.code,
-        consortium: report.consortium?.consortiumType?.code,
-        ownername: reportSnapshots && reportSnapshots[0].ownerUsername ? reportSnapshots[0].ownerUsername : "",
-        creatorname: reportSnapshots && reportSnapshots[0].creatorUsername ? reportSnapshots[0].creatorUsername : "",
-        organizationname: reportSnapshots && reportSnapshots[0].organizationName ? reportSnapshots[0].organizationName : "",
-        organizationtypeother: reportSnapshots && reportSnapshots[0].organizationOther ? reportSnapshots[0].organizationOther : "",
-        collaborationtypeother: reportSnapshots && reportSnapshots[0].collaborationOther ? reportSnapshots[0].collaborationOther : "",
-        additionalinformation: reportSnapshots && reportSnapshots[0].additionalInformation ? reportSnapshots[0].additionalInformation : "",
-    }
-
-    const reportChoices = generateReportChoices(reportChoicesRaw);
-    res.status(200).json({
-        debug: true,
-        reportSnapshots
-    })
-    return;
-}
-*/
-
-
 export const generateReport = async (req: Request, res: Response) => {
-    if (!parseRiskPayload(req, res)) {
+    if (!await parseRiskPayload(req, res)) {
         return;
     }
     const report = await calculateRisk(req);
@@ -134,7 +85,7 @@ export const patchReport = async (req: Request, res: Response) => {
     const reportIdRaw = (req.params.id);
     if (!reportIdRaw) {
         res.status(400).json({
-            message: `Id required is not a number`
+            message: `Id required`
         })
         return;
     }
@@ -163,13 +114,11 @@ export const patchReport = async (req: Request, res: Response) => {
     for (let i = 0; i < reportChoiceIds.collaborationTypeIds.length; i++) {
         const collaborationType = await repository.getCollaborationType(reportChoiceIds.collaborationTypeIds[i]);
         if (!collaborationType) {
-            res.status(404).json({ message: `Id ${reportChoiceIds.collaborationTypeIds[i]} is not a valid code for collaboration type` })
+            res.status(404).json({ message: `Id ${reportChoiceIds.collaborationTypeIds[i]} is not a valid id for collaboration type` })
             return;
         }
         collaborationTypes.push(collaborationType);
     }
-
-
 
     report = await repository.findReportById(reportId);
     if (!report) {
@@ -178,30 +127,14 @@ export const patchReport = async (req: Request, res: Response) => {
         })
         return;
     }
-    const fundingOption = await repository.getFundingOption(reportChoiceIds.fundingTypeId)
-    if (!fundingOption) {
-        res.status(404).json({
-            message: `Id ${reportChoiceIds.fundingTypeId} is invalid for funding`
-        })
-        return;
+
+    const fundingCreationAttributes = {
+        fundingOptionId: reportChoiceIds.fundingTypeId,
+        fundingSourceId: reportChoiceIds.fundingSourceId,
+        fundingHistoryId: reportChoiceIds.fundingHistoryId,
+        fundingExchangeId: reportChoiceIds.fundingExchangeId
     }
     let funding = await repository.findFundingById(report.fundingId);
-    let fundingSource = fundingOption.code === "option1" ? await repository.findFundingSourceByCode(req.body.fundingsource) : null
-    let fundingHistory = fundingOption.code === "option1" ? await repository.findFundingHistoryByCode(req.body.fundinghistory) : null
-    let fundingExchange = fundingOption.code === "option1" ? await repository.findFundingExchangeByCode(req.body.exchange) : null
-
-    if (fundingOption.code === "option1" && (!fundingSource || !fundingHistory || !fundingExchange)) {
-        res.status(404).json({
-            message: `Valid options required for fundingsource ${req.body.fundingsource}, fundinghistory ${req.body.fundinghistory} and fundingexchange ${req.body.exchange}`
-        })
-        return;
-    }
-    let fundingCreationAttributes = {
-        fundingOptionId: fundingOption.id,
-        fundingSourceId: fundingSource ? fundingSource.id : null,
-        fundingHistoryId: fundingHistory ? fundingHistory.id : null,
-        fundingExchangeId: fundingExchange ? fundingExchange.id : null
-    }
     if (!funding) {
         funding = await repository.createFunding(fundingCreationAttributes)
     } else {
@@ -346,34 +279,11 @@ export const saveReport = async (req: Request, res: Response) => {
     let reportId = parseInt(reportIdRaw as string)
     let report;
 
-    const fundingOption = await repository.getFundingOption(reportChoiceIds.fundingTypeId)
-    const fundingOptionId = fundingOption?.id;
-    if (!fundingOptionId) {
-        res.status(404).json({
-            message: `Id ${reportChoiceIds.fundingTypeId} is invalid for funding`
-        })
-        return;
-    }
-    const fundingSource = fundingOption.code === "option1" ? await repository.findFundingSourceByCode(req.body.fundingsource) : null
-    const fundingHistory = fundingOption.code === "option1" ? await repository.findFundingHistoryByCode(req.body.fundinghistory) : null
-    const fundingExchange = fundingOption.code === "option1" ? await repository.findFundingExchangeByCode(req.body.exchange) : null
-
-    if ((!fundingSource || !fundingHistory || !fundingExchange) && fundingOption.code === "option1") {
-        res.status(422).json({
-
-            message: `Valid options required for fundingsource, fundinghistory and exchange`,
-            source: fundingSource,
-            history: fundingHistory,
-            exchange: fundingExchange
-        })
-        return;
-    }
-
     const fundingCreationAttributes = {
-        fundingOptionId: fundingOptionId,
-        fundingSourceId: fundingSource ? fundingSource.id : null,
-        fundingHistoryId: fundingHistory ? fundingHistory.id : null,
-        fundingExchangeId: fundingExchange ? fundingExchange.id : null
+        fundingOptionId: reportChoiceIds.fundingTypeId,
+        fundingSourceId: reportChoiceIds.fundingSourceId,
+        fundingHistoryId: reportChoiceIds.fundingHistoryId,
+        fundingExchangeId: reportChoiceIds.fundingExchangeId
     }
     const funding = await repository.createFunding(fundingCreationAttributes);
     reportChoiceIds.fundingTypeId = funding.id;
@@ -421,14 +331,14 @@ export const saveReport = async (req: Request, res: Response) => {
     if (!ownerUsername) {
         ownerUsername = req.body.ownername;
         if (!ownerUsername) {
-            ownerUsername = "PlaceholderOwnerUsername";
+            ownerUsername = "";
         }
     }
     let creatorUsername = req.body.creatorusername;
     if (!creatorUsername) {
         creatorUsername = req.body.creatorname;
         if (!creatorUsername) {
-            creatorUsername = "PlaceholderCreatorUsername";
+            creatorUsername = "";
         }
     }
     let organizationName = "";
