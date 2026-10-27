@@ -3,24 +3,23 @@ import { riskResultDescriptions } from "./riskResultDescriptions";
 import repository from "../data/repository/repository";
 import ReportSnapshot from "../data/models/ReportSnapshot";
 import { ReportChoiceIds, ReportCreationAttributes } from "../controllers/riskCalculationController";
-import FundingExchange from "../data/models/FundingExchange";
 
 type CountryRisk = {
-    "overall": 0 | 1 | 2 | 3,
-    "corruption": 0 | 1 | 2 | 3,
-    "security": 0 | 1 | 2 | 3,
-    "academicfreedom": 0 | 1 | 2 | 3,
-    "politicalstability": 0 | 1 | 2 | 3,
-    "development": 0 | 1 | 2 | 3,
-    "gdpr": 0 | 1 | 2 | 3,
-    "sanctions": 0 | 1 | 2 | 3,
-    "ruleoflaw": 0 | 1 | 2 | 3,
+    overall: 0 | 1 | 2 | 3,
+    corruption: 0 | 1 | 2 | 3,
+    security: 0 | 1 | 2 | 3,
+    academicfreedom: 0 | 1 | 2 | 3,
+    politicalstability: 0 | 1 | 2 | 3,
+    development: 0 | 1 | 2 | 3,
+    gdpr: 0 | 1 | 2 | 3,
+    sanctions: 0 | 1 | 2 | 3,
+    ruleoflaw: 0 | 1 | 2 | 3,
 }
 
 type FinancialRisk = {
-    "overall": 0 | 1 | 2 | 3,
-    "scope": 0 | 1 | 2 | 3,
-    "exchange": 0 | 1 | 2 | 3
+    overall: 0 | 1 | 2 | 3,
+    scope: 0 | 1 | 2 | 3,
+    exchange: 0 | 1 | 2 | 3
 }
 
 type ReportRisks = {
@@ -67,7 +66,6 @@ type ReportChoices = {
 
 }
 
-//TODO: add stricter type definitions and fix code to accommodate
 type ReportChoicesRaw = {
     country: string | null | undefined
     organization: string | string[] | [] | any | null | undefined,
@@ -96,19 +94,27 @@ type ReportChoicesRaw = {
 
 }
 
-export const parseRiskPayload = (req: Request, res: Response) => {
-    const requiredFields = ["country", "organizationtype", "hhrole", "collaborationtype", "history", "contract", "funding", "liability", "personalinformation", "dualuse", "ethics", "duration"]
+export const parseRiskPayload = async (req: Request, res: Response) => {
+    //Add when legacy variations have been removed from frontend: "ownerusername", "creatorusername"
+    const requiredFields = ["country", "organization", "organizationtype", "hhrole", "collaborationtype", "history", "contract", "funding", "liability", "personalinformation", "dualuse", "ethics", "duration", "consortium"]
     let missingFields: string[] = [];
     for (let i = 0; i < requiredFields.length; i++) {
         if (!req.body[requiredFields[i]]) {
             missingFields.push(requiredFields[i])
         }
     }
+    if (!req.body.ownerusername && !req.body.ownername) { //Temporary check to allow legacy format
+        missingFields.push("ownerusername")
+    }
+    if (!req.body.creatorusername && !req.body.creatorname) {
+        missingFields.push("creatorusername")
+    }
 
     if (missingFields.length == 0) {
         return true
     } else {
         res.status(422).json({ message: "Missing fields", missing: missingFields })
+        return false;
     }
 }
 
@@ -191,20 +197,20 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
     const collaborationHistoryCode = req.body.history;
     const collaborationHistory = await repository.findCollaborationHistoryByCode(collaborationHistoryCode);
     if (!collaborationHistory) {
-        res.status(404).json({ message: `Code ${collaborationHistoryCode} is invalid for field history` })
+        res.status(422).json({ message: `Code ${collaborationHistoryCode} is invalid for field history` })
         return null;
     }
 
-    const collaborationTypeCodes = Array.isArray(req.body.collaborationtype) ? req.body.collaborationtype : [req.body.collaborationtype];;
+    const collaborationTypeCodes = Array.isArray(req.body.collaborationtype) ? req.body.collaborationtype : [req.body.collaborationtype];
     if (collaborationTypeCodes.length == 0) {
-        res.status(404).json({ message: `Collaborationtype codes required` })
+        res.status(422).json({ message: `Collaborationtype codes required` })
         return null;
     }
     let collaborationTypes = [];
     for (let i = 0; i < collaborationTypeCodes.length; i++) {
         const collaborationType = await repository.findCollaborationTypeByCode(collaborationTypeCodes[i]);
         if (!collaborationType) {
-            res.status(404).json({ message: `Code ${collaborationTypeCodes[i]} is not a valid code for collaboration type` })
+            res.status(422).json({ message: `Code ${collaborationTypeCodes[i]} is not a valid code for collaboration type` })
             return null;
         }
         collaborationTypes.push(collaborationType);
@@ -213,56 +219,56 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
     const consortiumTypeCode = req.body.consortium;
     const consortiumType = await repository.findConsortiumTypeByCode(consortiumTypeCode);
     if (!consortiumType) {
-        res.status(404).json({ message: `Code ${consortiumTypeCode} is invalid for field consortium` })
+        res.status(422).json({ message: `Code ${consortiumTypeCode} is invalid for field consortium` })
         return null;
     }
 
     const contractInfoCode = req.body.contract;
     const contractInfo = await repository.findContractInfoByCode(contractInfoCode);
     if (!contractInfo) {
-        res.status(404).json({ message: `Code ${contractInfoCode} is invalid for field contract` })
+        res.status(422).json({ message: `Code ${contractInfoCode} is invalid for field contract` })
         return null;
     }
 
     const countryCode = req.body.country;
     const country = await repository.findCountryByCode(countryCode);
     if (!country) {
-        res.status(404).json({ message: `Code ${countryCode} is invalid for field country` })
+        res.status(422).json({ message: `Code ${countryCode} is invalid for field country` })
         return null;
     }
 
     const dualUseCode = req.body.dualuse;
     const dualUse = await repository.findDualUseByCode(dualUseCode);
     if (!dualUse) {
-        res.status(404).json({ message: `Code ${dualUseCode} is invalid for field dualuse` })
+        res.status(422).json({ message: `Code ${dualUseCode} is invalid for field dualuse` })
         return null;
     }
 
     const durationCode = req.body.duration;
     const duration = await repository.findDurationByCode(durationCode);
     if (!duration) {
-        res.status(404).json({ message: `Code ${durationCode} is invalid for field duration` })
+        res.status(422).json({ message: `Code ${durationCode} is invalid for field duration` })
         return null;
     }
 
     const ethicsAssessmentCode = req.body.ethics;
     const ethicsAssessment = await repository.findEthicsAssessmentByCode(ethicsAssessmentCode);
     if (!ethicsAssessment) {
-        res.status(404).json({ message: `Code ${ethicsAssessmentCode} is invalid for field ethics` })
+        res.status(422).json({ message: `Code ${ethicsAssessmentCode} is invalid for field ethics` })
         return null;
     }
 
     const hhroleCode = req.body.hhrole;
     const hhrole = await repository.findHHRoleByCode(hhroleCode);
     if (!hhrole) {
-        res.status(404).json({ message: `Code ${hhroleCode} is invalid for field hhrole` })
+        res.status(422).json({ message: `Code ${hhroleCode} is invalid for field hhrole` })
         return null;
     }
 
     const liabilityCode = req.body.liability;
     const liability = await repository.findLiabilityByCode(liabilityCode);
     if (!liability) {
-        res.status(404).json({ message: `Code ${liabilityCode} is invalid for field liability` })
+        res.status(422).json({ message: `Code ${liabilityCode} is invalid for field liability` })
         return null;
     }
 
@@ -270,9 +276,38 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
     const fundingCode = req.body.funding;
     const funding = await repository.findFundingOptionByCode(fundingCode);
     if (!funding) {
-        res.status(404).json({ message: `Code ${funding} is invalid for field funding` })
+        res.status(422).json({ message: `Code ${fundingCode} is invalid for field funding` })
         return null;
     }
+
+    let fundingExchangeId = null;
+    let fundingHistoryId = null;
+    let fundingSourceId = null;
+
+    if (funding.code === "option1") {
+        const fundingExchangeCode = req.body.exchange;
+        const fundingExchange = await repository.findFundingExchangeByCode(fundingExchangeCode)
+        if (!fundingExchange) {
+            res.status(404).json({ message: `Code ${fundingExchangeCode} is invalid for field exchange` })
+            return null;
+        }
+        fundingExchangeId = fundingExchange?.id;
+        const fundingHistoryCode = req.body.exchange;
+        const fundingHistory = await repository.findFundingHistoryByCode(fundingHistoryCode)
+        if (!fundingHistory) {
+            res.status(404).json({ message: `Code ${fundingHistoryCode} is invalid for field fundinghistory` })
+            return null;
+        }
+        fundingHistoryId = fundingHistory?.id;
+        const fundingSourceCode = req.body.exchange;
+        const fundingSource = await repository.findFundingSourceByCode(fundingSourceCode)
+        if (!fundingSource) {
+            res.status(404).json({ message: `Code ${fundingSourceCode} is invalid for field fundingsource` })
+            return null;
+        }
+        fundingSourceId = fundingSource?.id;
+    }
+
 
     const organizationTypeCode = req.body.organizationtype;
     const organizationType = await repository.findOrganizationTypeByCode(organizationTypeCode);
@@ -313,7 +348,6 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         res.status(404).json({ message: `name field cannot be empty` })
         return null;
     }
-
 
     const organizationIds = Array.isArray(req.body.organization) ? req.body.organization : [req.body.organization];
     let organization = await repository.findOrganizationById(organizationIds[0]);
@@ -358,9 +392,9 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         hhroleId: hhrole.id,
         liabilityId: liability.id,
         fundingTypeId: funding.id,
-        fundingExchangeId: funding.code === "option2" ? null : null,
-        fundingHistoryId: funding.code === "option2" ? null : null,
-        fundingSourceId: funding.code === "option2" ? null : null,
+        fundingExchangeId: fundingExchangeId,
+        fundingHistoryId: fundingHistoryId,
+        fundingSourceId: fundingSourceId,
         organizationTypeId: organizationType.id,
         personalInformationId: personalInformation.id
     }
@@ -371,10 +405,10 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
 export const calculateRisk = async (req: Request) => {
     const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, organizationtypeother, collaborationtypeother, additionalinformation, name, fundinghistory, fundingsource, consortium, organizationname, ownername, creatorname, ownerusername, creatorusername } = req.body;
     const dualUseRisk = calculateDualUseRisk(dualuse);
-    const countryRisk = await calculateCountryRisk(country, personalinformation);
+    let countryRisk = await calculateCountryRisk(country, personalinformation);
     const ethicsRisk = calculateEthicsRisk(ethics);
     const financialRisk = calculateFinancialRisk(liability, funding, exchange, fundinghistory, fundingsource);
-    const collaborationRisk = calculateCollaborationRIsk(countryRisk, collaborationtype, duration, hhrole, contract, history)
+    const collaborationRisk = await calculateCollaborationRisk(countryRisk, collaborationtype, duration, hhrole, contract, history, consortium, organization, personalinformation)
     const organizationRisk = await calculateOrganizationRisk(organization);
 
     let collaborationtypeOptional = "";
@@ -382,22 +416,35 @@ export const calculateRisk = async (req: Request) => {
     let additionalinformationOptional = "";
     let organizationNameOptional = "";
 
-    if (collaborationtype.includes("option7")) {
+    //Highest risk of member Country is used for multilateral collaboration if if Haaga-Helia is the collaboratin coordinator
+    //Currently the Country calculation is based on is selected by user, uncomment to enable this instead
+    /*
+    if (hhrole === "option1" && consortium === "option2") {
+        const highestRisk = await calculateCountryRiskHighest(organization, personalinformation);
+        if (highestRisk) {
+            countryRisk = highestRisk
+        }
+    }
+    */
+
+    if (collaborationtype.includes("option7")) { //Collaboration description is added if option "other" is chosen
         collaborationtypeOptional = collaborationtypeother;
     }
-    if (organizationtype === "option5") {
+    if (organizationtype === "option5") { //Organization type description is added if option "other" is chosen
         if (organizationtypeother) {
             organizationOptional = organizationtypeother;
         } else if (organizationother) {
             organizationOptional = organizationother;
         }
     }
-    if (additionalinformation) {
+    if (additionalinformation) { //Additional information is included if present
         additionalinformationOptional = additionalinformation;
     }
-    if (organization) {
+    if (organization) { //Organization name is added if option "other" is chosen
         organizationNameOptional = organizationname;
     }
+
+    //Remove placeholders, ownername and creatorname once front-end has been updated to use username format
     let ownerName = "Placeholder";
     let creatorName = "Placeholder";
     if (ownername) {
@@ -570,12 +617,52 @@ export const getReportRisksFromReportSnapshot = (reportSnapshot: ReportSnapshot)
     return reportRisks;
 }
 
-const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType: any, duration: any, hhrole: any, contract: any, history: any): 0 | 1 | 2 | 3 => {
+const calculateCountryRiskHighest = async (organizationRaw: any, personal: any) => {
+    const organizations = Array.isArray(organizationRaw) ? organizationRaw : [organizationRaw];
+    let riskHighest = null;
+    for (let i = 0; i < organizations.length; i++) {
+        const organization = await repository.findOrganizationById(organizationRaw)
+        if (organization) {
+            const risk = await calculateCountryRisk(organization.country_code, personal);
+            if (risk.overall === 3) {
+                return risk;
+
+            } else if (!riskHighest) {
+                riskHighest = risk;
+            } else if (risk.overall > riskHighest.overall) {
+                riskHighest = risk;
+            }
+        }
+    }
+    return riskHighest;
+}
+
+const countConsortiumCountries = async (organizationRaw: any) => {
+    const organizations = Array.isArray(organizationRaw) ? organizationRaw : [organizationRaw]
+    let countries = null;
+    for (let i = 1; i < organizations.length; i++) {
+        const organization = await repository.findOrganizationById(organizations[i])
+        if (organization) {
+            if (!countries) {
+                countries = [organization.country_code]
+            } else if (!countries.includes(organization.country_code)) {
+                countries.push(organization.country_code);
+            }
+        }
+    }
+    if (!countries) {
+        countries = [];
+    }
+    return countries.length;
+}
+
+const calculateCollaborationRisk = async (countryRisk: CountryRisk, collaborationType: any, duration: any, hhrole: any, contract: any, history: any, consortium: any, organization: any, personal: any): Promise<0 | 1 | 2 | 3> => {
     if (!countryRisk) {
         return 0;
     } else if (countryRisk.sanctions === 3) { //All project to sanctioned countries have risk of 3
         return 3;
     }
+    //Multiplayers that counted after calculating the average, they stay at 1 unless their condition is triggered
     let roleMultiplier = 1;
     let durationMultiplier = 1;
     let contractMultiplier = 1;
@@ -589,11 +676,19 @@ const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType:
         roleMultiplier = 1.2;
     }
 
+    //Risk is added to total depending on the number of Countries in consortium
+    let consortiumRisk = 0;
+    if (consortium === "option2") {
+        const consortiumCountries = await countConsortiumCountries(organization);
+        if (consortiumCountries === 1) {
+            consortiumRisk = 2;
+        } else if (consortiumCountries > 1) {
+            consortiumRisk = 3;
+        }
+    }
 
-    let consortiumRisk = 0; //implement calculation once risk calculation for consortiums is supported
-
+    //Duration increases risk with highest duration also adding a multiplier
     let durationRisk = 0;
-
     if (duration !== "option1" && duration !== "option2" && duration !== "option3") {
         return 0;
     } else if (duration === "option1") {
@@ -605,18 +700,21 @@ const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType:
         durationMultiplier = 1.2;
     }
 
+    //Having no signed contract adds a multiplier to total risk
     if (contract !== "option1" && contract !== "option2") {
         return 0;
     } else if (contract === "option2") {
         contractMultiplier = 1.2;
     }
 
+    //Having no previous history adds a multiplier
     if (history !== "option1" && history !== "option2") {
         return 0;
     } else if (history === "option2") {
         historyMultiplier = 1.2;
     }
 
+    //Country's security rating adds a multiplier if it's more than 1 and project includes personnel movement
     for (let i = 0; i < collaborationType.length; i++) {
         if (collaborationType[i] === "option1") {
             //sanctionsMultiplier = 1.5; //Sanctions mean automatic risk of 3, implement multiplier if this is changed
@@ -645,8 +743,8 @@ const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType:
         return 3;
     }
 
-    const average = risksSum / validRisks;
-    const multipliedAverage = average * roleMultiplier * durationMultiplier * contractMultiplier;
+    const average = (risksSum + consortiumRisk) / validRisks;
+    const multipliedAverage = average * roleMultiplier * durationMultiplier * contractMultiplier * historyMultiplier;
 
     let roundedAverage = Math.round(multipliedAverage) as 0 | 1 | 2 | 3;
 
@@ -657,74 +755,12 @@ const calculateCollaborationRIsk = (countryRisk: CountryRisk, collaborationType:
 
 }
 
-
+//Country risk calculation based on the Country's risk factors and planned handling of personal information
 const calculateCountryRisk = async (countryCode: any, personal: any): Promise<CountryRisk> => {
-
-    /*
-    //placeholders until database integration
-    let countriesPlaceholder = [{
-        name: {
-            en: "United States of America",
-            fi: "Yhdysvallat"
-        },
-        id: "USA",
-        dataYear: 2025,
-        risk: {
-            corruption: 83.02,
-            security: 1,
-            academicFreedom: 0.397,
-            politicalStability: 47.39,
-            development: -1,
-            gdpr: 2,
-            sanctions: 1,
-            ruleOfLaw: 0.67977332
-        }
-    },
-    {
-        name: {
-            en: "Sweden",
-            fi: "Ruotsi"
-        },
-        id: "SWE",
-        dataYear: 2025,
-        risk: {
-            corruption: 97.64,
-            security: 1,
-            academicFreedom: 0.934,
-            politicalStability: 73.46,
-            development: 5,
-            gdpr: 1,
-            sanctions: 1,
-            ruleOfLaw: 0.85227449
-        }
-    },
-    {
-        name: {
-            en: "China",
-            fi: "Kiina"
-        },
-        id: "CHN",
-        dataYear: 2025,
-        risk: {
-            corruption: 54.25,
-            security: 1,
-            academicFreedom: 0.071,
-            politicalStability: 25.12,
-            development: 78,
-            gdpr: 3,
-            sanctions: 3,
-            ruleOfLaw: 0.47709017
-        }
-    }
-    ]
-    const countryRaw = countriesPlaceholder.find((country) => country.id === countryCode);
-    const country = countryRaw?.risk;
-    //placeholders end 
-*/
 
     const country = await repository.findCountryByCode(countryCode);
 
-    let countryRisk =
+    let countryRisk: CountryRisk =
     {
         "overall": 0 as 0 | 1 | 2 | 3,
         "corruption": 0 as 0 | 1 | 2 | 3,
@@ -740,7 +776,6 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
     if (!country) {
         return countryRisk;
     }
-
 
     if (country.security == 0 || country.security == 1 || country.security == 2 || country.security == 3) {
         countryRisk.security = country.security;
@@ -778,6 +813,7 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
         countryRisk.development = 3;
     }
 
+    //Reduced or no GDPR compliance increases risk if personal information may be moved
     if ((personal !== "option1" && personal !== "option2") && country.gdpr !== 1) {
         countryRisk.gdpr = 0;
     } else if (personal === "option2" || country.gdpr === 1) {
@@ -788,6 +824,7 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
         countryRisk.gdpr = 3
     }
 
+    //Is country under EU sanctions
     if (country.sanctions == 1) {
         countryRisk.sanctions = 1;
     } else if (country.sanctions == 3) {
@@ -812,6 +849,7 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
     return countryRisk;
 }
 
+//Organization risk based on whether organization is known
 const calculateOrganizationRisk = async (id: string): Promise<0 | 1 | 2 | 3> => {
     if (!id) {
         return 0;
@@ -827,6 +865,7 @@ const calculateOrganizationRisk = async (id: string): Promise<0 | 1 | 2 | 3> => 
     return 1;
 }
 
+//Risk of collaboration or its results being used for military use
 const calculateDualUseRisk = (dualUse: string): 0 | 1 | 2 | 3 => {
     let dualUseRisk = 0 as 0 | 1 | 2 | 3;
 
@@ -840,6 +879,7 @@ const calculateDualUseRisk = (dualUse: string): 0 | 1 | 2 | 3 => {
     return dualUseRisk;
 }
 
+//Assessment of ethical issues with the collaboration
 const calculateEthicsRisk = (ethics: any): 0 | 1 | 2 | 3 => {
     let ethicsRisk = 0 as 0 | 1 | 2 | 3;
 
@@ -853,6 +893,8 @@ const calculateEthicsRisk = (ethics: any): 0 | 1 | 2 | 3 => {
     return ethicsRisk;
 }
 
+
+//Financial risk is based on Haaga-Helia's investment, and external funding and its source and its currency
 const calculateFinancialRisk = (liability: any, funding: any, exchange: any, fundinghistory: any, fundingsource: any): FinancialRisk => {
     let financialRisk = {
         "overall": 0 as 0 | 1 | 2 | 3,
@@ -885,8 +927,14 @@ const calculateFinancialRisk = (liability: any, funding: any, exchange: any, fun
 
 const calculateFinancialRiskOverall = (scope: number, exchange: number, funding: any, fundinghistory: any, fundingsource: any): 0 | 1 | 2 | 3 => {
     let additionalRisk = 0;
+    let externalFunding = 0;
+    let exchangeRisk = 0;
+    if (funding === "option1") {
+        externalFunding = 1;
+        exchangeRisk = exchange;
+    }
     if (!funding || (funding === "option1" && (!fundinghistory || !fundingsource))) {
-        return 0; //remove comment once front end side has been implemented
+        return 0;
     } else if (funding === "option2") {
         additionalRisk = 0;
     } else if (fundinghistory === "option1") {
@@ -897,13 +945,12 @@ const calculateFinancialRiskOverall = (scope: number, exchange: number, funding:
         return 0;
     }
 
-
     if (scope == 0 || exchange == 0) {
         return 0;
     }
 
-    let overall = (scope + exchange + additionalRisk) / 2;
-    if (overall < 1) {
+    let overall = (scope + exchangeRisk + additionalRisk) / (1 + externalFunding); //If there is external funding, then the risk is split and may lower the value depending on funding source and currency, if there is not then it's just HH's liability
+    if (overall <= 0) {
         overall = 0;
     } else if (overall > 3) {
         overall = 3;
