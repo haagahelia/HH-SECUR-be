@@ -27,7 +27,7 @@ export function AddOrganizationRepository<TBase extends Constructor<BaseReposito
             });
         }
 
-        async createOrganization(organizationAttributes: { code: string; fi: string; en: string; country_code: string; }) {
+        async createOrganization(organizationAttributes: { code: string|null; fi: string; en: string; country_code: string; added_manually: boolean }) {
             return await Organization.create(organizationAttributes);
         }
     }

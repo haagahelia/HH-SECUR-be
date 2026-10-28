@@ -195,7 +195,6 @@ export async function addOrganizations() {
     ]
 */
     /*
-        //Real orga
         for (let i = 0; i < organizations.length; i++) {
     
             let organization = await repository.findOrganizationByCode(organizations[i].code)
@@ -224,15 +223,24 @@ export const addOrganizationsLimited = async () => {
 
         if (limit < 2) {
             limit++;
+            let organizationNew = {
+                code: organizations[i].code,
+                fi: organizations[i].fi,
+                en: organizations[i].en,
+                country_code: organizations[i].country_code,
+                added_manually: false,
+            }
             let organization = await repository.findOrganizationByCode(organizations[i].code)
             try {
                 if (organization) {
                     organization.fi = organizations[i].fi;
                     organization.en = organizations[i].en;
                     organization.country_code = organizations[i].country_code;
+                    organization.added_manually = false;
                     await organization.save();
                 } else {
-                    await repository.createOrganization(organizations[i]);
+                    organizations[i]
+                    await repository.createOrganization(organizationNew);
                 }
             } catch (error) {
                 limit--;
