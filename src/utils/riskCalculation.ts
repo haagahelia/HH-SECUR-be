@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 import { riskResultDescriptions } from "./riskResultDescriptions";
 import repository from "../data/repository/repository";
 import ReportSnapshot from "../data/models/ReportSnapshot";
-import { ReportChoiceIds, ReportCreationAttributes } from "../controllers/riskCalculationController";
+import { ReportChoiceIds } from "../controllers/riskCalculationController";
+import CollaborationType from "../data/models/CollaborationType";
+import { parseIntArray } from "./utils";
 
 type CountryRisk = {
     overall: 0 | 1 | 2 | 3,
@@ -40,7 +42,7 @@ type ReportRisks = {
 
 type ReportChoices = {
     country: string | null
-    organization: string | string[] | null,
+    organization: number | number[] | [],
     organizationtype: string | null,
     hhrole: string | null,
     collaborationtype: string | string[] | null,
@@ -119,12 +121,16 @@ export const parseRiskPayload = async (req: Request, res: Response) => {
 }
 
 export const generateReportChoices = (choices: ReportChoicesRaw) => {
+    let organizationIds = choices.organization;
+    if (organizationIds) {
+        organizationIds = parseIntArray(choices.organization)
+    }
     const reportChoices: ReportChoices = {
         country: choices.country ? choices.country : "",
-        organization: choices.organization ? choices.organization : "",
+        organization: organizationIds ? organizationIds : [],
         organizationtype: choices.organizationtype ? choices.organizationtype : "",
         hhrole: choices.hhrole ? choices.hhrole : "",
-        collaborationtype: choices.collaborationtype ? choices.collaborationtype : "",
+        collaborationtype: choices.collaborationtype ? choices.collaborationtype : [],
         history: choices.history ? choices.history : "",
         contract: choices.contract ? choices.contract : "",
         funding: choices.funding ? choices.funding : "",
@@ -192,6 +198,32 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
     return reportChoices;
 }
 
+export const validateCollaboration = async (res: Response, collaborationRaw: any): Promise<CollaborationType[] | null> => {
+    if (!collaborationRaw) {
+        res.status(422).json({ message: "Collaboration type codes required" });
+        return null;
+    }
+    const collaborationTypes = [];
+    const collaborationTypeCodes = Array.isArray(collaborationRaw) ? collaborationRaw : [collaborationRaw];
+    if (collaborationTypeCodes.length == 0) {
+        res.status(422).json({ message: `Collaborationtype codes required` })
+        return null;
+    }
+
+    for (let i = 0; i < collaborationTypeCodes.length; i++) {
+        const collaborationType = await repository.findCollaborationTypeByCode(collaborationTypeCodes[i]);
+        if (!collaborationType) {
+            res.status(404).json({
+                message: `Id ${collaborationTypeCodes[i]} is invalid for collaborationtype`,
+                codes: collaborationTypeCodes
+            })
+            return null;
+        }
+        collaborationTypes.push(collaborationType);
+    }
+    return collaborationTypes;
+}
+
 export const validateRiskOptions = async (req: Request, res: Response): Promise<ReportChoiceIds | null> => {
 
     const collaborationHistoryCode = req.body.history;
@@ -201,19 +233,19 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         return null;
     }
 
-    const collaborationTypeCodes = Array.isArray(req.body.collaborationtype) ? req.body.collaborationtype : [req.body.collaborationtype];
-    if (collaborationTypeCodes.length == 0) {
-        res.status(422).json({ message: `Collaborationtype codes required` })
+    const collaborationType = req.body.collaborationtype;
+    if (!collaborationType) {
+        res.status(422).json({ message: `Collaborationtype codes required` });
         return null;
     }
-    let collaborationTypes = [];
-    for (let i = 0; i < collaborationTypeCodes.length; i++) {
-        const collaborationType = await repository.findCollaborationTypeByCode(collaborationTypeCodes[i]);
-        if (!collaborationType) {
-            res.status(422).json({ message: `Code ${collaborationTypeCodes[i]} is not a valid code for collaboration type` })
-            return null;
-        }
-        collaborationTypes.push(collaborationType);
+    const collaborationTypes = await validateCollaboration(res, collaborationType)
+    if (!collaborationTypes) {
+        res.status(422).json({ message: `Valid collaboration type codes required` });
+        return null;
+    }
+    const collaborationTypeIds = [];
+    for (let i = 0; i > collaborationTypes.length; i++) {
+        collaborationTypeIds.push(collaborationTypes[i].id)
     }
 
     const consortiumTypeCode = req.body.consortium;
@@ -349,32 +381,31 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         return null;
     }
 
-    const organizationIds = Array.isArray(req.body.organization) ? req.body.organization : [req.body.organization];
-    let organization = await repository.findOrganizationById(organizationIds[0]);
-    if (!organization) {
-        res.status(404).json({ message: `Id ${organizationIds[0]} is invalid for field organization` })
+    const organizationIdsRaw = Array.isArray(req.body.organization) ? req.body.organization : [req.body.organization];
+    const organizationIdsParsed = parseIntArray(organizationIdsRaw)
+    if (!organizationIdsParsed) {
+        res.status(422).json({ message: `Organization IDs must be parseable as integers` })
         return null;
-    } else if (consortiumTypeCode === "option2") { //multilateral consortium 
-        for (let i = 1; i < organizationIds.length; i++) {
-            organization = await repository.findOrganizationById(organizationIds[0]);
+    }
+    let organizationIds = [];
+    let organizationId = organizationIdsParsed[0];
+
+    let organization = await repository.findOrganizationById(organizationId);
+    if (!organization) {
+        res.status(404).json({ message: `Id ${organizationId} is not an id of an organization` })
+        return null;
+    }
+    organizationIds.push(organization.id);
+    if (consortiumTypeCode === "option2") { //multilateral consortium 
+        for (let i = 1; i < organizationIdsRaw.length; i++) {
+            organizationId = organizationIdsParsed[i];
+            organization = await repository.findOrganizationById(organizationId);
             if (!organization) {
-                res.status(404).json({ message: `Id ${organizationIds[i]} is invalid for field organization` })
+                res.status(404).json({ message: `Id ${organizationId} is not an id of an organization` })
                 return null;
             }
+            organizationIds.push(organization.id);
         }
-    }
-
-    let collaborationTypeIds = [];
-    for (let i = 0; i < collaborationTypeCodes.length; i++) {
-        const collaborationType = await repository.findCollaborationTypeByCode(collaborationTypeCodes[i]);
-        if (!collaborationType) {
-            res.status(404).json({
-                message: `Id ${collaborationTypeCodes[i]} is invalid for collaborationtype`,
-                codes: collaborationTypeCodes
-            })
-            return null;
-        }
-        collaborationTypeIds.push(collaborationType.id);
     }
 
     let reportChoiceIds: ReportChoiceIds = {
@@ -402,14 +433,20 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
     return reportChoiceIds;
 }
 
-export const calculateRisk = async (req: Request) => {
+export const calculateRisk = async (req: Request, res: Response, reportChoiceIds: ReportChoiceIds) => {
+
     const { country, organization, organizationtype, hhrole, collaborationtype, history, contract, funding, liability, exchange, personalinformation, dualuse, ethics, duration, organizationother, organizationtypeother, collaborationtypeother, additionalinformation, name, fundinghistory, fundingsource, consortium, organizationname, ownername, creatorname, ownerusername, creatorusername } = req.body;
+    if (!collaborationtype) {
+        return;
+    }
+
+    const collaborationTypeCodes = await validateCollaboration(res, collaborationtype)
     const dualUseRisk = calculateDualUseRisk(dualuse);
     let countryRisk = await calculateCountryRisk(country, personalinformation);
     const ethicsRisk = calculateEthicsRisk(ethics);
     const financialRisk = calculateFinancialRisk(liability, funding, exchange, fundinghistory, fundingsource);
-    const collaborationRisk = await calculateCollaborationRisk(countryRisk, collaborationtype, duration, hhrole, contract, history, consortium, organization, personalinformation)
-    const organizationRisk = await calculateOrganizationRisk(organization);
+    const collaborationRisk = await calculateCollaborationRisk(countryRisk, collaborationTypeCodes, duration, hhrole, contract, history, consortium, reportChoiceIds.organizationIds, personalinformation)
+    const organizationRisk = await calculateOrganizationRisk(reportChoiceIds.organizationIds);
 
     let collaborationtypeOptional = "";
     let organizationOptional = "";
@@ -638,7 +675,11 @@ const calculateCountryRiskHighest = async (organizationRaw: any, personal: any) 
 }
 
 const countConsortiumCountries = async (organizationRaw: any) => {
-    const organizations = Array.isArray(organizationRaw) ? organizationRaw : [organizationRaw]
+    //const organizations = Array.isArray(organizationRaw) ? organizationRaw : [organizationRaw]
+    const organizations = parseIntArray(organizationRaw)
+    if (!organizations) {
+        return 0;
+    }
     let countries = null;
     for (let i = 1; i < organizations.length; i++) {
         const organization = await repository.findOrganizationById(organizations[i])
@@ -850,17 +891,15 @@ const calculateCountryRisk = async (countryCode: any, personal: any): Promise<Co
 }
 
 //Organization risk based on whether organization is known
-const calculateOrganizationRisk = async (id: string): Promise<0 | 1 | 2 | 3> => {
-    if (!id) {
+const calculateOrganizationRisk = async (ids: number[]): Promise<0 | 1 | 2 | 3> => {
+    if (!ids) {
         return 0;
     }
-    const idNumber = Number.parseInt(id);
-    if (Number.isNaN(idNumber)) {
-        return 0;
-    }
-    const organization = await repository.findOrganizationById(idNumber)
-    if (!organization || organization.code === "other") {
-        return 3;
+    for (let i = 0; i < ids.length; i++) {
+        const organization = await repository.findOrganizationById(ids[i])
+        if (!organization || organization.code === "other") {
+            return 3;
+        }
     }
     return 1;
 }
