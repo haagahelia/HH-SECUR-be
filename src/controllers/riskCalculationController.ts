@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { calculateRisk, getReportRisksFromReportSnapshot, generateVerboseReport, parseRiskPayload, validateRiskOptions, generateReportChoices, getReportChoicesFromReport, validateCollaboration } from "../utils/riskCalculation";
+import { calculateRisk, getReportRisksFromReportSnapshot, generateVerboseReport, parseRiskPayload, validateRiskOptions, generateReportChoices, getReportChoicesFromReport, validateCollaboration, generateNewOrganizations } from "../utils/riskCalculation";
 import repository from "../data/repository/repository";
 
 export type ReportSnapshot = {
@@ -115,6 +115,18 @@ export const patchReport = async (req: Request, res: Response) => {
             message: `Invalid report choices`
         })
         return;
+    }
+    if ((req.body.consortium === "option2" || reportChoiceIds.organizationIds.length === 0) && req.body.neworganization) {
+        let firstOnly = false;
+        if (req.body.consortium === "option2") {
+            firstOnly = true
+        }
+        const newOrganizations = await generateNewOrganizations(req, res, firstOnly);
+        if (newOrganizations) {
+            for (let i = 0; i < newOrganizations.length; i++) {
+                reportChoiceIds.organizationIds.push(newOrganizations[i].id)
+            }
+        }
     }
 
     const collaborationTypes = await validateCollaboration(res, req.body.collaborationtype);
@@ -272,8 +284,22 @@ export const saveReport = async (req: Request, res: Response) => {
     }
 
     const reportChoiceIds: ReportChoiceIds | null = await validateRiskOptions(req, res);
+
     if (!reportChoiceIds) {
         return;
+    }
+
+    if ((req.body.consortium === "option2" || reportChoiceIds.organizationIds.length === 0) && req.body.neworganization) {
+        let firstOnly = false;
+        if (req.body.consortium === "option1") {
+            firstOnly = true
+        }
+        const newOrganizations = await generateNewOrganizations(req, res, firstOnly);
+        if (newOrganizations) {
+            for (let i = 0; i < newOrganizations.length; i++) {
+                reportChoiceIds.organizationIds.push(newOrganizations[i].id)
+            }
+        }
     }
 
     const collaborationTypes = await validateCollaboration(res, req.body.collaborationtype);

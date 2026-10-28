@@ -5,6 +5,7 @@ import ReportSnapshot from "../data/models/ReportSnapshot";
 import { ReportChoiceIds } from "../controllers/riskCalculationController";
 import CollaborationType from "../data/models/CollaborationType";
 import { parseIntArray } from "./utils";
+import Organization from "../data/models/Organization";
 
 type CountryRisk = {
     overall: 0 | 1 | 2 | 3,
@@ -64,7 +65,8 @@ type ReportChoices = {
     consortium: string | null,
     organizationname: string | null,
     ownerusername: string | null,
-    creatorusername: string | null
+    creatorusername: string | null,
+    neworganization: Object[] | []
 
 }
 
@@ -92,24 +94,27 @@ type ReportChoicesRaw = {
     consortium: string | null | undefined,
     organizationname: string | null | undefined,
     ownerusername: string | null | undefined,
-    creatorusername: string | null | undefined
-
+    creatorusername: string | null | undefined,
+    neworganization: any
 }
 
 export const parseRiskPayload = async (req: Request, res: Response) => {
     //Add when legacy variations have been removed from frontend: "ownerusername", "creatorusername"
-    const requiredFields = ["country", "organization", "organizationtype", "hhrole", "collaborationtype", "history", "contract", "funding", "liability", "personalinformation", "dualuse", "ethics", "duration", "consortium"]
+    const requiredFields = ["country", "organizationtype", "hhrole", "collaborationtype", "history", "contract", "funding", "liability", "personalinformation", "dualuse", "ethics", "duration", "consortium"]
     let missingFields: string[] = [];
     for (let i = 0; i < requiredFields.length; i++) {
         if (!req.body[requiredFields[i]]) {
-            missingFields.push(requiredFields[i])
+            missingFields.push(requiredFields[i]);
         }
     }
     if (!req.body.ownerusername && !req.body.ownername) { //Temporary check to allow legacy format
-        missingFields.push("ownerusername")
+        missingFields.push("ownerusername");
     }
     if (!req.body.creatorusername && !req.body.creatorname) {
-        missingFields.push("creatorusername")
+        missingFields.push("creatorusername");
+    }
+    if (!req.body.organization && !req.body.neworganization) {
+        missingFields.push("organization");
     }
 
     if (missingFields.length == 0) {
@@ -149,7 +154,8 @@ export const generateReportChoices = (choices: ReportChoicesRaw) => {
         consortium: choices.consortium ? choices.consortium : "",
         organizationname: choices.organizationname ? choices.organizationname : "",
         ownerusername: choices.ownerusername ? choices.ownerusername : "",
-        creatorusername: choices.creatorusername ? choices.creatorusername : ""
+        creatorusername: choices.creatorusername ? choices.creatorusername : "",
+        neworganization: choices.neworganization ? choices.neworganization : []
     }
 
     return reportChoices;
@@ -191,6 +197,7 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
         organizationtypeother: reportSnapshot?.organizationOther ? reportSnapshot.organizationOther : "",
         collaborationtypeother: reportSnapshot?.collaborationOther ? reportSnapshot.collaborationOther : "",
         additionalinformation: reportSnapshot?.additionalInformation ? reportSnapshot.additionalInformation : "",
+        neworganization: []
     }
 
     const reportChoices = generateReportChoices(reportChoicesRaw);
@@ -222,6 +229,43 @@ export const validateCollaboration = async (res: Response, collaborationRaw: any
         collaborationTypes.push(collaborationType);
     }
     return collaborationTypes;
+}
+
+export const generateNewOrganizations = async (req: Request, res: Response, firstOnly: boolean): Promise<Organization[] | null> => {
+    const organizationsRaw = Array.isArray(req.body.neworganization) ? req.body.neworganization : [req.body.neworganization];
+    const organizations = [];
+    if (!organizationsRaw) {
+        return null;
+    }
+    for (let i = 0; i < organizationsRaw.length; i++) {
+        if (!organizationsRaw[i].name) {
+            res.status(422).json({
+                message: `name is required for a new organizations`
+            })
+            return null;
+        } else if (!organizationsRaw[i].countrycode) {
+            res.status(422).json({
+                message: `countrycode is required for a new organizations`
+            })
+            return null;
+        }
+        const organization = {
+            code: null,
+            fi: organizationsRaw[i].name as string,
+            en: organizationsRaw[i].name as string,
+            country_code: organizationsRaw[i].countrycode as string,
+            added_manually: true
+        }
+        const newOrganization = await repository.createOrganization(organization);
+        organizations.push(newOrganization);
+        if (firstOnly) {
+            return organizations;
+        }
+    }
+    if (organizations.length === 0) {
+        return null;
+    }
+    return organizations;
 }
 
 export const validateRiskOptions = async (req: Request, res: Response): Promise<ReportChoiceIds | null> => {
@@ -381,30 +425,36 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
         return null;
     }
 
-    const organizationIdsRaw = Array.isArray(req.body.organization) ? req.body.organization : [req.body.organization];
-    const organizationIdsParsed = parseIntArray(organizationIdsRaw)
-    if (!organizationIdsParsed) {
-        res.status(422).json({ message: `Organization IDs must be parseable as integers` })
-        return null;
-    }
-    let organizationIds = [];
-    let organizationId = organizationIdsParsed[0];
 
-    let organization = await repository.findOrganizationById(organizationId);
-    if (!organization) {
-        res.status(404).json({ message: `Id ${organizationId} is not an id of an organization` })
-        return null;
-    }
-    organizationIds.push(organization.id);
-    if (consortiumTypeCode === "option2") { //multilateral consortium 
-        for (let i = 1; i < organizationIdsRaw.length; i++) {
-            organizationId = organizationIdsParsed[i];
-            organization = await repository.findOrganizationById(organizationId);
+    let organizationIds = [];
+
+    if (req.body.organization) {
+        const organizationIdsRaw = Array.isArray(req.body.organization) ? req.body.organization : [req.body.organization];
+        if (organizationIdsRaw.length !== 0) {
+            const organizationIdsParsed = parseIntArray(organizationIdsRaw)
+            if (!organizationIdsParsed) {
+                res.status(422).json({ message: `Organization IDs must be parseable as integers` })
+                return null;
+            }
+            let organizationId = organizationIdsParsed[0];
+
+            let organization = await repository.findOrganizationById(organizationId);
             if (!organization) {
                 res.status(404).json({ message: `Id ${organizationId} is not an id of an organization` })
                 return null;
             }
             organizationIds.push(organization.id);
+            if (consortiumTypeCode === "option2") { //multilateral consortium 
+                for (let i = 1; i < organizationIdsRaw.length; i++) {
+                    organizationId = organizationIdsParsed[i];
+                    organization = await repository.findOrganizationById(organizationId);
+                    if (!organization) {
+                        res.status(404).json({ message: `Id ${organizationId} is not an id of an organization` })
+                        return null;
+                    }
+                    organizationIds.push(organization.id);
+                }
+            }
         }
     }
 
@@ -446,7 +496,7 @@ export const calculateRisk = async (req: Request, res: Response, reportChoiceIds
     const ethicsRisk = calculateEthicsRisk(ethics);
     const financialRisk = calculateFinancialRisk(liability, funding, exchange, fundinghistory, fundingsource);
     const collaborationRisk = await calculateCollaborationRisk(countryRisk, collaborationTypeCodes, duration, hhrole, contract, history, consortium, reportChoiceIds.organizationIds, personalinformation)
-    const organizationRisk = await calculateOrganizationRisk(reportChoiceIds.organizationIds);
+    const organizationRisk = reportChoiceIds.organizationIds.length > 0 ? await calculateOrganizationRisk(reportChoiceIds.organizationIds) : 3; //If no IDs from database are present, the organizatin cannot be known and gets 3
 
     let collaborationtypeOptional = "";
     let organizationOptional = "";
@@ -897,7 +947,8 @@ const calculateOrganizationRisk = async (ids: number[]): Promise<0 | 1 | 2 | 3> 
     }
     for (let i = 0; i < ids.length; i++) {
         const organization = await repository.findOrganizationById(ids[i])
-        if (!organization || organization.code === "other") {
+
+        if (!organization || organization.code === "other" || organization.added_manually) {
             return 3;
         }
     }

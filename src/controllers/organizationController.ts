@@ -11,6 +11,7 @@ export const getOrganizations = async (req: Request, res: Response) => {
                 en: organization.en,
             },
             countryId: organization.country_code,
+            manuallyAdded: organization.added_manually
         })),
     });
 }

@@ -236,12 +236,13 @@ Request body:
     "dualuse": "option1",
     "ethics": "option1",
     "duration": "option1",
-    "organizationname": "Name of organization if other is chosen",
+    "organizationname": "Old way to name other option in organization, use neworganization instead",
     "organizationtypeother": "specify organization",
     "collaborationtypeother": "specify collaboration type",
-    "additionalinformation": "additional description"
-
+    "additionalinformation": "additional description",
+    "neworganization": [{"name": "Name of new organization", "countrycode": "Countrycode of new organization"}]
 }
+
 ```
 
 Optional fields: 
@@ -251,6 +252,8 @@ Optional fields:
     - collaborationtypeother - Description for other option in collaboration type
 
     - additionalinformation - Additional information about project
+
+    - organization, neworganization - Only one if these is required
 
 Conditionally required fields
 
@@ -287,11 +290,11 @@ personalinformation: option1 | option2 | option3 # Yes | No | Unkown
 dualuse: option1 | option2 | option3 # Yes | No | Unkown
 ethics: option1 | option2 | option3 | option4 | option5 # Absolutely not | Most likely not | Possibly | Very likely | Definitely
 duration: option1 | option2 | option3 # 0-24 months | 24-60 months | Over 60 Months
-organizationname: any text #Name of organization if other is chosen for organization selection
+organizationname: any text #Use neworganization instead if adding new organizations with the request, this will be removed once front-end has been updated to use it
 organizationtypeother: any text #Type of organization if other is chosen for organization type selection
 collaborationother: any text #Type of collaboration of other is chosen for collaboration type
 additionalinformation: any text #Additional information about the project
-
+neworganization: [{"name": text, "countrycode": text}] #Array of new organizations
 ```
 
 Responses:
@@ -307,18 +310,18 @@ Response body:
 ```
 {
     "report": {
-        "name": "Sample report",
-        "ownername": "Placeholder",
-        "creatorname": "Placeholder",
+        "name": "Sample report2",
+        "ownername": "User",
+        "creatorname": "User",
         "collaboration": {
             "title": {
                 "fi": "Yhteistyön kokonaisriskiarvio",
                 "en": "Overall Collaboration Risk Level"
             },
-            "risk": 1,
+            "risk": 2,
             "description": {
-                "fi": "Yhteistyön kokonaisriski on alhainen. Yhteistyössä voi kuitenkin  esiintyä tunnistamattomia riskejä ja nyt arvioitujen asioiden riskitaso saattaa muuttua jatkossa.",
-                "en": "Overall risk rating for the collaboration is low. Collaboration may still include unforeseen risks and risk ratings for currently assessed risks may change in the future."
+                "fi": "Yhteistyön kokonaisriskitaso on kohonnut. Kiinnitä erityistä huomiota kohonneisiin riskeihin ja mieti niiden hallintaa. Toteuta tarvittaessa yksityiskohtaisempi riskiarvio.",
+                "en": "The overall collaboration risk level has increased. Pay special attention to the elevated risks and consider how to manage them. If necessary, conduct a more detailed risk assessment."
             }
         },
         "country": {
@@ -439,10 +442,10 @@ Response body:
                     "fi": "Taloudellinen kokonaisriskitaso",
                     "en": "Overall Financial Risk Level"
                 },
-                "risk": 1,
+                "risk": 0,
                 "description": {
-                    "fi": "Yhteistyön taloudellinen laajuus ei ole merkittävä, eikä muodosta merkittävää riskiä. Varmista tarvittaessa ykskkösi talouden lähipalveluilta, että hankkeen budjetti on asianmukainen.",
-                    "en": "The financial scope of the collaboration is not significant and does not pose a major risk. If necessary, consult your unit’s financial services to ensure that the project budget is appropriate."
+                    "fi": "Virheellinen tai puuttuva riskiluokitus",
+                    "en": "Invalid or missing risk level"
                 }
             },
             "exchange": {
@@ -491,24 +494,23 @@ Response body:
             }
         },
         "organizationname": "Add name here if other is selected for organization",
-        "organizationother": "This message is added to response if option5 is selected for organizationtype",
-        "collaborationtypeother": "This message is added to response if option7 is included in collaboration types",
+        "organizationtypeother": "This message is added to response if option5 is selected for organizationtype",
+        "collaborationtypeother": "",
         "additionalinformation": "Additional information about project"
     },
     "choices": {
         "country": "SWE",
-        "organization": "1",
+        "organization": [
+            280
+        ],
         "organizationtype": "option5",
         "hhrole": "option1",
         "collaborationtype": [
             "option1",
-            "option2",
-            "option3",
-            "option4",
-            "option7"
+            "option2"
         ],
-        "history": "option1",
-        "contract": "option1",
+        "history": "option2",
+        "contract": "option2",
         "funding": "option1",
         "liability": "option1",
         "exchange": "option1",
@@ -516,18 +518,25 @@ Response body:
         "dualuse": "option1",
         "ethics": "option1",
         "duration": "option1",
-        "organizationother": "This message is added to response if option5 is selected for organizationtype",
+        "organizationtypeother": "This message is added to response if option5 is selected for organizationtype",
         "collaborationtypeother": "This message is added to response if option7 is included in collaboration types",
         "additionalinformation": "Additional information about project",
-        "name": "Sample report",
-        "fundinghistory": "option1",
+        "name": "Sample report2",
+        "fundinghistory": "option2",
         "fundingsource": "option1",
-        "consortium": "option1",
+        "consortium": "option2",
         "organizationname": "Add name here if other is selected for organization",
         "ownerusername": "User",
-        "creatorusername": "User"
+        "creatorusername": "User",
+        "neworganization": [
+            {
+                "name": "Custom organization",
+                "countrycode": "SWE"
+            }
+        ]
     }
 }
+
 ```
 
 </details>

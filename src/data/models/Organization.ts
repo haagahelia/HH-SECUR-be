@@ -1,5 +1,5 @@
 import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
-import { AllowNull, BelongsToMany, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
+import { AllowNull, BelongsToMany, Column, DataType, HasMany, Index, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
 import Report from "./Report";
 import Consortium from "./Consortium";
 import ConsortiumOrganization from "./ConsortiumOrganization";
@@ -8,6 +8,13 @@ import ConsortiumOrganization from "./ConsortiumOrganization";
 @Table({
     tableName: "organization",
     modelName: "Organization",
+    indexes: [
+        {
+            name: "organization_name_country_code_unique",
+            unique: true,
+            fields: ["name_fi", "country_code"]
+        }
+    ]
 })
 export default class Organization extends Model<
     InferAttributes<Organization>,
@@ -20,14 +27,14 @@ export default class Organization extends Model<
     })
     declare id: CreationOptional<number>
 
-    @AllowNull(false)
+    @AllowNull(true)
     @NotEmpty
     @Unique({ name: "organization_code_unique", msg: "Organization code must be unique" })
     @Column({
         type: DataType.STRING,
         field: "code",
     })
-    declare code: string;
+    declare code: string | null;
 
     @AllowNull(false)
     @NotEmpty
@@ -51,6 +58,12 @@ export default class Organization extends Model<
         type: DataType.STRING
     })
     declare country_code: string;
+
+    @AllowNull(false)
+    @Column({
+        type: DataType.BOOLEAN
+    })
+    declare added_manually: boolean;
 
     /*
     @HasMany(() => Report)
