@@ -1,3 +1,4 @@
+import Consortium from "../models/Consortium.js";
 import Organization from "../models/Organization.js";
 import BaseRepository, { Constructor } from "./BaseRepository.js";
 
@@ -12,10 +13,10 @@ export function AddOrganizationRepository<TBase extends Constructor<BaseReposito
         }
 
         async findOrganizationById(id: number) {
-            return Organization.findOne({
-                where: {
-                    id: id,
-                },
+            return Organization.findByPk(id, {
+                include: [
+                    { model: Consortium }
+                ]
             });
         }
 
@@ -27,8 +28,34 @@ export function AddOrganizationRepository<TBase extends Constructor<BaseReposito
             });
         }
 
-        async createOrganization(organizationAttributes: { code: string|null; fi: string; en: string; country_code: string; added_manually: boolean }) {
+        async createOrganization(organizationAttributes: { code: string | null; fi: string; en: string; country_code: string; added_manually: boolean }) {
             return await Organization.create(organizationAttributes);
         }
+
+        async deleteUnattachedCustomOrganizations() {
+            let destroyed = 0;
+            const organizations = await Organization.findAll({
+                where: {
+                    added_manually: true,
+                }, include: [{
+                    model: Consortium
+                }]
+            })
+            //return organizations;
+            for (let i = 0; i < organizations.length; i++) {
+                const consortiums = organizations[i].consortiums
+                if (consortiums) {
+                    if (consortiums.length === 0) {
+                        await organizations[i].destroy();
+                        destroyed++;
+                    }
+                } else {
+                    await organizations[i].destroy();
+                    destroyed++;
+                }
+            }
+            return destroyed;
+        }
     }
+
 }

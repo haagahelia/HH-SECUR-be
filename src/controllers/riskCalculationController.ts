@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { calculateRisk, getReportRisksFromReportSnapshot, generateVerboseReport, parseRiskPayload, validateRiskOptions, generateReportChoices, getReportChoicesFromReport, validateCollaboration, generateNewOrganizations } from "../utils/riskCalculation";
 import repository from "../data/repository/repository";
+import Consortium from "../data/models/Consortium";
 
 export type ReportSnapshot = {
     reportId: number,
@@ -264,6 +265,8 @@ export const patchReport = async (req: Request, res: Response) => {
 
     const reportChoices = generateReportChoices(req.body);
 
+    const customOrganizationCleanup = await repository.deleteUnattachedCustomOrganizations();
+
     if (savedReport) {
         res.status(200).json({
             message: `Report by the id of ${savedReport.id} has been saved.`,
@@ -413,12 +416,15 @@ export const saveReport = async (req: Request, res: Response) => {
     const savedReport = await repository.findReportById(reportId);
     const reportChoices = generateReportChoices(req.body);
 
+    const customOrganizationCleanup = await repository.deleteUnattachedCustomOrganizations();
+
     if (savedReport) {
         res.status(200).json({
             message: `Report by the id of ${savedReport.id} has been saved.`,
             reportDetails: savedReport,
             report: reportRisks,
-            choices: reportChoices
+            choices: reportChoices,
+            debug: customOrganizationCleanup
         })
     } else {
         res.status(400).json({
@@ -548,6 +554,7 @@ export const deleteReportById = async (req: Request, res: Response) => {
             await repository.deleteReportById(id);
             await funding?.destroy();
             await consortium?.destroy();
+            await repository.deleteUnattachedCustomOrganizations();
             res.json({
                 message: `Report with the id ${id} has been deleted`
             })
