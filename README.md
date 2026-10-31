@@ -431,10 +431,6 @@ Requires: Authentication, Admin
 
 <summary>
 
-<details>
-
-<summary>
-
 **/calculaterisk** - POST: Risk calculation endpoint
 
 </summary>
