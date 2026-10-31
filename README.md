@@ -286,7 +286,10 @@ ruleoflaw: number
 
 <details>
 
+<summary>
+
 **/countries/{id}** - PATCH: Update values for a specific country
+
 </summary>
     
 Requires: authentication, admin
@@ -304,7 +307,6 @@ Request body:
 <summary>
 
 **/countries/{id}** - DELETE: Delete a Country by the specific id
-
 
 </summary>
 
