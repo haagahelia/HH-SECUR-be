@@ -169,6 +169,155 @@ Responses:
 
 <summary>
 
+**/countries** - GET: All countries in the database and their risk values
+
+</summary>
+
+Requires: Authentication
+
+Response format:
+
+```
+
+{
+    "countries": [
+        {
+            "id": 1,
+            "code": "AFG",
+            "fi": "Afganistan",
+            "en": "Afghanistan",
+            "dataYear": 2025,
+            "corruption": 13.68,
+            "security": 3,
+            "academicFreedom": 0.086,
+            "politicalStability": 1.42,
+            "development": 181,
+            "gdpr": 3,
+            "sanctions": 3,
+            "ruleOfLaw": 0.30764429
+        },
+        {
+            "id": 2,
+            "code": "ALB",
+            "fi": "Albania",
+            "en": "Albania",
+            "dataYear": 2025,
+            "corruption": 43.4,
+            "security": 1,
+            "academicFreedom": 0.76,
+            "politicalStability": 51.66,
+            "development": 71,
+            "gdpr": 3,
+            "sanctions": 1,
+            "ruleOfLaw": 0.48877582
+        },
+        {
+            "id": 3,
+            "code": "DZA",
+            "fi": "Algeria",
+            "en": "Algeria",
+            "dataYear": 2025,
+            "corruption": 30.19,
+            "security": 2,
+            "academicFreedom": 0.206,
+            "politicalStability": 23.22,
+            "development": 96,
+            "gdpr": 3,
+            "sanctions": 1,
+            "ruleOfLaw": 0.48857478
+        },
+        ...
+
+    ]
+}
+
+```
+
+</details>
+
+<details>
+
+<summary>
+
+**/countries** - POST: Post a new Country
+
+</summary>
+    
+Requires: authentication, admin
+
+Request body:
+
+```
+
+{
+    "code": "ESM",
+    "en": "Example Country",
+    "fi": "Esimerkkimaa",
+    "datayear": 2026,
+    "corruption": 13.68,
+    "security": 3,
+    "academicfreedom": 0.086,
+    "politicalstability": 1.42,
+    "development": 181,
+    "gdpr": 3,
+    "sanctions": 3,
+    "ruleoflaw": 0.30764429
+}
+
+```
+
+Valid values #description after
+
+```
+code: Any text #Has to be Unique
+fi: Any text #Has to be unique
+en: Any text #Has to be unique
+datayear: number
+corruption: number
+security: number
+academicfreedom: number
+politicalstability: number
+development: number
+gdpr: number
+sanctions: number
+ruleoflaw: number
+```
+</details>
+
+<details>
+
+**/countries/{id}** - PATCH: Update values for a specific country
+</summary>
+    
+Requires: authentication, admin
+
+Request body:
+
+    - Same as POST Country but fields can be omitted
+
+    - Fields omitted retain old values
+
+</details>
+
+<details>
+
+<summary>
+
+**/countries/{id}** - DELETE: Delete a Country by the specific id
+
+
+</summary>
+
+Requires: Authentication, Admin
+
+    - Countries in reports cannot be deleted
+
+</details>
+
+<details>
+
+<summary>
+
 **/organizations** - GET: List of partner organizations
 
 </summary>
@@ -203,6 +352,7 @@ Responses:
 </details>
 
 <details>
+
 <summary>
 
 **/organizations** - POST: Post a new partnership organization
@@ -215,7 +365,7 @@ Responses:
 
 Request body:
 
-````
+```
 
 {
     "code": "qwerty123",
@@ -242,6 +392,42 @@ countrycode: Any text #3 letter code for a valid country. If the Country doesn't
 Combinations of (countrycode + fi) and (countrycode + en) have to be unique, meaning no organizations with the same name are allowed in the same Country.
 
 </details>
+
+<details>
+
+<summary>
+
+**/organizations/{id}** - PATCH: Update values for a specific organization
+
+
+</summary>
+
+Requires: Authentication, Admin
+
+    - Same format as POST organization but fields can be omitted
+
+    - Omitted fields will retain old values
+
+</details>
+
+<details>
+
+<summary>
+
+**/organizations/{id}** - DELETE: Delete an Organization by the specific id
+
+
+</summary>
+
+Requires: Authentication, Admin
+
+    - Organizations in consortiums cannot be deleted
+
+</details>
+
+<details>
+
+<summary>
 
 <details>
 

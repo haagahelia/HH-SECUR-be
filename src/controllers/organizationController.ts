@@ -45,6 +45,42 @@ export const postOrganization = async (req: Request, res: Response) => {
     });
 }
 
+export const patchOrganization = async (req: Request, res: Response) => {
+    const idRaw = (req.params.id);
+    const id = parseInt(idRaw as string)
+    if (Number.isNaN(id)) {
+        res.status(400).json({
+            message: `Requested id ${idRaw} is not a number`
+        })
+        return;
+    }
+    const organization = await repository.findOrganizationById(id);
+    if (!organization) {
+        res.status(404).json({
+            message: `Organization by the id of ${id} does not exist`
+        })
+        return;
+    }
+    const { code, fi, en, countrycode, addedmanually } = req.body;
+    if (typeof (addedmanually) !== "undefined" && typeof (addedmanually) !== "boolean") {
+        res.status(422).json({ message: `Valid options for the field added manually are true and false. ${addedmanually} is invalid.` })
+        return;
+    }
+    const organizationUpdates = {
+        code: code ? code : organization.code,
+        fi: fi ? fi : organization.fi,
+        en: en ? en : organization.en,
+        country_code: countrycode ? countrycode : organization.country_code,
+        added_manually: addedmanually ? addedmanually : organization.added_manually
+    }
+    organization.set(organizationUpdates);
+    await organization.save();
+    res.status(200).json({
+        message: `Organization by the id of ${id} has been updated`,
+        organization: organization
+    })
+}
+
 export const deleteOrganization = async (req: Request, res: Response) => {
     const idRaw = (req.params.id);
     const id = parseInt(idRaw as string)
