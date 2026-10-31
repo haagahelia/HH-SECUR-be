@@ -563,7 +563,7 @@ export async function addFundingExchange() {
     const fundingExchanges = [
         {
             code: "option1",
-            fi: "Eorumääräinen",
+            fi: "Euromääräinen",
             en: "In euros"
         },
         {
