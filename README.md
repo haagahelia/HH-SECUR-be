@@ -203,6 +203,47 @@ Responses:
 </details>
 
 <details>
+<summary>
+
+**/organizations** - POST: Post a new partnership organization
+
+</summary>
+
+    - Post a new partnership organization
+    
+    - Requires: authentication, admin
+
+Request body:
+
+````
+
+{
+    "code": "qwerty123",
+    "fi": "testi organisaatio",
+    "en": "test organization",
+    "countrycode": "SWE",
+    "addedmanually": true
+}
+
+```
+
+Optional fields:
+
+    - code: can be left out, has to be unique if included
+
+Valid values #description after
+
+```
+code: Any text #Unique code for partnerhip organization, can be null, needs to be unique if added, and should be null until there's a need to add it (codes for the organizations list are from the WHED source and were left in the data in case a need for human readable codes arises)
+fi: Any text #Finnish name of the partnership organization if localized and if not, just the same value as en
+en: Any text #English name of the partnership organization if localized and if not, just the same value as fi
+countrycode: Any text #3 letter code for a valid country. If the Country doesn't exist but needs to, post that Country first.
+```
+Combinations of (countrycode + fi) and (countrycode + en) have to be unique, meaning no organizations with the same name are allowed in the same Country.
+
+</details>
+
+<details>
 
 <summary>
 

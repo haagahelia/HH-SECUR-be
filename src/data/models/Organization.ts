@@ -10,9 +10,14 @@ import ConsortiumOrganization from "./ConsortiumOrganization";
     modelName: "Organization",
     indexes: [
         {
-            name: "organization_name_country_code_unique",
+            name: "organization_name_fi_country_code_unique",
             unique: true,
             fields: ["name_fi", "country_code"]
+        },
+        {
+            name: "organization_name_en_country_code_unique",
+            unique: true,
+            fields: ["name_en", "country_code"]
         }
     ]
 })
