@@ -12,7 +12,7 @@ export const getFormOptions = async (req: Request, res: Response) => {
     const hhRoleRaw = await repository.getHHRoles();
     const consortiumRaw = await repository.getConsortiumTypes();
     const collaborationHistorieRaw = await repository.getCollaborationHistories();
-    const organizationTypeRaw = await repository.getCollaborationTypes()
+    const organizationTypeRaw = await repository.getOrganizationTypes()
     const contractRaw = await repository.getContractInfos();
     const collaborationTypeRaw = await repository.getCollaborationTypes();
     const externalFundingRaw = await repository.getFundingOptions();
