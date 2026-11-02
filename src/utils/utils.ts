@@ -44,3 +44,19 @@ export const addDataToAllTables = async () => {
     await addFundingExchange();
     await addExtraUsers();
 }
+
+export const parseIntArray = (raw: any): number[] | null => {
+    if (!raw) {
+        return null;
+    }
+    const arrayRaw = Array.isArray(raw) ? raw : [raw];
+    let newArray = [];
+    for (let i = 0; i < arrayRaw.length; i++) {
+        const number = Number.parseInt(arrayRaw[i]);
+        if (Number.isNaN(number)) {
+            return null;
+        }
+        newArray.push(number);
+    }
+    return newArray;
+}

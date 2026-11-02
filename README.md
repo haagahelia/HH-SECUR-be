@@ -169,6 +169,157 @@ Responses:
 
 <summary>
 
+**/countries** - GET: All countries in the database and their risk values
+
+</summary>
+
+Requires: Authentication
+
+Response format:
+
+```
+
+{
+    "countries": [
+        {
+            "id": 1,
+            "code": "AFG",
+            "fi": "Afganistan",
+            "en": "Afghanistan",
+            "dataYear": 2025,
+            "corruption": 13.68,
+            "security": 3,
+            "academicFreedom": 0.086,
+            "politicalStability": 1.42,
+            "development": 181,
+            "gdpr": 3,
+            "sanctions": 3,
+            "ruleOfLaw": 0.30764429
+        },
+        {
+            "id": 2,
+            "code": "ALB",
+            "fi": "Albania",
+            "en": "Albania",
+            "dataYear": 2025,
+            "corruption": 43.4,
+            "security": 1,
+            "academicFreedom": 0.76,
+            "politicalStability": 51.66,
+            "development": 71,
+            "gdpr": 3,
+            "sanctions": 1,
+            "ruleOfLaw": 0.48877582
+        },
+        {
+            "id": 3,
+            "code": "DZA",
+            "fi": "Algeria",
+            "en": "Algeria",
+            "dataYear": 2025,
+            "corruption": 30.19,
+            "security": 2,
+            "academicFreedom": 0.206,
+            "politicalStability": 23.22,
+            "development": 96,
+            "gdpr": 3,
+            "sanctions": 1,
+            "ruleOfLaw": 0.48857478
+        },
+        ...
+
+    ]
+}
+
+```
+
+</details>
+
+<details>
+
+<summary>
+
+**/countries** - POST: Post a new Country
+
+</summary>
+    
+Requires: authentication, admin
+
+Request body:
+
+```
+
+{
+    "code": "ESM",
+    "en": "Example Country",
+    "fi": "Esimerkkimaa",
+    "datayear": 2026,
+    "corruption": 13.68,
+    "security": 3,
+    "academicfreedom": 0.086,
+    "politicalstability": 1.42,
+    "development": 181,
+    "gdpr": 3,
+    "sanctions": 3,
+    "ruleoflaw": 0.30764429
+}
+
+```
+
+Valid values #description after
+
+```
+code: Any text #Has to be Unique
+fi: Any text #Has to be unique
+en: Any text #Has to be unique
+datayear: number
+corruption: number
+security: number
+academicfreedom: number
+politicalstability: number
+development: number
+gdpr: number
+sanctions: number
+ruleoflaw: number
+```
+</details>
+
+<details>
+
+<summary>
+
+**/countries/{id}** - PATCH: Update values for a specific country
+
+</summary>
+    
+Requires: authentication, admin
+
+Request body:
+
+    - Same as POST Country but fields can be omitted
+
+    - Fields omitted retain old values
+
+</details>
+
+<details>
+
+<summary>
+
+**/countries/{id}** - DELETE: Delete a Country by the specific id
+
+</summary>
+
+Requires: Authentication, Admin
+
+    - Countries in reports cannot be deleted
+
+</details>
+
+<details>
+
+<summary>
+
 **/organizations** - GET: List of partner organizations
 
 </summary>
@@ -206,6 +357,80 @@ Responses:
 
 <summary>
 
+**/organizations** - POST: Post a new partnership organization
+
+</summary>
+
+    - Post a new partnership organization
+    
+    - Requires: authentication, admin
+
+Request body:
+
+```
+
+{
+    "code": "qwerty123",
+    "fi": "testi organisaatio",
+    "en": "test organization",
+    "countrycode": "SWE",
+    "addedmanually": true
+}
+
+```
+
+Optional fields:
+
+    - code: can be left out, has to be unique if included
+
+Valid values #description after
+
+```
+code: Any text #Unique code for partnerhip organization, can be null, needs to be unique if added, and should be null until there's a need to add it (codes for the organizations list are from the WHED source and were left in the data in case a need for human readable codes arises)
+fi: Any text #Finnish name of the partnership organization if localized and if not, just the same value as en
+en: Any text #English name of the partnership organization if localized and if not, just the same value as fi
+countrycode: Any text #3 letter code for a valid country. If the Country doesn't exist but needs to, post that Country first.
+```
+Combinations of (countrycode + fi) and (countrycode + en) have to be unique, meaning no organizations with the same name are allowed in the same Country.
+
+</details>
+
+<details>
+
+<summary>
+
+**/organizations/{id}** - PATCH: Update values for a specific organization
+
+
+</summary>
+
+Requires: Authentication, Admin
+
+    - Same format as POST organization but fields can be omitted
+
+    - Omitted fields will retain old values
+
+</details>
+
+<details>
+
+<summary>
+
+**/organizations/{id}** - DELETE: Delete an Organization by the specific id
+
+
+</summary>
+
+Requires: Authentication, Admin
+
+    - Organizations in consortiums cannot be deleted
+
+</details>
+
+<details>
+
+<summary>
+
 **/calculaterisk** - POST: Risk calculation endpoint
 
 </summary>
@@ -220,27 +445,29 @@ Request body:
     "ownerusername": "User",
     "creatorusername": "Admin",
     "country": "CHN",
-    "organization": 1,
+    "organization": [1, 2, 3],
     "hhrole": "option1",
-    "consortium": "option1"
+    "consortium": "option1",
     "organizationtype": "option1",
     "history": "option1",
     "contract": "option1",
-    "collaborationtype": ["option1", "option2"]´
+    "collaborationtype": ["option1", "option2"],
     "funding": "option1",
-    "exhange": "option1"
+    "exchange": "option1",
     "fundinghistory": "option1",
-    "fundingsource": "option1"
+    "fundingsource": "option1",
     "liability": "option1",
     "personalinformation": "option1",
     "dualuse": "option1",
     "ethics": "option1",
     "duration": "option1",
-    "organizationother": "specify organization",
+    "organizationname": "Old way to name other option in organization, use neworganization instead",
+    "organizationtypeother": "specify organization",
     "collaborationtypeother": "specify collaboration type",
-    "additionalinformation": "additional description"
-
+    "additionalinformation": "additional description",
+    "neworganization": [{"name": "Name of new organization", "countrycode": "Countrycode of new organization"}]
 }
+
 ```
 
 Optional fields: 
@@ -250,6 +477,8 @@ Optional fields:
     - collaborationtypeother - Description for other option in collaboration type
 
     - additionalinformation - Additional information about project
+
+    - organization, neworganization - Only one if these is required
 
 Conditionally required fields
 
@@ -270,7 +499,7 @@ name: project name field content,
 ownerusername: valid username of project owner,
 creatorusername: valid username of current user,
 country: 3 letter country code
-organization: organization number id
+organization: Array of organization number ids or a single organization id number #If bilateral consortium is selected, numbers after the first one will be ignored
 hhrole: option1 | option2 | option3 # Collaboration coordinator | Partner  Other
 consortium: option1 | option2 # Bilateral | Multilateral
 history: option1 | option2 # Yes | No
@@ -282,14 +511,15 @@ exchange: option1 | option2 | option3 # In euros | Partially in euros | In curre
 fundinghistory: option1 | option2 #Yes | No
 fundingsource: option1 | option2 | option3 | option4 | option5 | option6 | option7 | option 8 # Finnish public sector entity | Finnish foundation or equivalent | Finnish corpororation | Finnish source other than the above | Foreign public sector entity | Foreign foundation or equivalent | Foreign corporation | Foreign entity other than the above
 liability: option1 | option2 | option3  # 0-20.000 | 20.000 | Over 50.000
-personalinformation: option1 | option2 # Yes | No | Unkown
+personalinformation: option1 | option2 | option3 # Yes | No | Unkown
 dualuse: option1 | option2 | option3 # Yes | No | Unkown
 ethics: option1 | option2 | option3 | option4 | option5 # Absolutely not | Most likely not | Possibly | Very likely | Definitely
 duration: option1 | option2 | option3 # 0-24 months | 24-60 months | Over 60 Months
-organizationother: any text
-collaborationother: any text
-additionalinformation: any text
-
+organizationname: any text #Use neworganization instead if adding new organizations with the request, this will be removed once front-end has been updated to use it
+organizationtypeother: any text #Type of organization if other is chosen for organization type selection
+collaborationother: any text #Type of collaboration of other is chosen for collaboration type
+additionalinformation: any text #Additional information about the project
+neworganization: [{"name": text, "countrycode": text}] #Array of new organizations
 ```
 
 Responses:
@@ -305,18 +535,18 @@ Response body:
 ```
 {
     "report": {
-        "name": "Sample report",
-        "ownername": "Placeholder",
-        "creatorname": "Placeholder",
+        "name": "Sample report2",
+        "ownername": "User",
+        "creatorname": "User",
         "collaboration": {
             "title": {
                 "fi": "Yhteistyön kokonaisriskiarvio",
                 "en": "Overall Collaboration Risk Level"
             },
-            "risk": 1,
+            "risk": 2,
             "description": {
-                "fi": "Yhteistyön kokonaisriski on alhainen. Yhteistyössä voi kuitenkin  esiintyä tunnistamattomia riskejä ja nyt arvioitujen asioiden riskitaso saattaa muuttua jatkossa.",
-                "en": "Overall risk rating for the collaboration is low. Collaboration may still include unforeseen risks and risk ratings for currently assessed risks may change in the future."
+                "fi": "Yhteistyön kokonaisriskitaso on kohonnut. Kiinnitä erityistä huomiota kohonneisiin riskeihin ja mieti niiden hallintaa. Toteuta tarvittaessa yksityiskohtaisempi riskiarvio.",
+                "en": "The overall collaboration risk level has increased. Pay special attention to the elevated risks and consider how to manage them. If necessary, conduct a more detailed risk assessment."
             }
         },
         "country": {
@@ -437,10 +667,10 @@ Response body:
                     "fi": "Taloudellinen kokonaisriskitaso",
                     "en": "Overall Financial Risk Level"
                 },
-                "risk": 1,
+                "risk": 0,
                 "description": {
-                    "fi": "Yhteistyön taloudellinen laajuus ei ole merkittävä, eikä muodosta merkittävää riskiä. Varmista tarvittaessa ykskkösi talouden lähipalveluilta, että hankkeen budjetti on asianmukainen.",
-                    "en": "The financial scope of the collaboration is not significant and does not pose a major risk. If necessary, consult your unit’s financial services to ensure that the project budget is appropriate."
+                    "fi": "Virheellinen tai puuttuva riskiluokitus",
+                    "en": "Invalid or missing risk level"
                 }
             },
             "exchange": {
@@ -489,24 +719,23 @@ Response body:
             }
         },
         "organizationname": "Add name here if other is selected for organization",
-        "organizationother": "This message is added to response if option5 is selected for organizationtype",
-        "collaborationtypeother": "This message is added to response if option7 is included in collaboration types",
+        "organizationtypeother": "This message is added to response if option5 is selected for organizationtype",
+        "collaborationtypeother": "",
         "additionalinformation": "Additional information about project"
     },
     "choices": {
         "country": "SWE",
-        "organization": "1",
+        "organization": [
+            280
+        ],
         "organizationtype": "option5",
         "hhrole": "option1",
         "collaborationtype": [
             "option1",
-            "option2",
-            "option3",
-            "option4",
-            "option7"
+            "option2"
         ],
-        "history": "option1",
-        "contract": "option1",
+        "history": "option2",
+        "contract": "option2",
         "funding": "option1",
         "liability": "option1",
         "exchange": "option1",
@@ -514,18 +743,25 @@ Response body:
         "dualuse": "option1",
         "ethics": "option1",
         "duration": "option1",
-        "organizationother": "This message is added to response if option5 is selected for organizationtype",
+        "organizationtypeother": "This message is added to response if option5 is selected for organizationtype",
         "collaborationtypeother": "This message is added to response if option7 is included in collaboration types",
         "additionalinformation": "Additional information about project",
-        "name": "Sample report",
-        "fundinghistory": "option1",
+        "name": "Sample report2",
+        "fundinghistory": "option2",
         "fundingsource": "option1",
-        "consortium": "option1",
+        "consortium": "option2",
         "organizationname": "Add name here if other is selected for organization",
         "ownerusername": "User",
-        "creatorusername": "User"
+        "creatorusername": "User",
+        "neworganization": [
+            {
+                "name": "Custom organization",
+                "countrycode": "SWE"
+            }
+        ]
     }
 }
+
 ```
 
 </details>
@@ -538,7 +774,7 @@ Response body:
 
 </summary>
 
-Fetches all reports with `id`, `name`, `risk`, `ownername`, `creatorname`, `country: {code, fi, en}`,`organizations: [{id, fi, en, countrycode}]`, `created_at` and `updated_at` included. Currently only bilateral organizations are supported but the format allows for expanding it to include multilaterals since organizations are returned as an array.
+Fetches all reports with `id`, `name`, `risk`, `ownername`, `creatorname`, `country: {code, fi, en}`,`organizations: [{id, fi, en, countrycode}]`, `created_at` and `updated_at` included.
 
 Requires: Authentication
 
@@ -1628,7 +1864,7 @@ Example response:
 
 Uses the same function as saving the report and updating is done instead of creation of id param is found.
 
-Requires: Authentication
+Requires: Authentication, ownership or admin role
 
 Reponse:
 
@@ -2133,7 +2369,7 @@ Report and choices content can be used fill results and form pages.
 
 </summary>
 
-Requires: Authentication, Admin access
+Requires: Authentication, ownership or admin role
 
 </details>
 
