@@ -1864,7 +1864,7 @@ Example response:
 
 Uses the same function as saving the report and updating is done instead of creation of id param is found.
 
-Requires: Authentication
+Requires: Authentication, ownership or admin role
 
 Reponse:
 
@@ -2369,7 +2369,7 @@ Report and choices content can be used fill results and form pages.
 
 </summary>
 
-Requires: Authentication (requirement for ownership or admin status to be added later)
+Requires: Authentication, ownership or admin role
 
 </details>
 
