@@ -23,7 +23,7 @@ Responds `{ok: true}` if server is running. Doesn't require successful database 
 
 </summary>
 
-**Request body format:**
+Request body format:
 
 ```
 {
@@ -33,7 +33,7 @@ Responds `{ok: true}` if server is running. Doesn't require successful database 
 
 ```
 
-Credentials for default user and admin are defined in env variables.
+Credentials for premade users are defined via env variables. 
 
 </details>
 
@@ -45,13 +45,35 @@ Credentials for default user and admin are defined in env variables.
 
 </summary>
 
-    - Returns list of users with password_hash omitted
+Requires: 
 
-    - Requires authentication
+    - Authentication
 
-Responses:
+Response format:
 
-    - Failures: 401: Auth failure
+```
+{
+    "users": [
+        {
+            "id": 1,
+            "username": "User",
+            "email": "user@testing.com",
+            "role": "user",
+            "created_at": "2026-11-03T11:41:13.000Z",
+            "updated_at": "2026-11-03T11:41:13.000Z"
+        },
+        {
+            "id": 2,
+            "username": "Admin",
+            "email": "admin@testing.com",
+            "role": "admin",
+            "created_at": "2026-11-03T11:41:13.000Z",
+            "updated_at": "2026-11-03T11:41:13.000Z"
+        },
+        ...
+    ]
+}
+```
 
 </details>
 
@@ -63,15 +85,25 @@ Responses:
 
 </summary>
 
-    - Returns specific user by ID
 
-    - Requires authentication
+Requires:
 
-Responses:
+    - Authentication
 
-    - Success: 200
+Response format:
 
-    - Failures: 401: Auth failure, 404: user not found
+```
+{
+    "user": {
+        "id": 1,
+        "username": "User",
+        "email": "user@testing.com",
+        "role": "user",
+        "created_at": "2026-11-03T11:41:13.000Z",
+        "updated_at": "2026-11-03T11:41:13.000Z"
+    }
+}
+```
     
 </details>
 
@@ -83,9 +115,10 @@ Responses:
 
 </summary>
 
-    - Create new user
 
-    - Requires authentication and admin role
+Requires:
+
+    - Authentication, admin
 
 Request body:
 
@@ -94,11 +127,13 @@ Request body:
     "username": "Username",
     "email": "valid@emailformat.com",
     "password": "password",
-    "role": "role"
+    "role": "user"
 }
 ```
 
-Requirements:
+Requires:
+
+    - Authentication, admin
 
     - Not empty / null: username, email, password, role
 
@@ -106,11 +141,20 @@ Requirements:
 
     - Valid format: email
 
-Responses:
+Response format:
 
-    - Success: 200 - Json of generated user with password_hash omitted
-
-    - Failures: 401, 403: Auth errors, 422: Validation errors
+```
+{
+    "user": {
+        "id": 8,
+        "username": "Username",
+        "email": "valid@emailformat.com",
+        "role": "user",
+        "updated_at": "2026-11-03T11:43:30.381Z",
+        "created_at": "2026-11-03T11:43:30.381Z"
+    }
+}
+```
     
 </details>
 
@@ -122,26 +166,43 @@ Responses:
 
 </summary>
 
-    - Update information of a specific user.
 
-    - Requires authentication and admin role
+Requires:
+
+    - Authentication, admin
 
 Request body (attributes can be omitted, only included ones will be updated):
 
 ```
 {
-    "username": "Username",
-    "email": "valid@emailformat.com",
-    "password": "password",
-    "role": "role"
+    "username": "Newname",
+    "email": "validnew@emailformat.com",
+    "password": "pass",
+    "role": "admin"
 }
 ```
 
-Responses:
+Requires:
 
-    - Success: 200 - Success message and updated json of user with password_hash omitted
+    - Authentication, admin
+    
+    - Same unique rules as posting user
 
-    - Failures: 401, 403 - Auth failures
+Response format:
+
+```
+{
+    "message": "User with id 1 has been updated",
+    "user": {
+        "id": 1,
+        "username": "Newname",
+        "email": "validnew@emailformat.com",
+        "role": "admin",
+        "created_at": "2026-11-03T11:41:13.000Z",
+        "updated_at": "2026-11-03T11:48:04.198Z"
+    }
+}
+```
 
 </details>
 
@@ -153,15 +214,17 @@ Responses:
 
 </summary>
 
-    - Deletes a specific user
-    
-    - Requires authentication and admin role
+Requires:
 
-Responses:
+    - Authentication, admin
 
-    - Success: 200 - User has been deleted message
+Response format:
 
-    - Failures: 401, 403 - Auth failures, 404 - User not found
+```
+{
+    "message": "User with id 3 has been deleted"
+}
+```
 
 </details>
 
@@ -173,7 +236,9 @@ Responses:
 
 </summary>
 
-Requires: Authentication
+Requires:
+
+    - Authentication
 
 Response format:
 
@@ -243,12 +308,13 @@ Response format:
 
 </summary>
     
-Requires: authentication, admin
+Requires:
+
+    - Authentication, admin
 
 Request body:
 
 ```
-
 {
     "code": "ESM",
     "en": "Example Country",
@@ -292,7 +358,9 @@ ruleoflaw: number
 
 </summary>
     
-Requires: authentication, admin
+Requires:
+
+    - Authentication, admin
 
 Request body:
 
@@ -310,7 +378,9 @@ Request body:
 
 </summary>
 
-Requires: Authentication, Admin
+Requires:
+
+    - Authentication, admin
 
     - Countries in reports cannot be deleted
 
@@ -324,11 +394,13 @@ Requires: Authentication, Admin
 
 </summary>
 
-    - Returns list of organizations (id, name:(fi, en), country id)
+Returns list of organizations (id, name:(fi, en), country id)
 
-    - Requires authentication
+Requires:
 
-Response body:
+    - Authentication
+
+Response format:
 
 ```
 {
@@ -345,12 +417,6 @@ Response body:
 }
 ```
 
-Responses:
-
-    - Success: 200
-
-    - Failures: 401: Auth failure
-
 </details>
 
 <details>
@@ -361,14 +427,13 @@ Responses:
 
 </summary>
 
-    - Post a new partnership organization
-    
-    - Requires: authentication, admin
+Requires:
+
+    - Authentication, admin
 
 Request body:
 
 ```
-
 {
     "code": "qwerty123",
     "fi": "testi organisaatio",
@@ -404,7 +469,9 @@ Combinations of (countrycode + fi) and (countrycode + en) have to be unique, mea
 
 </summary>
 
-Requires: Authentication, Admin
+Requires:
+
+    - Authentication, admin
 
     - Same format as POST organization but fields can be omitted
 
@@ -421,7 +488,9 @@ Requires: Authentication, Admin
 
 </summary>
 
-Requires: Authentication, Admin
+Requires:
+
+    - Authentication, Admin
 
     - Organizations in consortiums cannot be deleted
 
@@ -435,7 +504,9 @@ Requires: Authentication, Admin
 
 </summary>
 
-Requires: authentication
+Requires:
+
+    - Authentication
 
 Request body:
 
@@ -776,7 +847,9 @@ Response body:
 
 Fetches all reports with `id`, `name`, `risk`, `ownername`, `creatorname`, `country: {code, fi, en}`,`organizations: [{id, fi, en, countrycode}]`, `created_at` and `updated_at` included.
 
-Requires: Authentication
+Requires:
+
+    - Authentication
 
 Example response:
 
@@ -843,7 +916,9 @@ Example response:
 
 Saves report to database and returns that report and its relations.
 
-Requires: Authentication
+Requires:
+
+    - Authentication
 
 Request body:
 
@@ -1355,7 +1430,9 @@ Example response:
 
 Fetches a specific report, its relations, and its verbose risk report
 
-Requires: Authentication
+Requires:
+
+    - Authentication
 
 Reponse:
 
@@ -1864,7 +1941,9 @@ Example response:
 
 Uses the same function as saving the report and updating is done instead of creation of id param is found.
 
-Requires: Authentication, ownership or admin role
+Requires:
+
+    - Authentication, ownership or admin
 
 Reponse:
 
@@ -2369,7 +2448,9 @@ Report and choices content can be used fill results and form pages.
 
 </summary>
 
-Requires: Authentication, ownership or admin role
+Requires:
+
+    - Authentication, ownership or admin
 
 </details>
 
