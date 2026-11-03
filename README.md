@@ -1434,7 +1434,7 @@ Requires:
 
     - Authentication
 
-Reponse:
+Response:
 
 Elements:
 
@@ -1945,9 +1945,7 @@ Requires:
 
     - Authentication, ownership or admin
 
-Reponse:
-
-Elements:
+Response elements:
 
     - "reportDeails": {} - representation of report data in the database
 
@@ -1956,6 +1954,8 @@ Elements:
     - "choices": {} - list of choices for form page options
 
 Report and choices content can be used fill results and form pages.
+
+Response body:
 
 ```
 {
@@ -2462,6 +2462,10 @@ Requires:
 
 </summary>
 
+Requires:
+
+    - Authentication
+
 Includes:
 
     - name
@@ -2498,7 +2502,7 @@ Includes:
 
     - additionalInformation
 
-Reponse: 
+Response: 
 
 ```
 
