@@ -1,6 +1,7 @@
 import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
 import { AllowNull, Column, DataType, HasMany, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
 import Report from "./Report";
+import Organization from "./Organization";
 
 
 @Table({
@@ -120,4 +121,7 @@ export default class Country extends Model<
 
     @HasMany(() => Report)
     declare reports?: NonAttribute<Report>[];
+
+    @HasMany(() => Organization)
+    declare organizations?: NonAttribute<Organization>[];
 }

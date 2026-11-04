@@ -215,7 +215,6 @@ export const addOrganizationsLimited = async () => {
     let limit = 0;
     let countryCode = ""
     for (let i = 0; i < organizations.length; i++) {
-
         if (organizations[i].country_code !== countryCode) {
             countryCode = organizations[i].country_code
             limit = 0
@@ -223,7 +222,8 @@ export const addOrganizationsLimited = async () => {
 
         if (limit < 2) {
             limit++;
-            let organizationNew = {
+            const organizationNew = {
+                countryId: null,
                 code: organizations[i].code,
                 fi: organizations[i].fi,
                 en: organizations[i].en,
@@ -233,6 +233,7 @@ export const addOrganizationsLimited = async () => {
             let organization = await repository.findOrganizationByCode(organizations[i].code)
             try {
                 if (organization) {
+                    organization.countryId = null,
                     organization.fi = organizations[i].fi;
                     organization.en = organizations[i].en;
                     organization.country_code = organizations[i].country_code;

@@ -66,7 +66,15 @@ export const patchOrganization = async (req: Request, res: Response) => {
         res.status(422).json({ message: `Valid options for the field added manually are true and false. ${addedmanually} is invalid.` })
         return;
     }
+    let countryId = organization.countryId;
+    if (countrycode && (countrycode !== organization.country_code)) {
+        const country = await repository.findCountryByCode(countrycode);
+        if (country) {
+            countryId = country.id;
+        }
+    }
     const organizationUpdates = {
+        countryId: countryId,
         code: code ? code : organization.code,
         fi: fi ? fi : organization.fi,
         en: en ? en : organization.en,

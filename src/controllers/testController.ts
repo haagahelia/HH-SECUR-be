@@ -144,3 +144,15 @@ export const addExtraUsers = async () => {
 
     return true;
 }
+
+export const testFindCountryByCode = async (req: Request, res: Response) => {
+    const country = await repository.findCountryByCode(req.body.code);
+    const newOrganization = await repository.createOrganization({
+        code: null,
+        fi: "test",
+        en: "test",
+        country_code: country ? country.code : "SWE",
+        added_manually: false
+    })
+    res.json(country, );
+}
