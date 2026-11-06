@@ -26,10 +26,10 @@ export const addDataToAllTables = async () => {
     await internalAddDefaultUser();
     await internalAddDefaultAdmin();
     await addHHRole();
+    await addCountryData();
     await addOrganizations();
     await addCollaborationTypes();
     await addConsortiumTypes();
-    await addCountryData();
     await addOrganizationType();
     await addDuration();
     await addCollaborationHistory();

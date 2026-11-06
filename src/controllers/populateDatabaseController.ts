@@ -8,11 +8,11 @@ import { addExtraUsers } from "./testController";
 
 export const populateDatabase = async (req: Request, res: Response) => {
     await addHHRole();
+    await addCountryData();
     await addOrganizations();
     await addCollaborationTypes();
     await addConsortiumTypes();
     await addOrganizationType();
-    await addCountryData();
     await addDuration();
     await addCollaborationHistory();
     await addContractInfo();
