@@ -411,7 +411,17 @@ Response format:
                 "fi": "Name in Finnish",
                 "en": "Name in English"
             },
-            "countryId": "XXX"
+            "countryId": "XXX",
+            "manuallyAdded": false
+        },
+        {
+            "id": null,
+            "name": {
+                "fi": "Other valinnalla lisätty organisaatio",
+                "en": "Organization added when selecting other"
+            },
+            "countryId": "XXX",
+            "manuallyAdded": true
         }
     ]
 }
