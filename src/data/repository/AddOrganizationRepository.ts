@@ -1,6 +1,7 @@
 import Consortium from "../models/Consortium.js";
 import Organization from "../models/Organization.js";
 import BaseRepository, { Constructor } from "./BaseRepository.js";
+import repository from "./repository.js";
 
 
 export function AddOrganizationRepository<TBase extends Constructor<BaseRepository>>(
@@ -29,7 +30,15 @@ export function AddOrganizationRepository<TBase extends Constructor<BaseReposito
         }
 
         async createOrganization(organizationAttributes: { code: string | null; fi: string; en: string; country_code: string; added_manually: boolean }) {
-            return await Organization.create(organizationAttributes);
+            const organization = await Organization.create(organizationAttributes);
+            const country = await repository.findCountryByCode(organization.country_code)
+
+            if (country) {
+                organization.set({ countryId: country.id })
+                await organization.save();
+            }
+
+            return organization;
         }
 
         async deleteUnattachedCustomOrganizations() {

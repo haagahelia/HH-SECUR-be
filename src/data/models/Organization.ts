@@ -1,8 +1,9 @@
 import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from "sequelize";
-import { AllowNull, BelongsToMany, Column, DataType, HasMany, Index, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
+import { AllowNull, BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasMany, Index, Model, NotEmpty, PrimaryKey, Table, Unique, } from "sequelize-typescript";
 import Report from "./Report";
 import Consortium from "./Consortium";
 import ConsortiumOrganization from "./ConsortiumOrganization";
+import Country from "./Country";
 
 
 @Table({
@@ -31,6 +32,14 @@ export default class Organization extends Model<
         autoIncrement: true,
     })
     declare id: CreationOptional<number>
+
+    @ForeignKey(() => Country)
+    @AllowNull(true)
+    @Column({
+        type: DataType.BIGINT,
+        field: "country_id",
+    })
+    declare countryId: number | null;
 
     @AllowNull(true)
     @NotEmpty
@@ -74,6 +83,9 @@ export default class Organization extends Model<
     @HasMany(() => Report)
     declare reports?: NonAttribute<Report>[];
 */
+
+    @BelongsTo(() => Country)
+    declare country?: NonAttribute<Country>;
 
     @BelongsToMany(() => Consortium, () => ConsortiumOrganization)
     declare consortiums?: NonAttribute<Consortium[]>;
