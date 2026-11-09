@@ -1,0 +1,64 @@
+# Builds the backend Docker image, pushes it to GitHub Container Registry (ghcr.io)
+# and updates the Azure Container App whenever dev is updated.
+#
+# Required repository secret (Settings -> Secrets and variables -> Actions):
+#   AZURE_CREDENTIALS  JSON output of `az ad sp create-for-rbac ... --json-auth`
+#                      (service principal with Contributor role on hh-secur-i-rg)
+
+name: Deploy backend to Azure (dev)
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+concurrency:
+  group: azure-backend-dev
+  cancel-in-progress: true
+
+env:
+  IMAGE: ghcr.io/haagahelia/hh-secur-be
+  RESOURCE_GROUP: hh-secur-i-rg
+  CONTAINER_APP: hh-secur-be-dev
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:dev
+            ${{ env.IMAGE }}:${{ github.sha }}
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Update Container App to the new image
+        run: |
+          az containerapp update \
+            --name "$CONTAINER_APP" \
+            --resource-group "$RESOURCE_GROUP" \
+            --image "$IMAGE:${{ github.sha }}" \
+            --only-show-errors \
+            --query "properties.configuration.ingress.fqdn" -o tsv
