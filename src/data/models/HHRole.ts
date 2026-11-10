@@ -42,12 +42,6 @@ export default class HHRole extends Model<
     })
     declare en: string;
 
-    @CreatedAt
-    declare created_at: CreationOptional<Date>;
-
-    @UpdatedAt
-    declare updated_at: CreationOptional<Date>;
-
     @HasMany(() => Report)
     declare reports?: NonAttribute<Report>[];
 }

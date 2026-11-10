@@ -33,7 +33,7 @@ export default class Liability extends Model<
     @NotEmpty
     @Column({
         type: DataType.STRING,
-        field: "fi",
+        field: "name_fi",
     })
     declare fi: string;
 
@@ -41,7 +41,7 @@ export default class Liability extends Model<
     @NotEmpty
     @Column({
         type: DataType.STRING,
-        field: "en",
+        field: "name_en",
     })
     declare en: string;
 

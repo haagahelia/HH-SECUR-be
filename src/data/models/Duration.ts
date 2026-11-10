@@ -46,13 +46,13 @@ export default class Duration extends Model<
     @Column({
         type: DataType.BIGINT,
     })
-    declare lowerlimit: number | null
+    declare lower_limit: number | null
 
     @AllowNull(true)
     @Column({
         type: DataType.BIGINT,
     })
-    declare upperlimit: number | null
+    declare upper_limit: number | null
 
     @HasMany(() => Report)
     declare reports?: NonAttribute<Report>[];

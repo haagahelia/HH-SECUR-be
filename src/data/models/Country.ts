@@ -51,7 +51,7 @@ export default class Country extends Model<
     @NotEmpty
     @Column({
         type: DataType.INTEGER,
-        field: "Data Year",
+        field: "data_year",
     })
     declare dataYear: number;
 

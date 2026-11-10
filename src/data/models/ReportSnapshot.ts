@@ -107,7 +107,7 @@ export default class ReportSnapshot extends Model<
     @NotEmpty
     @Column({
         type: DataType.INTEGER,
-        field: "countryCorruption",
+        field: "country_corruption",
         validate: {
             min: 0,
             max: 3
