@@ -32,7 +32,7 @@ export default class ConsortiumType extends Model<
     @NotEmpty
     @Column({
         type: DataType.STRING,
-        field: "consortium_type_fi",
+        field: "name_fi",
     })
     declare fi: string;
 
@@ -40,7 +40,7 @@ export default class ConsortiumType extends Model<
     @NotEmpty
     @Column({
         type: DataType.STRING,
-        field: "consortium_type_en",
+        field: "name_en",
     })
     declare en: string;
 

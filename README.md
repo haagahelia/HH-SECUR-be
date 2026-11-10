@@ -3215,3 +3215,7 @@ PowerShell:
 ```powershell
 $env:API_BASE_URL="http://localhost:4000"; npm test
 ```
+
+## Documentation
+
+[Database model and table explanations](docs/database_model.md)
