@@ -60,4 +60,4 @@ Database serves two main functions. First is to provide data needed for risk cal
 
 ## Relational model
 
-[!HH-SECUR-i relational model](files/HH-SECUR-i_relational_model.png)
+[HH-SECUR-i relational model](!files/HH-SECUR-i_relational_model.png)
