@@ -1,9 +1,13 @@
 # Builds the backend Docker image, pushes it to GitHub Container Registry (ghcr.io)
 # and updates the Azure Container App whenever dev is updated.
 #
-# Required repository secret (Settings -> Secrets and variables -> Actions):
-#   AZURE_CREDENTIALS  JSON output of `az ad sp create-for-rbac ... --json-auth`
-#                      (service principal with Contributor role on hh-secur-i-rg)
+# Azure login uses OpenID Connect with a user-assigned managed identity
+# (hh-secur-be-github in hh-secur-i-rg), so no client secret is stored in GitHub.
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#   AZURE_CLIENT_ID        client ID of the managed identity
+#   AZURE_TENANT_ID        Azure tenant ID
+#   AZURE_SUBSCRIPTION_ID  Azure for Students subscription ID
 
 name: Deploy backend to Azure (dev)
 
@@ -24,6 +28,7 @@ env:
 permissions:
   contents: read
   packages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
@@ -49,10 +54,12 @@ jobs:
             ${{ env.IMAGE }}:dev
             ${{ env.IMAGE }}:${{ github.sha }}
 
-      - name: Log in to Azure
+      - name: Log in to Azure (OIDC)
         uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Update Container App to the new image
         run: |
