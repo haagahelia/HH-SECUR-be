@@ -381,3 +381,27 @@ export const generateNewOrganizationsTransaction = async (req: Request, firstOnl
 
     return organizations.length > 0 ? organizations : null;
 }
+
+export const deleteReportByIdTransaction = async (req: Request) => {
+    return repository.sequelizeClient.transaction(async (transaction) => {
+        const idRaw = (req.params.id);
+        const id = parseInt(idRaw as string)
+        if (Number.isNaN(id)) {
+            throw new Error(`Requested id ${idRaw} is not a number`)
+        } else {
+            const report = await repository.findReportById(id);
+            if (!report) {
+                throw new Error(`Report by the id of ${id} does not exist`)
+
+            } else {
+                const funding = report.funding;
+                const consortium = report.consortium;
+                await report.destroy({transaction});
+                await funding?.destroy({transaction});
+                await consortium?.destroy({transaction});
+                await repository.deleteUnattachedCustomOrganizationsTransaction(transaction);
+            }
+        }
+        return true;
+    })
+}

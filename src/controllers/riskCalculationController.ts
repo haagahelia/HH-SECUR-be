@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { calculateRisk, getReportRisksFromReportSnapshot, generateVerboseReport, parseRiskPayload, validateRiskOptions, generateReportChoices, getReportChoicesFromReport, validateCollaboration, generateNewOrganizations } from "../utils/riskCalculation";
 import repository from "../data/repository/repository";
 import Consortium from "../data/models/Consortium";
-import { patchReportTransaction, saveReportTransaction } from "../services/reportTransactions";
+import { deleteReportByIdTransaction, patchReportTransaction, saveReportTransaction } from "../services/reportTransactions";
 
 export type ReportSnapshot = {
     reportId: number,
@@ -263,6 +263,13 @@ export const getReportById = async (req: Request, res: Response) => {
 }
 
 export const deleteReportById = async (req: Request, res: Response) => {
+    const destroyed = await deleteReportByIdTransaction(req);
+    if (destroyed) {
+        res.json({
+            message: `Report with the id ${req.params.id} has been deleted`
+        })
+    }
+    /*
     const idRaw = (req.params.id);
     const id = parseInt(idRaw as string)
     if (Number.isNaN(id)) {
@@ -286,6 +293,7 @@ export const deleteReportById = async (req: Request, res: Response) => {
                 message: `Report with the id ${id} has been deleted`
             })
         }
-    }
+    }*/
+
 }
 
