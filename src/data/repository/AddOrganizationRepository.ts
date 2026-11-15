@@ -1,3 +1,4 @@
+import { Transaction } from "sequelize";
 import Consortium from "../models/Consortium.js";
 import Organization from "../models/Organization.js";
 import BaseRepository, { Constructor } from "./BaseRepository.js";
@@ -41,6 +42,19 @@ export function AddOrganizationRepository<TBase extends Constructor<BaseReposito
             return organization;
         }
 
+        async createOrganizationTransaction(organizationAttributes: { code: string | null; fi: string; en: string; country_code: string; added_manually: boolean }, transaction: Transaction) {
+            const organization = await Organization.create(organizationAttributes, { transaction });
+            const country = await repository.findCountryByCode(organization.country_code)
+
+            if (country) {
+                organization.set({ countryId: country.id })
+                await organization.save({ transaction });
+            }
+
+            return organization;
+
+        }
+
         async deleteUnattachedCustomOrganizations() {
             let destroyed = 0;
             const organizations = await Organization.findAll({
@@ -65,6 +79,31 @@ export function AddOrganizationRepository<TBase extends Constructor<BaseReposito
             }
             return destroyed;
         }
-    }
 
+        async deleteUnattachedCustomOrganizationsTransaction(transaction: Transaction) {
+            let destroyed = 0;
+            const organizations = await Organization.findAll({
+                where: {
+                    added_manually: true,
+                }, include: [{
+                    model: Consortium
+                }],
+                transaction
+            })
+            //return organizations;
+            for (let i = 0; i < organizations.length; i++) {
+                const consortiums = organizations[i].consortiums
+                if (consortiums) {
+                    if (consortiums.length === 0) {
+                        await organizations[i].destroy({transaction});
+                        destroyed++;
+                    }
+                } else {
+                    await organizations[i].destroy({transaction});
+                    destroyed++;
+                }
+            }
+            return destroyed;
+        }
+    }
 }
