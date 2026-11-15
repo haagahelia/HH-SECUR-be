@@ -1,3 +1,4 @@
+import { Transaction } from "sequelize";
 import CollaborationHistory from "../models/CollaborationHistory.js";
 import CollaborationType from "../models/CollaborationType.js";
 import Consortium from "../models/Consortium.js";
@@ -44,7 +45,9 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
             organizationTypeId: number,
             personalInformationId: number,
             userId: number,
-        }) {
+        }, transaction: Transaction
+
+        ) {
             return await Report.create(reportAttributes);
         }
 

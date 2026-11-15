@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { calculateRisk, getReportRisksFromReportSnapshot, generateVerboseReport, parseRiskPayload, validateRiskOptions, generateReportChoices, getReportChoicesFromReport, validateCollaboration, generateNewOrganizations } from "../utils/riskCalculation";
 import repository from "../data/repository/repository";
 import Consortium from "../data/models/Consortium";
+import { saveReportTransaction } from "../services/reportTransactions";
 
 export type ReportSnapshot = {
     reportId: number,
@@ -282,149 +283,24 @@ export const patchReport = async (req: Request, res: Response) => {
 }
 
 export const saveReport = async (req: Request, res: Response) => {
-    if (!parseRiskPayload(req, res)) {
-        return;
-    }
 
     const reportChoiceIds: ReportChoiceIds | null = await validateRiskOptions(req, res);
-
     if (!reportChoiceIds) {
         return;
     }
-
-    if ((req.body.consortium === "option2" || reportChoiceIds.organizationIds.length === 0) && req.body.neworganization) {
-        let firstOnly = false;
-        if (req.body.consortium === "option1") {
-            firstOnly = true
-        }
-        const newOrganizations = await generateNewOrganizations(req, res, firstOnly);
-        if (newOrganizations) {
-            for (let i = 0; i < newOrganizations.length; i++) {
-                reportChoiceIds.organizationIds.push(newOrganizations[i].id)
-            }
-        }
-    }
-
-    const collaborationTypes = await validateCollaboration(res, req.body.collaborationtype);
-    if (!collaborationTypes) {
-        return;
-    }
-
-    const fundingCreationAttributes = {
-        fundingOptionId: reportChoiceIds.fundingTypeId,
-        fundingSourceId: reportChoiceIds.fundingSourceId,
-        fundingHistoryId: reportChoiceIds.fundingHistoryId,
-        fundingExchangeId: reportChoiceIds.fundingExchangeId
-    }
-    const funding = await repository.createFunding(fundingCreationAttributes);
-    reportChoiceIds.fundingTypeId = funding.id;
-
-    const consortium = await generateConsortium(req, res, reportChoiceIds, null)
-    if (!consortium) {
-        return;
-    }
-
-    const reportCreationAttributes: ReportCreationAttributes = {
-        name: reportChoiceIds.name,
-        userId: reportChoiceIds.userId,
-        collaborationHistoryId: reportChoiceIds.collaborationHistoryId,
-        consortiumId: consortium.id,
-        contractInfoId: reportChoiceIds.contractInfoId,
-        countryId: reportChoiceIds.countryId,
-        dualUseId: reportChoiceIds.dualUseId,
-        durationId: reportChoiceIds.durationId,
-        ethicsAssessmentId: reportChoiceIds.ethicsAssessmentId,
-        hhroleId: reportChoiceIds.hhroleId,
-        liabilityId: reportChoiceIds.liabilityId,
-        fundingId: funding.id,
-        organizationTypeId: reportChoiceIds.organizationTypeId,
-        personalInformationId: reportChoiceIds.personalInformationId,
-    }
-
-    let report = await repository.createReport(reportCreationAttributes);
-    let reportId = report.id;
-
-    if (!report) {
-        res.status(404).json({ message: `Failed to save report` })
-    }
-
-    await report?.$set("collaborationTypes", collaborationTypes);
 
     const reportRisks = await calculateRisk(req, res, reportChoiceIds);
     if (!reportRisks) {
         return;
     }
-
-    let name = req.body.name;
-    if (!name) {
-        name = "PlaceholderName"
-    }
-    let ownerUsername = req.body.ownerusername;
-    if (!ownerUsername) {
-        ownerUsername = req.body.ownername;
-        if (!ownerUsername) {
-            ownerUsername = "";
-        }
-    }
-    let creatorUsername = req.body.creatorusername;
-    if (!creatorUsername) {
-        creatorUsername = req.body.creatorname;
-        if (!creatorUsername) {
-            creatorUsername = "";
-        }
-    }
-
-    let organizationName = "";
-    const organizations = Array.isArray(consortium.organizations) ? consortium.organizations : [];
-    for (let i = 0; i < organizations.length; i++) {
-        if (organizations[i].code === "other") {
-            organizationName = req.body.organizationname;
-        }
-    }
-
-    const reportSnapshot: ReportSnapshot = {
-        reportId: reportId,
-        name: name,
-        ownerUsername: ownerUsername,
-        creatorUsername: creatorUsername,
-        organizationName: organizationName,
-        additionalInformation: reportRisks.additionalinformation,
-        organizationOther: reportRisks.organizationtypeother,
-        collaborationOther: reportRisks.collaborationtypeother,
-        collaboration: reportRisks.collaboration.risk,
-        countryOverall: reportRisks.country.overall.risk,
-        countryCorruption: reportRisks.country.corruption.risk,
-        countrySecurity: reportRisks.country.security.risk,
-        countryAcademicFreedom: reportRisks.country.academicfreedom.risk,
-        countryPoliticalStability: reportRisks.country.politicalstability.risk,
-        countryDevelopment: reportRisks.country.development.risk,
-        countryGdpr: reportRisks.country.gdpr.risk,
-        countrySanctions: reportRisks.country.sanctions.risk,
-        countryRuleOfLaw: reportRisks.country.ruleoflaw.risk,
-        organization: reportRisks.organization.risk,
-        financialOverall: reportRisks.financial.overall.risk,
-        financialExchange: reportRisks.financial.exchange.risk,
-        financialScope: reportRisks.financial.scope.risk,
-        dualUse: reportRisks.dualuse.risk,
-        ethics: reportRisks.ethics.risk,
-    }
-
-    await repository.deleteReportSnapshotByReportId(reportId);
-
-    await repository.createReportSnapshot(reportSnapshot);
-
-    const savedReport = await repository.findReportById(reportId);
+    const savedReport = await saveReportTransaction(req, res);
     const reportChoices = generateReportChoices(req.body);
-
-    const customOrganizationCleanup = await repository.deleteUnattachedCustomOrganizations();
-
     if (savedReport) {
         res.status(200).json({
             message: `Report by the id of ${savedReport.id} has been saved.`,
             reportDetails: savedReport,
             report: reportRisks,
-            choices: reportChoices,
-            debug: customOrganizationCleanup
+            choices: reportChoices
         })
     } else {
         res.status(400).json({

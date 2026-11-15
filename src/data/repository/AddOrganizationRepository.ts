@@ -1,3 +1,4 @@
+import { Transaction } from "sequelize";
 import Consortium from "../models/Consortium.js";
 import Organization from "../models/Organization.js";
 import BaseRepository, { Constructor } from "./BaseRepository.js";
@@ -39,6 +40,19 @@ export function AddOrganizationRepository<TBase extends Constructor<BaseReposito
             }
 
             return organization;
+        }
+
+        async createOrganizationTransaction(organizationAttributes: { code: string | null; fi: string; en: string; country_code: string; added_manually: boolean }, transaction: Transaction) {
+            const organization = await Organization.create(organizationAttributes, { transaction });
+            const country = await repository.findCountryByCode(organization.country_code)
+
+            if (country) {
+                organization.set({ countryId: country.id })
+                await organization.save({ transaction });
+            }
+
+            return organization;
+
         }
 
         async deleteUnattachedCustomOrganizations() {
