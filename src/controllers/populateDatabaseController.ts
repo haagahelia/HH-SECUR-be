@@ -33,7 +33,7 @@ export async function addHHRole() {
         {
             code: "option1",
             fi: "Yhteistyön koordinaattori",
-            en: "Collaboration Coordnator"
+            en: "Collaboration Coordinator"
         },
         {
             code: "option2",

@@ -79,6 +79,31 @@ export function AddOrganizationRepository<TBase extends Constructor<BaseReposito
             }
             return destroyed;
         }
-    }
 
+        async deleteUnattachedCustomOrganizationsTransaction(transaction: Transaction) {
+            let destroyed = 0;
+            const organizations = await Organization.findAll({
+                where: {
+                    added_manually: true,
+                }, include: [{
+                    model: Consortium
+                }],
+                transaction
+            })
+            //return organizations;
+            for (let i = 0; i < organizations.length; i++) {
+                const consortiums = organizations[i].consortiums
+                if (consortiums) {
+                    if (consortiums.length === 0) {
+                        await organizations[i].destroy({transaction});
+                        destroyed++;
+                    }
+                } else {
+                    await organizations[i].destroy({transaction});
+                    destroyed++;
+                }
+            }
+            return destroyed;
+        }
+    }
 }
