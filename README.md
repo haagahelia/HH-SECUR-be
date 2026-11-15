@@ -3053,6 +3053,32 @@ Then fill in your own values.
 - `DB_HOST=localhost` is used when running the backend directly with `npm run dev`. With Docker Compose it is overridden automatically (see below).
 - `DEFAULT_USER_*` and `DEFAULT_ADMIN_*` are the credentials used to log in via `/login`.
 - Extra users (`EXTRA_USER_1..5_*`) are created on startup if all four values are set. The placeholder values in `.env.example` are for local development only.
+- Database settings (`DB_*`) are used by the app **and** by the migration tool. `DB_USERNAME` must not be `root` and `DB_PASSWORD` must not be empty when you use the Docker database. If port 3306 on your machine is already used by another MariaDB/MySQL, set `DB_PORT=3307`. `DB_SSL=true` is only for remote databases that require SSL. Details: [docs/migrations.md](docs/migrations.md#4-setting-up-your-environment).
+
+## Database and migrations
+
+The database structure is managed with **migrations** ([Sequelize-CLI](https://sequelize.org/docs/v6/other-topics/migrations/)). A migration is a small file in `db/migrations/` that describes one change to the database, so the schema has a reviewed history in git and can be changed without deleting data. Models (`src/data/models/`) describe how the code sees the tables, migrations change the real database, and a schema change updates both.
+
+> **Current status:** the migration tooling and the baseline migration (the 24 existing tables) are in place, but the application has **not been switched over yet**. `src/index.ts` still drops and recreates all tables on every start, so data is still lost on each start. Do not write schema-changing migrations until that switch-over is done. See the status table in [docs/migrations.md](docs/migrations.md#2-status-and-roadmap).
+
+Setup order for a local environment (full explanation, variations and troubleshooting in [docs/migrations.md](docs/migrations.md#4-setting-up-your-environment)):
+
+```bash
+npm ci
+cp .env.example .env        # then fill in the DB_* values, see the notes above
+docker compose -f docker-compose-dbbe.yaml up -d --wait hh_secur_db_service
+npm run migrate             # builds the schema (24 tables + SequelizeMeta)
+npm run dev
+```
+
+| Goal | Command |
+|---|---|
+| Apply pending migrations | `npm run migrate` |
+| See what has run | `npm run migrate:status` |
+| Undo the latest migration (local only, never on a shared database) | `npm run migrate:undo` |
+| Create a new empty migration | `npm run migrate:new -- name-of-the-change` |
+
+The full guide covers what migrations are, the team rules, how to change the schema, how the baseline was generated and can be regenerated, backups, deployment, troubleshooting and the open decisions: **[docs/migrations.md](docs/migrations.md)**.
 
 ## Default users (Rahti)
 
@@ -3148,7 +3174,7 @@ The full test flow (login, tokens, default users), in short:
 docker compose -f docker-compose-dbbe.yaml down
 ```
 
-The database persists across restarts in the named volume (`hh_secur_db_data`). Add `-v` if you want a clean, empty database:
+The database files persist across restarts in the named volume (`hh_secur_db_data`). Note that the backend still drops and recreates all tables when it starts (see [Database and migrations](#database-and-migrations)), so the *data* in them does not survive a backend restart yet. Add `-v` if you want a clean, empty database:
 
 ```bash
 docker compose -f docker-compose-dbbe.yaml down -v
@@ -3164,6 +3190,8 @@ docker compose -f docker-compose-dbbe.yaml down -v
 * **Changed `DB_*` values without `down -v`:** the database still has the old user and password, so the backend gets `Access denied`.
 * **Only `.env.example` updated:** Compose reads `.env`, not `.env.example`. Copy new variables into your own `.env` as well. For example, extra users are skipped silently if their values are missing from `.env`.
 * **Forgetting `--build` after a code change:** the container starts with the old code and your changes won't show up.
+* **Empty `DB_PASSWORD`:** the MariaDB image then does not create the user at all, and every login fails with `Access denied (using password: NO)`. Set a password and run `down -v`.
+* **Another database already uses port 3306 on your machine** (a Windows service, XAMPP, Homebrew...): `localhost:3306` then reaches *that* server and not the container, and you get `Access denied for user '...'@'localhost'` with the correct password. Set `DB_PORT=3307` in `.env` and run `up -d` again. Details in [docs/migrations.md](docs/migrations.md#45-port-3306-is-already-in-use).
 
 
 ## Testing
@@ -3218,4 +3246,5 @@ $env:API_BASE_URL="http://localhost:4000"; npm test
 
 ## Documentation
 
-[Database model and table explanations](docs/database_model.md)
+- [Database migrations: introduction, environment setup, rules, deployment, troubleshooting](docs/migrations.md)
+- [Database model and table explanations](docs/database_model.md)

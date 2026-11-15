@@ -2,6 +2,12 @@
 
 Database serves two main functions. First is to provide data needed for risk calculation form and second is to store risk calculation reports including a snapshot of the calculation results.
 
+## How the schema is managed
+
+The models in `src/data/models/` describe the tables for the code. The actual database structure is created and changed by **migrations** in `db/migrations/`, see [migrations.md](migrations.md). `db/baseline.sql` contains the exact SQL of all 24 tables (columns, types, keys and indexes) as they were when migrations were introduced, so it is the quickest place to look up real column names. Note that the timestamp columns are not named consistently: most tables use `createdAt` / `updatedAt`, and `funding`, `report`, `report_snapshot` and `user` use `created_at` / `updated_at`.
+
+A change to a table is always a change to the model **and** a new migration, in the same pull request. Update this file when tables are added or removed.
+
 ## Table explanations
 
 ### Miscallaneous
