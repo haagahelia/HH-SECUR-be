@@ -368,14 +368,14 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
             return null;
         }
         fundingExchangeId = fundingExchange?.id;
-        const fundingHistoryCode = req.body.exchange;
+        const fundingHistoryCode = req.body.fundinghistory;
         const fundingHistory = await repository.findFundingHistoryByCode(fundingHistoryCode)
         if (!fundingHistory) {
             res.status(404).json({ message: `Code ${fundingHistoryCode} is invalid for field fundinghistory` })
             return null;
         }
         fundingHistoryId = fundingHistory?.id;
-        const fundingSourceCode = req.body.exchange;
+        const fundingSourceCode = req.body.fundingsource;
         const fundingSource = await repository.findFundingSourceByCode(fundingSourceCode)
         if (!fundingSource) {
             res.status(404).json({ message: `Code ${fundingSourceCode} is invalid for field fundingsource` })
