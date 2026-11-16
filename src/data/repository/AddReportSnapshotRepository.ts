@@ -1,3 +1,4 @@
+import { Transaction } from "sequelize";
 import ReportSnapshot from "../models/ReportSnapshot.js";
 import BaseRepository, { Constructor } from "./BaseRepository.js";
 
@@ -50,6 +51,15 @@ export function AddReportSnapshotRepository<TBase extends Constructor<BaseReposi
                 where: {
                     reportId: id,
                 },
+            });
+        }
+
+        async deleteReportSnapshotByReportIdTransaction(id: number, transaction: Transaction) {
+            await ReportSnapshot.destroy({
+                where: {
+                    reportId: id,
+                },
+                transaction
             });
         }
 

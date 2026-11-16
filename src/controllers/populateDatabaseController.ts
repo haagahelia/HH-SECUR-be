@@ -8,6 +8,7 @@ import { addExtraUsers } from "./testController";
 
 export const populateDatabase = async (req: Request, res: Response) => {
     await addHHRole();
+    await addReportStatuses();
     await addCountryData();
     await addOrganizations();
     await addCollaborationTypes();
@@ -33,7 +34,7 @@ export async function addHHRole() {
         {
             code: "option1",
             fi: "Yhteistyön koordinaattori",
-            en: "Collaboration Coordnator"
+            en: "Collaboration Coordinator"
         },
         {
             code: "option2",
@@ -234,7 +235,7 @@ export const addOrganizationsLimited = async () => {
             try {
                 if (organization) {
                     organization.countryId = null,
-                    organization.fi = organizations[i].fi;
+                        organization.fi = organizations[i].fi;
                     organization.en = organizations[i].en;
                     organization.country_code = organizations[i].country_code;
                     organization.added_manually = false;
@@ -649,6 +650,48 @@ export async function addPersonalInformation() {
             await personalInformation.save();
         } else {
             await repository.createPersonalInformation(personalInformations[i]);
+        }
+    }
+}
+
+export const addReportStatuses = async () => {
+    const reportStatuses = [
+        {
+            code: "option1",
+            fi: "Suunniteltu",
+            en: "Planned"
+        },
+        {
+            code: "option2",
+            fi: "Hyväksytty",
+            en: "Accepted"
+        },
+        {
+            code: "option3",
+            fi: "Hylätty",
+            en: "Rejected"
+        },
+        {
+            code: "option4",
+            fi: "Käynnissä",
+            en: "In progress"
+        },
+        {
+            code: "option5",
+            fi: "Valmis",
+            en: "Finished"
+        }
+    ]
+
+    for (let i = 0; i < reportStatuses.length; i++) {
+
+        let reportStatus = await repository.findReportStatusByCode(reportStatuses[i].code)
+        if (reportStatus) {
+            reportStatus.fi = reportStatuses[i].fi;
+            reportStatus.en = reportStatuses[i].en;
+            await reportStatus.save();
+        } else {
+            await repository.createReportStatus(reportStatuses[i]);
         }
     }
 }

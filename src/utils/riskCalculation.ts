@@ -66,7 +66,8 @@ type ReportChoices = {
     organizationname: string | null,
     ownerusername: string | null,
     creatorusername: string | null,
-    neworganization: Object[] | []
+    neworganization: Object[] | [],
+    reportstatus: string | null
 
 }
 
@@ -95,7 +96,8 @@ type ReportChoicesRaw = {
     organizationname: string | null | undefined,
     ownerusername: string | null | undefined,
     creatorusername: string | null | undefined,
-    neworganization: any
+    neworganization: any,
+    reportstatus: string | null
 }
 
 export const parseRiskPayload = async (req: Request, res: Response) => {
@@ -132,6 +134,7 @@ export const generateReportChoices = (choices: ReportChoicesRaw) => {
     }
     const reportChoices: ReportChoices = {
         country: choices.country ? choices.country : "",
+        reportstatus: choices.reportstatus ? choices.reportstatus : "",
         organization: organizationIds ? organizationIds : [],
         organizationtype: choices.organizationtype ? choices.organizationtype : "",
         hhrole: choices.hhrole ? choices.hhrole : "",
@@ -155,7 +158,7 @@ export const generateReportChoices = (choices: ReportChoicesRaw) => {
         organizationname: choices.organizationname ? choices.organizationname : "",
         ownerusername: choices.ownerusername ? choices.ownerusername : "",
         creatorusername: choices.creatorusername ? choices.creatorusername : "",
-        neworganization: choices.neworganization ? choices.neworganization : []
+        neworganization: choices.neworganization ? choices.neworganization : [],
     }
 
     return reportChoices;
@@ -174,6 +177,7 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
 
     const reportChoicesRaw: ReportChoicesRaw = {
         country: report.country?.code,
+        reportstatus: report.reportStatus?.code ? report.reportStatus?.code : "",
         organization: organizations,
         organizationtype: report.organizationType?.code,
         hhrole: report.hhrole?.code,
@@ -368,14 +372,14 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
             return null;
         }
         fundingExchangeId = fundingExchange?.id;
-        const fundingHistoryCode = req.body.exchange;
+        const fundingHistoryCode = req.body.fundinghistory;
         const fundingHistory = await repository.findFundingHistoryByCode(fundingHistoryCode)
         if (!fundingHistory) {
             res.status(404).json({ message: `Code ${fundingHistoryCode} is invalid for field fundinghistory` })
             return null;
         }
         fundingHistoryId = fundingHistory?.id;
-        const fundingSourceCode = req.body.exchange;
+        const fundingSourceCode = req.body.fundingsource;
         const fundingSource = await repository.findFundingSourceByCode(fundingSourceCode)
         if (!fundingSource) {
             res.status(404).json({ message: `Code ${fundingSourceCode} is invalid for field fundingsource` })

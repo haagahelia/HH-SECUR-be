@@ -19,6 +19,7 @@ import User from "./User";
 import Funding from "./Funding";
 import FundingSource from "./FundingSource";
 import Consortium from "./Consortium";
+import ReportStatus from "./ReportStatus";
 
 
 @Table({
@@ -150,6 +151,14 @@ export default class Report extends Model<
     })
     declare userId: number;
 
+    @ForeignKey(() => ReportStatus)
+    @AllowNull(true)
+    @Column({
+        type: DataType.BIGINT,
+        field: "report_status_id",
+    })
+    declare reportStatusId: number;
+
     @CreatedAt
     declare created_at: CreationOptional<Date>;
 
@@ -197,6 +206,9 @@ export default class Report extends Model<
 
     @BelongsTo(() => User)
     declare user?: NonAttribute<User>;
+
+    @BelongsTo(() => ReportStatus)
+    declare reportStatus?: NonAttribute<ReportStatus>;
 
     @BelongsToMany(() => CollaborationType, () => ReportCollaborationType)
     declare collaborationTypes?: NonAttribute<CollaborationType[]>;

@@ -8536,7 +8536,7 @@ export const organizations = [
         fi: "University of Teacher Education Zürich",
         en: "University of Teacher Education Zürich",
         country_code: "CHE"
-    },
+    }, 
     {
         code: "IAU-024254",
         fi: "Zurich University of Applied Sciences",
@@ -65249,4 +65249,5 @@ export const organizations = [
         en: "Other",
         country_code: "OTH"
     }
+    
 ]
