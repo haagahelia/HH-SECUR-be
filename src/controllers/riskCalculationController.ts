@@ -46,6 +46,7 @@ export type ReportCreationAttributes = {
     fundingId: number,
     organizationTypeId: number,
     personalInformationId: number,
+    reportStatusId: number
 }
 
 export type ReportChoiceIds = {

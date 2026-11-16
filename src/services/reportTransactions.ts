@@ -54,6 +54,11 @@ export const saveReportTransaction = async (req: Request, res: Response) => {
         if (!consortium) {
             throw new Error(`Could not generate consortium`)
         }
+        const reportStatusCode = req.body.reportstatus ? req.body.reportstatus : 'option1';
+        const reportStatus = await repository.findReportStatusByCode(reportStatusCode)
+        if (!reportStatus) {
+            throw new Error(`Report status code ${reportStatusCode} is invalid`)
+        }
 
         const reportCreationAttributes: ReportCreationAttributes = {
             name: reportChoiceIds.name,
@@ -70,6 +75,7 @@ export const saveReportTransaction = async (req: Request, res: Response) => {
             fundingId: funding.id,
             organizationTypeId: reportChoiceIds.organizationTypeId,
             personalInformationId: reportChoiceIds.personalInformationId,
+            reportStatusId: reportStatus.id,
         }
 
         let report = await Report.create(reportCreationAttributes, { transaction })
@@ -221,6 +227,12 @@ export const patchReportTransaction = async (req: Request, res: Response) => {
             throw new Error(`Could not generate consortium`)
         }
 
+        const reportStatusCode = req.body.reportstatus ? req.body.reportstatus : report.reportStatus?.code;
+        const reportStatus = await repository.findReportStatusByCode(reportStatusCode)
+        if (!reportStatus) {
+            throw new Error(`Report status code ${reportStatusCode} is invalid`)
+        }
+
         report.set({
             name: reportChoiceIds.name,
             collaborationHistoryId: reportChoiceIds.collaborationHistoryId,
@@ -236,6 +248,7 @@ export const patchReportTransaction = async (req: Request, res: Response) => {
             organizationTypeId: reportChoiceIds.organizationTypeId,
             personalInformationId: reportChoiceIds.personalInformationId,
             userId: reportChoiceIds.userId,
+            reportStatusId: reportStatus.id
         });
         await report.save({ transaction });
 

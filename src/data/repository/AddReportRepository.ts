@@ -22,6 +22,7 @@ import Report from "../models/Report.js";
 import ReportSnapshot from "../models/ReportSnapshot.js";
 import User from "../models/User.js";
 import BaseRepository, { Constructor } from "./BaseRepository.js";
+import ReportStatus from "../models/ReportStatus.js";
 
 
 export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
@@ -45,6 +46,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
             organizationTypeId: number,
             personalInformationId: number,
             userId: number,
+            reportStatusId: number
         }, transaction: Transaction
 
         ) {
@@ -67,6 +69,7 @@ export function AddReportRepository<TBase extends Constructor<BaseRepository>>(
         async findReportById(id: number) {
             return await Report.findByPk(id, {
                 include: [
+                    { model: ReportStatus },
                     { model: ReportSnapshot },
                     { model: CollaborationHistory },
                     { model: CollaborationType },

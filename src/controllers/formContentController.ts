@@ -196,3 +196,17 @@ const mapOptions = (optionsRaw: FormPageObject[]) => {
         }
     })
 }
+
+export const getReportStatusOptions = async (req: Request, res: Response) => {
+    const statuses = await repository.getReportStatuses();
+    if (!statuses) {
+        res.status(400).json({
+            message: `Could not fetch report status options`
+
+        })
+    } else {
+        res.status(200).json({
+            statuses
+        })
+    }
+}
