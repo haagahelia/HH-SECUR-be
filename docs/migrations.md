@@ -35,7 +35,7 @@ This document explains how the database schema of HH-SECUR-be is managed with **
 
 ### 1.1 The problem we had
 
-The backend describes its tables in TypeScript classes, the **models** in `src/data/models/*.ts` (24 of them). Until now, every time the server started, `src/index.ts` did this:
+The backend describes its tables in TypeScript classes, the **models** in `src/data/models/*.ts` (25 of them). Until now, every time the server started, `src/index.ts` did this:
 
 ```ts
 await repository.sequelizeClient.drop();   // delete all tables
@@ -128,7 +128,7 @@ The work is split into phases. Phases 1 to 4a change nothing about how the appli
 | **4b** | **Remove `drop()` and `sync()` from `src/index.ts`, run migrations when the container starts** | **Not done. Point of no return.** |
 | 5 | Switch the shared environments over, one at a time (Azure dev first, then Rahti) | Not done |
 | 6 | PR template, README section (done), optional CI workflow | Partly done |
-| 7 | First real migrations | Not done, scope needs revisiting ([section 13](#13-decisions-findings-and-open-questions)) |
+| 7 | First real migrations | **Started:** `add-report-status` (see [6.6](#66-writing-schema-changes-before-phase-4b)). The rest needs its scope revisited ([section 13](#13-decisions-findings-and-open-questions)) |
 
 ### What is *not* done yet
 
@@ -142,7 +142,7 @@ So that nobody assumes otherwise:
 
 ### <a id="why-not-yet"></a>Why not write schema-changing migrations yet
 
-While `drop()` and `sync()` still run on start, the server rebuilds every table from the models each time. A migration such as "add column X" would then find that the column already exists (the model created it) and fail, and the data it was meant to keep is gone anyway. Real migrations only make sense from Phase 4b on. Until then the only migration is the baseline.
+While `drop()` and `sync()` still run on start, the server rebuilds every table from the models each time. A migration such as "add column X" would then find that the column already exists (the model created it) and fail, and the data it was meant to keep is gone anyway. Real migrations only make sense from Phase 4b on, **unless they skip what already exists**. That is how `add-report-status` was written, because `dev` gained a table before Phase 4b and the baseline could not include it (see [6.6](#66-writing-schema-changes-before-phase-4b)).
 
 ---
 
@@ -154,9 +154,9 @@ Nothing in `src/` (the application code) was changed.
 |---|---|---|
 | `.sequelizerc` | Tells the CLI where the config and the migrations are | Rarely |
 | `db/config.js` | Database connection for the CLI. Reads the same `DB_*` variables as the app, with the same `DB_SSL` rule. One block is used for every environment. | Rarely |
-| `db/migrations/` | The migration files. Currently only the baseline. | Add new files, **never edit merged ones** |
+| `db/migrations/` | The migration files: the baseline and `add-report-status`. | Add new files, **never edit merged ones** |
 | `db/migrations/<timestamp>-baseline.js` | The baseline migration, see [section 8](#8-the-baseline-migration-in-detail) | **Never** |
-| `db/baseline.sql` | The schema of the 24 tables, as SQL. Used only by the baseline migration. | **Never by hand** |
+| `db/baseline.sql` | The schema of the first 24 tables, as SQL. Used only by the baseline migration. Tables added later are in their own migrations. | **Never by hand** |
 | `scripts/sync-schema.ts` | Builds the schema from the models with `sync()`. Refuses to run unless the database name contains `baseline` or `drift`. | Rarely |
 | `scripts/clean-baseline.js` | Turns a raw database dump into `db/baseline.sql`. The regeneration steps are in its header. | Rarely |
 | `scripts/schema-diff.sh` | Compares the schema of two databases | Rarely |
@@ -231,6 +231,8 @@ Expected output:
 == 20261115184302-baseline: migrating =======
 Baseline: created 24 tables
 == 20261115184302-baseline: migrated (0.161s)
+== 20261116101512-add-report-status: migrating =======
+== 20261116101512-add-report-status: migrated (0.047s)
 ```
 
 Check it:
@@ -241,6 +243,7 @@ npm run migrate:status
 
 ```
 up 20261115184302-baseline.js
+up 20261116101512-add-report-status.js
 ```
 
 `up` means the migration has been applied, `down` means it is waiting to be applied.
@@ -271,7 +274,7 @@ To look inside the database:
 docker exec -it hh_secur_db_container sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" hh_secur'
 ```
 
-Then, for example, `SHOW TABLES;` (25 rows: the 24 model tables plus `SequelizeMeta`) and `SELECT * FROM SequelizeMeta;`. Replace `hh_secur` with your `DB_DATABASE`. Leave with `exit`.
+Then, for example, `SHOW TABLES;` (26 rows: the 25 model tables plus `SequelizeMeta`) and `SELECT * FROM SequelizeMeta;`. Replace `hh_secur` with your `DB_DATABASE`. Leave with `exit`.
 
 ### 4.3 Running the backend and the database together (full Compose)
 
@@ -343,7 +346,7 @@ There is deliberately no "undo all" script. `npm run migrate:undo` goes back one
 
 ## 6. How to change the database schema
 
-> **Wait for Phase 4b before doing this for real** ([why](#why-not-yet)). The procedure below is what the team will follow from then on.
+> **Wait for Phase 4b before doing this for real** ([why](#why-not-yet)). The procedure below is what the team will follow from then on. If a schema change reaches `dev` before that, follow [6.6](#66-writing-schema-changes-before-phase-4b).
 
 ### 6.1 Checklist
 
@@ -454,6 +457,20 @@ async down() {
 
 The part that ran stays applied, and the migration is **not** recorded in `SequelizeMeta`. On your local database, the easiest fix is [Start from scratch](#44-variations). On a shared database, stop and ask: look at what was applied, either revert it by hand or restore the backup, fix the migration in a **new** commit (it was never recorded, but another environment may have run it successfully), and run again.
 
+### 6.6 Writing schema changes before Phase 4b
+
+Until Phase 4b is merged, `sync()` still builds every table from the models on each start. A migration that only says "add column X" would find the column already there and fail. A schema change that reaches `dev` in this period therefore gets a migration that **checks first and skips** what exists. The baseline is not regenerated for it: the baseline stays the 24 tables it was made from, because regenerating it would break the "all 24 tables exist" test for databases built before the change.
+
+Rules for such a migration:
+
+- check with `queryInterface.showAllTables()` and `describeTable()` before every create or add, and log what was skipped;
+- use SQL that matches what `sync()` generates (build it in a scratch database and dump it, [8.3](#83-regenerating-the-baseline) steps 1 to 3), including the column position;
+- only add things (a table, a nullable column), so the previous version of the app keeps working;
+- prove it with the drift check in [8.4](#84-checking-for-schema-drift) (expected: `SCHEMAS IDENTICAL`), and run `migrate:undo` then `migrate` once;
+- seed data for new lookup tables stays in `addDataToAllTables()`. The migration creates the table, it does not fill it.
+
+Example: `db/migrations/20261116101512-add-report-status.js` (table `report_status` and nullable column `report.report_status_id` with index and foreign key). Tested on a database built by migrations only (both parts added), on one built by `sync()` (both skipped), and with undo and redo. Its `down` drops the column and the table, so the status of existing reports and the status rows are lost.
+
 ---
 
 ## 7. Team rules
@@ -527,7 +544,7 @@ DB_DATABASE=hh_secur_baseline npx tsx scripts/sync-schema.ts
 
 PowerShell: `$env:DB_DATABASE = "hh_secur_baseline"; npx tsx scripts/sync-schema.ts` (and afterwards `Remove-Item Env:DB_DATABASE`).
 
-Expected last line: `sync() finished on "hh_secur_baseline": 24 tables`.
+Expected last line: `sync() finished on "hh_secur_baseline": 25 tables` (or more, if later migrations added tables). `db/baseline.sql` itself stays at 24 tables, see [6.6](#66-writing-schema-changes-before-phase-4b).
 
 **3. Dump it inside the container.** Do **not** use `>` in PowerShell here: Windows PowerShell 5.1 writes UTF-16, which corrupts the SQL.
 
@@ -687,7 +704,7 @@ Replace `hh_secur` with your `DB_DATABASE`. For a remote database use `mariadb-d
 
 ### 13.2 Findings made while building this
 
-- **The join tables already have unique keys.** `report_collaboration_type (report_id, collaboration_type_id)` and `consortium_organization (consortium_id, organization_id)` get a composite UNIQUE index automatically from Sequelize's many-to-many handling (visible in `db/baseline.sql`). The commented-out `@Index` blocks in `ReportCollaborationType.ts` and `ConsortiumOrganization.ts` were therefore redundant, and an earlier idea to add these indexes in a first real migration does not apply. Those comments can be removed, and the first real migration needs a different subject.
+- **The join tables already have unique keys.** `report_collaboration_type (report_id, collaboration_type_id)` and `consortium_organization (consortium_id, organization_id)` get a composite UNIQUE index automatically from Sequelize's many-to-many handling (visible in `db/baseline.sql`). The commented-out `@Index` blocks in `ReportCollaborationType.ts` and `ConsortiumOrganization.ts` were therefore redundant, and an earlier idea to add these indexes in a first real migration does not apply. Those comments can be removed. The first real migration turned out to be `add-report-status` (a table that `dev` gained after the baseline was generated).
 - **MariaDB 12 dumps show the foreign keys that `sync()` created without a name as `CONSTRAINT `1``, `` `2` ``** and so on, in every table. Replaying that SQL works (verified), no action needed.
 - **Timestamp column naming is inconsistent** (20 tables `createdAt`, 4 tables `created_at`), see [6.2](#62-worked-example-hypothetical). Fixing it would be a (large) migration of its own.
 - `drop()` leaves `SequelizeMeta` alone (it is not a model), verified.

@@ -3059,7 +3059,7 @@ Then fill in your own values.
 
 The database structure is managed with **migrations** ([Sequelize-CLI](https://sequelize.org/docs/v6/other-topics/migrations/)). A migration is a small file in `db/migrations/` that describes one change to the database, so the schema has a reviewed history in git and can be changed without deleting data. Models (`src/data/models/`) describe how the code sees the tables, migrations change the real database, and a schema change updates both.
 
-> **Current status:** the migration tooling and the baseline migration (the 24 existing tables) are in place, but the application has **not been switched over yet**. `src/index.ts` still drops and recreates all tables on every start, so data is still lost on each start. Do not write schema-changing migrations until that switch-over is done. See the status table in [docs/migrations.md](docs/migrations.md#2-status-and-roadmap).
+> **Current status:** the migration tooling, the baseline migration (the first 24 tables) and the migration `add-report-status` are in place, but the application has **not been switched over yet**. `src/index.ts` still drops and recreates all tables on every start, so data is still lost on each start. Until that switch-over is done, a schema change on `dev` needs a migration that skips what already exists, because `sync()` has already created it (`add-report-status` is the example). See the status table in [docs/migrations.md](docs/migrations.md#2-status-and-roadmap).
 
 Setup order for a local environment (full explanation, variations and troubleshooting in [docs/migrations.md](docs/migrations.md#4-setting-up-your-environment)):
 
@@ -3067,7 +3067,7 @@ Setup order for a local environment (full explanation, variations and troublesho
 npm ci
 cp .env.example .env        # then fill in the DB_* values, see the notes above
 docker compose -f docker-compose-dbbe.yaml up -d --wait hh_secur_db_service
-npm run migrate             # builds the schema (24 tables + SequelizeMeta)
+npm run migrate             # builds the schema (25 tables + SequelizeMeta)
 npm run dev
 ```
 
