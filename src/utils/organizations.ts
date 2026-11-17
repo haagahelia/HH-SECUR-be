@@ -47269,8 +47269,8 @@ export const organizations = [
     },
     {
         code: "IAU-000647",
-        fi: "Grazyna and Kiejstut Bacewicz Academy of Music in lódź",
-        en: "Grazyna and Kiejstut Bacewicz Academy of Music in lódź",
+        fi: "Grazyna and Kiejstut Bacewicz Academy of Music in lódz",
+        en: "Grazyna and Kiejstut Bacewicz Academy of Music in lódz",
         country_code: "POL"
     },
     {
@@ -48085,8 +48085,8 @@ export const organizations = [
     },
     {
         code: "IAU-021424",
-        fi: "University of Finance and Computer Science Prof. Janusz Chechlinski in lódź",
-        en: "University of Finance and Computer Science Prof. Janusz Chechlinski in lódź",
+        fi: "University of Finance and Computer Science Prof. Janusz Chechlinski in lódz",
+        en: "University of Finance and Computer Science Prof. Janusz Chechlinski in lódz",
         country_code: "POL"
     },
     {
