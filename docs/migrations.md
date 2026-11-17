@@ -128,7 +128,7 @@ The work is split into phases. Phases 1 to 4a change nothing about how the appli
 | **4b** | **Remove `drop()` and `sync()` from `src/index.ts`, run migrations when the container starts** | **Not done. Point of no return.** |
 | 5 | Switch the shared environments over, one at a time (Azure dev first, then Rahti) | Not done |
 | 6 | PR template, README section (done), optional CI workflow | Partly done |
-| 7 | First real migrations | **Started:** `add-report-status` (see [6.6](#66-writing-schema-changes-before-phase-4b)). The rest needs its scope revisited ([section 13](#13-decisions-findings-and-open-questions)) |
+| 7 | First real migrations | **Started:** `add-report-status` (see [6.6](#66-writing-schema-changes-before-phase-4b)) and `ensure-utf8mb4` (character set, see [13.2](#132-findings-made-while-building-this)). The rest needs its scope revisited ([section 13](#13-decisions-findings-and-open-questions)) |
 
 ### What is *not* done yet
 
@@ -155,7 +155,7 @@ The only changes in `src/` (the application code) are the two seeding fixes of P
 | `scripts/test-seed.ts` | Runs the seed twice on a scratch database and checks that it is safe on persistent data, see [9.4](#94-testing-the-seed) | Rarely |
 | `.sequelizerc` | Tells the CLI where the config and the migrations are | Rarely |
 | `db/config.js` | Database connection for the CLI. Reads the same `DB_*` variables as the app, with the same `DB_SSL` rule. One block is used for every environment. | Rarely |
-| `db/migrations/` | The migration files: the baseline and `add-report-status`. | Add new files, **never edit merged ones** |
+| `db/migrations/` | The migration files: the baseline, `add-report-status` and `ensure-utf8mb4`. | Add new files, **never edit merged ones** |
 | `db/migrations/<timestamp>-baseline.js` | The baseline migration, see [section 8](#8-the-baseline-migration-in-detail) | **Never** |
 | `db/baseline.sql` | The schema of the first 24 tables, as SQL. Used only by the baseline migration. Tables added later are in their own migrations. | **Never by hand** |
 | `scripts/sync-schema.ts` | Builds the schema from the models with `sync()`. Refuses to run unless the database name contains `baseline` or `drift`. | Rarely |
@@ -413,7 +413,7 @@ async up(queryInterface, Sequelize) {
     code: { type: Sequelize.STRING, allowNull: false, unique: true },
     created_at: { type: Sequelize.DATE, allowNull: false },
     updated_at: { type: Sequelize.DATE, allowNull: false },
-  });
+  }, { charset: 'utf8mb4' }); // always name the character set, see rule 11
 },
 async down(queryInterface) {
   await queryInterface.dropTable('example');
@@ -487,6 +487,9 @@ Example: `db/migrations/20261116101512-add-report-status.js` (table `report_stat
 7. **Seed data stays in `addDataToAllTables()`.** Removing or renaming a seeded row needs a data migration, because saved reports refer to those rows.
 8. **`sync()` is allowed only on scratch databases** (`scripts/sync-schema.ts` enforces this).
 9. **A migration must work with the previous version of the application.** During a deployment the old and the new version of the app can run at the same time. Adding things is safe (a table, a nullable column, an index). Removing or renaming something needs two steps in two deployments.
+10. **Never refer to a foreign key by its name.** Names differ between servers and versions (`1`, `2` on MariaDB 12, `<table>_ibfk_1` on MySQL and older MariaDB). Look the name up in `information_schema`, as `add-report-status` does.
+11. **Name the character set in every `CREATE TABLE`** (`charset: 'utf8mb4'` with `createTable`), do not rely on the server default.
+12. **Migrations run with a database user that has DDL rights** (`CREATE`, `ALTER`, `DROP`, `INDEX`, `REFERENCES`). If the application user is ever restricted to data rights, migrations need a separate user.
 
 ---
 
@@ -698,6 +701,7 @@ Replace `hh_secur` with your `DB_DATABASE`. For a remote database use `mariadb-d
 | `Unable to find migrations path` / config not found | You are not in the project root. `.sequelizerc` is read from the current directory. |
 | `Baseline: the database has only some of the 24 tables` | The database is half built, for example from an interrupted run. Locally: "Start from scratch". On a shared database: do not touch it, ask the team, restore from backup. |
 | `Baseline: all tables exist but their columns differ from the baseline` | The tables were built from older models (the error lists the missing columns). Disposable data: drop all tables, run `npm run migrate`. Otherwise stop and ask the team, do not force it. |
+| `Incorrect string value: 'Ä'` (or similar) when inserting text | The table is not utf8mb4 (for example a latin1 server default). Run `npm run migrate`: `ensure-utf8mb4` converts it. Do not strip characters from the data. |
 | `The baseline cannot be undone` | Expected. `migrate:undo` refuses on the baseline. |
 | `Table '...' already exists` or `Duplicate column name` when a new migration runs | The old server (`drop()` + `sync()`) already built that table or column from the models. This is why real migrations wait for Phase 4b ([why](#why-not-yet)). Locally: "Start from scratch", then run `npm run migrate` **before** starting the server. |
 | `syntax error` mentioning strange characters like `ÿþ` in `baseline.sql` | The dump was written with PowerShell `>` (UTF-16). Redo step 3 of [8.3](#83-regenerating-the-baseline) with the redirect inside the container. |
@@ -728,6 +732,7 @@ Replace `hh_secur` with your `DB_DATABASE`. For a remote database use `mariadb-d
 - **The join tables already have unique keys.** `report_collaboration_type (report_id, collaboration_type_id)` and `consortium_organization (consortium_id, organization_id)` get a composite UNIQUE index automatically from Sequelize's many-to-many handling (visible in `db/baseline.sql`). The commented-out `@Index` blocks in `ReportCollaborationType.ts` and `ConsortiumOrganization.ts` were therefore redundant, and an earlier idea to add these indexes in a first real migration does not apply. Those comments can be removed. The first real migration turned out to be `add-report-status` (a table that `dev` gained after the baseline was generated).
 - **MariaDB 12 dumps show the foreign keys that `sync()` created without a name as `CONSTRAINT `1``, `` `2` ``** and so on, in every table. Replaying that SQL works (verified), no action needed.
 - **Timestamp column naming is inconsistent** (20 tables `createdAt`, 4 tables `created_at`), see [6.2](#62-worked-example-hypothetical). Fixing it would be a (large) migration of its own.
+- **Character set.** The baseline does not name a character set, so tables take the server default. On a latin1 server the organization seed failed on characters such as `ć` and `č`, and the names were changed to ASCII to get around it (`University of Bihac`). The migration `ensure-utf8mb4` converts the database and every table that is not utf8mb4 yet and does nothing on environments that already are. It was tested on a latin1 MariaDB with existing rows (data intact, foreign keys and unique keys intact, `ć` accepted afterwards) and on utf8mb4 databases (no change, schema identical to a `sync()`-built one). **Only after it has run on an environment** may the original names be restored in `src/utils/organizations.ts`, otherwise the seed fails there again.
 - `drop()` leaves `SequelizeMeta` alone (it is not a model), verified.
 - Other problems, outside the scope of migrations but worth tickets: `/defaultuser`, `/defaultadmin` and `/testcode` have no `authenticate`, which matters more once data persists; the default users' passwords are overwritten from the environment on every start; the model name `HHRole ` has a trailing space; typos such as `AddEthicsAssessmentRepoitory` and `Succsefully`; `report_snapshot` text columns are `VARCHAR(255)`.
 
