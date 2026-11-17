@@ -41911,38 +41911,38 @@ export const organizations = [
     },
     {
         code: "IAU-028944-002787",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Ara Institute of Canterbury",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Ara Institute of Canterbury",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Ara Institute of Canterbury",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Ara Institute of Canterbury",
         country_code: "NZL"
     },
     {
         code: "IAU-028944-013186",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Otago Polytechnic",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Otago Polytechnic",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Otago Polytechnic",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Otago Polytechnic",
         country_code: "NZL"
     },
     {
         code: "IAU-028944-021113",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Waikato Institute of Technology",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Waikato Institute of Technology",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Waikato Institute of Technology",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Waikato Institute of Technology",
         country_code: "NZL"
     },
     {
         code: "IAU-028944-003962",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Eastern Institute of Technology",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Eastern Institute of Technology",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Eastern Institute of Technology",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Eastern Institute of Technology",
         country_code: "NZL"
     },
     {
         code: "IAU-028944-012597",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Nelson Marlborough Institute of Technology",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Nelson Marlborough Institute of Technology",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Nelson Marlborough Institute of Technology",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Nelson Marlborough Institute of Technology",
         country_code: "NZL"
     },
     {
         code: "IAU-028944-017086",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Unitec New Zealand Limited",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Unitec New Zealand Limited",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Unitec New Zealand Limited",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Unitec New Zealand Limited",
         country_code: "NZL"
     },
     {
