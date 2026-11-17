@@ -34537,8 +34537,8 @@ export const organizations = [
     },
     {
         code: "IAU-009884",
-        fi: "Jāzeps Vītols Latvian Academy of Music",
-        en: "Jāzeps Vītols Latvian Academy of Music",
+        fi: "Jazeps Vitols Latvian Academy of Music",
+        en: "Jazeps Vitols Latvian Academy of Music",
         country_code: "LVA"
     },
     {
