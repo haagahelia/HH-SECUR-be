@@ -12,5 +12,6 @@ RUN npm run build
 
 EXPOSE 3000
 
-# Migrate first: if a migration fails the container exits instead of running on the wrong schema
-CMD ["sh", "-c", "npm run migrate && npm start"]
+# npm start runs "prestart" (npm run migrate) first: if a migration fails the container exits
+# instead of running on the wrong schema. Any platform that starts the app with npm start migrates too.
+CMD ["npm", "start"]
