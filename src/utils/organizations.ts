@@ -47203,8 +47203,8 @@ export const organizations = [
     },
     {
         code: "IAU-003058",
-        fi: "Collegium Masoviense - Higher School of Health Sciences in Żyrardów",
-        en: "Collegium Masoviense - Higher School of Health Sciences in Żyrardów",
+        fi: "Collegium Masoviense - Higher School of Health Sciences in Zyrardów",
+        en: "Collegium Masoviense - Higher School of Health Sciences in Zyrardów",
         country_code: "POL"
     },
     {
@@ -47269,8 +47269,8 @@ export const organizations = [
     },
     {
         code: "IAU-000647",
-        fi: "Grażyna and Kiejstut Bacewicz Academy of Music in lódź",
-        en: "Grażyna and Kiejstut Bacewicz Academy of Music in lódź",
+        fi: "Grazyna and Kiejstut Bacewicz Academy of Music in lódź",
+        en: "Grazyna and Kiejstut Bacewicz Academy of Music in lódź",
         country_code: "POL"
     },
     {
@@ -47437,8 +47437,8 @@ export const organizations = [
     },
     {
         code: "IAU-021380",
-        fi: "International Academy of Applied Sciences in lomża",
-        en: "International Academy of Applied Sciences in lomża",
+        fi: "International Academy of Applied Sciences in lomza",
+        en: "International Academy of Applied Sciences in lomza",
         country_code: "POL"
     },
     {
@@ -47467,14 +47467,14 @@ export const organizations = [
     },
     {
         code: "IAU-003809",
-        fi: "Jan Wyżykowski University",
-        en: "Jan Wyżykowski University",
+        fi: "Jan Wyzykowski University",
+        en: "Jan Wyzykowski University",
         country_code: "POL"
     },
     {
         code: "IAU-021565",
-        fi: "Janski University in lomża",
-        en: "Janski University in lomża",
+        fi: "Janski University in lomza",
+        en: "Janski University in lomza",
         country_code: "POL"
     },
     {
