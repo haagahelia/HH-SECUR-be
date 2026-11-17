@@ -27,7 +27,7 @@ CREATE TABLE `consortium` (
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `consortium_type_id` (`consortium_type_id`),
-  CONSTRAINT `1` FOREIGN KEY (`consortium_type_id`) REFERENCES `consortium_type` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  FOREIGN KEY (`consortium_type_id`) REFERENCES `consortium_type` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `consortium_organization` (
@@ -39,8 +39,8 @@ CREATE TABLE `consortium_organization` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `consortium_organization_organizationId_consortiumId_unique` (`consortium_id`,`organization_id`),
   KEY `organization_id` (`organization_id`),
-  CONSTRAINT `1` FOREIGN KEY (`consortium_id`) REFERENCES `consortium` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `2` FOREIGN KEY (`organization_id`) REFERENCES `organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`consortium_id`) REFERENCES `consortium` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`organization_id`) REFERENCES `organization` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `consortium_type` (
@@ -135,10 +135,10 @@ CREATE TABLE `funding` (
   KEY `funding_source_id` (`funding_source_id`),
   KEY `funding_history_id` (`funding_history_id`),
   KEY `funding_exchange_id` (`funding_exchange_id`),
-  CONSTRAINT `1` FOREIGN KEY (`funding_option_id`) REFERENCES `funding_option` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  CONSTRAINT `2` FOREIGN KEY (`funding_source_id`) REFERENCES `funding_source` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `3` FOREIGN KEY (`funding_history_id`) REFERENCES `funding_history` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `4` FOREIGN KEY (`funding_exchange_id`) REFERENCES `funding_exchange` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  FOREIGN KEY (`funding_option_id`) REFERENCES `funding_option` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  FOREIGN KEY (`funding_source_id`) REFERENCES `funding_source` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`funding_history_id`) REFERENCES `funding_history` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`funding_exchange_id`) REFERENCES `funding_exchange` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `funding_exchange` (
@@ -230,7 +230,7 @@ CREATE TABLE `organization` (
   UNIQUE KEY `organization_name_en_country_code_unique` (`name_en`,`country_code`),
   UNIQUE KEY `organization_code_unique` (`code`),
   KEY `country_id` (`country_id`),
-  CONSTRAINT `1` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `organization_type` (
@@ -288,19 +288,19 @@ CREATE TABLE `report` (
   KEY `organization_type_id` (`organization_type_id`),
   KEY `personal_information_id` (`personal_information_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `1` FOREIGN KEY (`collaboration_history_id`) REFERENCES `collaboration_history` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `10` FOREIGN KEY (`funding_id`) REFERENCES `funding` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `11` FOREIGN KEY (`organization_type_id`) REFERENCES `organization_type` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `12` FOREIGN KEY (`personal_information_id`) REFERENCES `personal_information` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `13` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `2` FOREIGN KEY (`consortium_id`) REFERENCES `consortium` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `3` FOREIGN KEY (`contract_info_id`) REFERENCES `contract_info` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `4` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `5` FOREIGN KEY (`dual_use_id`) REFERENCES `dual_use` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `6` FOREIGN KEY (`duration_id`) REFERENCES `duration` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `7` FOREIGN KEY (`ethics_assessment_id`) REFERENCES `ethics_assessment` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `8` FOREIGN KEY (`hhrole_id`) REFERENCES `hh_role` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `9` FOREIGN KEY (`liability_id`) REFERENCES `liability` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  FOREIGN KEY (`collaboration_history_id`) REFERENCES `collaboration_history` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`funding_id`) REFERENCES `funding` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`organization_type_id`) REFERENCES `organization_type` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`personal_information_id`) REFERENCES `personal_information` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`consortium_id`) REFERENCES `consortium` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`contract_info_id`) REFERENCES `contract_info` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`country_id`) REFERENCES `country` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`dual_use_id`) REFERENCES `dual_use` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`duration_id`) REFERENCES `duration` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`ethics_assessment_id`) REFERENCES `ethics_assessment` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`hhrole_id`) REFERENCES `hh_role` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  FOREIGN KEY (`liability_id`) REFERENCES `liability` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `report_collaboration_type` (
@@ -312,8 +312,8 @@ CREATE TABLE `report_collaboration_type` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `report_collaboration_type_reportId_collaborationTypeId_unique` (`report_id`,`collaboration_type_id`),
   KEY `collaboration_type_id` (`collaboration_type_id`),
-  CONSTRAINT `1` FOREIGN KEY (`report_id`) REFERENCES `report` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `2` FOREIGN KEY (`collaboration_type_id`) REFERENCES `collaboration_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`report_id`) REFERENCES `report` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`collaboration_type_id`) REFERENCES `collaboration_type` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `report_snapshot` (
@@ -346,7 +346,7 @@ CREATE TABLE `report_snapshot` (
   `updated_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `report_id` (`report_id`),
-  CONSTRAINT `1` FOREIGN KEY (`report_id`) REFERENCES `report` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`report_id`) REFERENCES `report` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 CREATE TABLE `user` (

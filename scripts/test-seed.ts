@@ -3,7 +3,9 @@
 // It runs the seed twice, with a manually added organization present, and verifies:
 //   1. every seeded organization whose country exists still has country_id after both runs;
 //   2. the manually added organization is untouched by the second run;
-//   3. no error was logged and no promise was rejected without a handler.
+//   3. the same holds for the full organization list (addOrganizations(), the code behind the admin
+//      endpoint /populatedatabase, about 11 000 rows), run twice on top of the boot seed;
+//   4. no error was logged and no promise was rejected without a handler.
 //
 // SCRATCH databases only: it refuses to run unless the database name contains "scratch",
 // "baseline" or "drift". The schema must already exist (run `npm run migrate` against the
@@ -18,6 +20,7 @@ import repository from "../src/data/repository/repository";
 import Organization from "../src/data/models/Organization";
 import Country from "../src/data/models/Country";
 import { addDataToAllTables } from "../src/utils/utils";
+import { addOrganizations } from "../src/controllers/populateDatabaseController";
 
 const MANUAL_NAME_FI = "Manual test organization FI";
 const problems: string[] = [];
@@ -104,6 +107,26 @@ const main = async () => {
     check(
         manualAfter !== null && JSON.stringify(manualAfter.toJSON()) === manualBefore,
         "run 2: the manually added organization was changed",
+    );
+
+    // The full list, as /populatedatabase runs it. It is a superset of the boot seed, so the rows
+    // created by the boot seed are updated and the rest are created. Nothing may lose its country.
+    for (const run of [1, 2]) {
+        console.log(`--- full organization list, run ${run} ---`);
+        await addOrganizations();
+        const afterFull = await seededOrgsWithoutCountry();
+        console.log(`after full list run ${run}: ${afterFull.seeded} seeded organizations, ${afterFull.missing} without country_id`);
+        check(afterFull.missing === 0, `full list run ${run}: ${afterFull.missing} seeded organizations have no country_id`);
+        check(afterFull.seeded >= afterSecond.seeded, `full list run ${run}: seeded organizations dropped from ${afterSecond.seeded} to ${afterFull.seeded}`);
+    }
+    // The boot seed must also be safe on top of the full list.
+    await addDataToAllTables();
+    const afterBoot = await seededOrgsWithoutCountry();
+    check(afterBoot.missing === 0, `boot seed after full list: ${afterBoot.missing} seeded organizations lost their country_id`);
+    const manualFinal = await Organization.findByPk(manual.id);
+    check(
+        manualFinal !== null && JSON.stringify(manualFinal.toJSON()) === manualBefore,
+        "full list: the manually added organization was changed or removed",
     );
 
     check(loggedErrors === 0, `${loggedErrors} error(s) were logged during seeding`);

@@ -4,15 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "predev": "npm run migrate",
     "dev": "tsx src/index.ts",
     "build": "tsc",
+    "prestart": "npm run migrate",
     "start": "node dist/index.js",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "migrate": "sequelize-cli db:migrate",
+    "migrate": "node scripts/migrate.js",
     "migrate:undo": "sequelize-cli db:migrate:undo",
     "migrate:status": "sequelize-cli db:migrate:status",
-    "migrate:new": "sequelize-cli migration:generate --name"
+    "migrate:new": "sequelize-cli migration:generate --name",
+    "db:reset": "docker compose -f docker-compose-dbbe.yaml down -v && docker compose -f docker-compose-dbbe.yaml up -d --wait hh_secur_db_service && npm run migrate"
   },
   "keywords": [],
   "devDependencies": {
