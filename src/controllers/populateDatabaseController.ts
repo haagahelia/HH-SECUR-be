@@ -152,15 +152,19 @@ export async function addOrganizations() {
             country_code: organizations[i].country_code,
             added_manually: false,
         }
+        try {
+            let organization = await repository.findOrganizationByCode(organizations[i].code)
 
-        let organization = await repository.findOrganizationByCode(organizations[i].code)
-        if (organization) {
-            organization.fi = organizations[i].fi;
-            organization.en = organizations[i].en;
-            organization.country_code = organizations[i].country_code;
-            await organization.save();
-        } else {
-            await repository.createOrganization(organizationNew);
+            if (organization) {
+                organization.fi = organizations[i].fi;
+                organization.en = organizations[i].en;
+                organization.country_code = organizations[i].country_code;
+                await organization.save();
+            } else {
+                await repository.createOrganization(organizationNew);
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 
