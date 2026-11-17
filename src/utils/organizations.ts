@@ -47077,8 +47077,8 @@ export const organizations = [
     },
     {
         code: "IAU-000661",
-        fi: "Academy of Fine Arts in Gdańsk",
-        en: "Academy of Fine Arts in Gdańsk",
+        fi: "Academy of Fine Arts in Gdansk",
+        en: "Academy of Fine Arts in Gdansk",
         country_code: "POL"
     },
     {
@@ -47101,8 +47101,8 @@ export const organizations = [
     },
     {
         code: "IAU-020717",
-        fi: "Adam Mickiewicz University in Poznań",
-        en: "Adam Mickiewicz University in Poznań",
+        fi: "Adam Mickiewicz University in Poznan",
+        en: "Adam Mickiewicz University in Poznan",
         country_code: "POL"
     },
     {
@@ -47119,8 +47119,8 @@ export const organizations = [
     },
     {
         code: "IAU-001256",
-        fi: "Ateneum University in Gdańsk",
-        en: "Ateneum University in Gdańsk",
+        fi: "Ateneum University in Gdansk",
+        en: "Ateneum University in Gdansk",
         country_code: "POL"
     },
     {
@@ -47245,14 +47245,14 @@ export const organizations = [
     },
     {
         code: "IAU-021571",
-        fi: "Gdańsk College of Health Sciences",
-        en: "Gdańsk College of Health Sciences",
+        fi: "Gdansk College of Health Sciences",
+        en: "Gdansk College of Health Sciences",
         country_code: "POL"
     },
     {
         code: "IAU-006598",
-        fi: "Gdańsk University of Humanities",
-        en: "Gdańsk University of Humanities",
+        fi: "Gdansk University of Humanities",
+        en: "Gdansk University of Humanities",
         country_code: "POL"
     },
     {
@@ -47329,8 +47329,8 @@ export const organizations = [
     },
     {
         code: "IAU-021446",
-        fi: "Higher School of Humanities King Stanisław Leszczyński in Leszno",
-        en: "Higher School of Humanities King Stanisław Leszczyński in Leszno",
+        fi: "Higher School of Humanities King Stanisław Leszczynski in Leszno",
+        en: "Higher School of Humanities King Stanisław Leszczynski in Leszno",
         country_code: "POL"
     },
     {
@@ -47413,8 +47413,8 @@ export const organizations = [
     },
     {
         code: "IAU-021580",
-        fi: "Higher Vocational School of Health and Beauty Treatment in Poznań",
-        en: "Higher Vocational School of Health and Beauty Treatment in Poznań",
+        fi: "Higher Vocational School of Health and Beauty Treatment in Poznan",
+        en: "Higher Vocational School of Health and Beauty Treatment in Poznan",
         country_code: "POL"
     },
     {
@@ -47431,8 +47431,8 @@ export const organizations = [
     },
     {
         code: "IAU-000648",
-        fi: "I.J. Paderewski Academy of Music in Poznań",
-        en: "I.J. Paderewski Academy of Music in Poznań",
+        fi: "I.J. Paderewski Academy of Music in Poznan",
+        en: "I.J. Paderewski Academy of Music in Poznan",
         country_code: "POL"
     },
     {
@@ -47473,14 +47473,14 @@ export const organizations = [
     },
     {
         code: "IAU-021565",
-        fi: "Jański University in Łomża",
-        en: "Jański University in Łomża",
+        fi: "Janski University in Łomża",
+        en: "Janski University in Łomża",
         country_code: "POL"
     },
     {
         code: "IAU-000667",
-        fi: "Jedrzej Śniadecki Academy of Physical Education and Sport in Gdańsk",
-        en: "Jedrzej Śniadecki Academy of Physical Education and Sport in Gdańsk",
+        fi: "Jedrzej Śniadecki Academy of Physical Education and Sport in Gdansk",
+        en: "Jedrzej Śniadecki Academy of Physical Education and Sport in Gdansk",
         country_code: "POL"
     },
     {
@@ -47599,14 +47599,14 @@ export const organizations = [
     },
     {
         code: "IAU-021510",
-        fi: "Mieszko I College of Education and Administration in Poznań",
-        en: "Mieszko I College of Education and Administration in Poznań",
+        fi: "Mieszko I College of Education and Administration in Poznan",
+        en: "Mieszko I College of Education and Administration in Poznan",
         country_code: "POL"
     },
     {
         code: "IAU-020726",
-        fi: "Nicolaus Copernicus University in Toruń",
-        en: "Nicolaus Copernicus University in Toruń",
+        fi: "Nicolaus Copernicus University in Torun",
+        en: "Nicolaus Copernicus University in Torun",
         country_code: "POL"
     },
     {
@@ -47659,8 +47659,8 @@ export const organizations = [
     },
     {
         code: "IAU-013642",
-        fi: "Pomeranian Higher School, Starogard Gdański",
-        en: "Pomeranian Higher School, Starogard Gdański",
+        fi: "Pomeranian Higher School, Starogard Gdanski",
+        en: "Pomeranian Higher School, Starogard Gdanski",
         country_code: "POL"
     },
     {
@@ -47671,8 +47671,8 @@ export const organizations = [
     },
     {
         code: "IAU-020713",
-        fi: "Poznań University of Economics and Business",
-        en: "Poznań University of Economics and Business",
+        fi: "Poznan University of Economics and Business",
+        en: "Poznan University of Economics and Business",
         country_code: "POL"
     },
     {
@@ -47797,8 +47797,8 @@ export const organizations = [
     },
     {
         code: "IAU-016047",
-        fi: "The Bogdan Jański Academy",
-        en: "The Bogdan Jański Academy",
+        fi: "The Bogdan Janski Academy",
+        en: "The Bogdan Janski Academy",
         country_code: "POL"
     },
     {
@@ -48085,14 +48085,14 @@ export const organizations = [
     },
     {
         code: "IAU-021424",
-        fi: "University of Finance and Computer Science Prof. Janusz Chechliński in Łódź",
-        en: "University of Finance and Computer Science Prof. Janusz Chechliński in Łódź",
+        fi: "University of Finance and Computer Science Prof. Janusz Chechlinski in Łódź",
+        en: "University of Finance and Computer Science Prof. Janusz Chechlinski in Łódź",
         country_code: "POL"
     },
     {
         code: "IAU-020715",
-        fi: "University of Gdańsk",
-        en: "University of Gdańsk",
+        fi: "University of Gdansk",
+        en: "University of Gdansk",
         country_code: "POL"
     },
     {
@@ -48145,8 +48145,8 @@ export const organizations = [
     },
     {
         code: "IAU-020710",
-        fi: "University of the Arts Poznań",
-        en: "University of the Arts Poznań",
+        fi: "University of the Arts Poznan",
+        en: "University of the Arts Poznan",
         country_code: "POL"
     },
     {
@@ -48265,8 +48265,8 @@ export const organizations = [
     },
     {
         code: "IAU-021384",
-        fi: "WSB University in Toruń",
-        en: "WSB University in Toruń",
+        fi: "WSB University in Torun",
+        en: "WSB University in Torun",
         country_code: "POL"
     },
     {
