@@ -47227,8 +47227,8 @@ export const organizations = [
     },
     {
         code: "IAU-004464",
-        fi: "Elbląg University of Humanities and Economy",
-        en: "Elbląg University of Humanities and Economy",
+        fi: "Elblag University of Humanities and Economy",
+        en: "Elblag University of Humanities and Economy",
         country_code: "POL"
     },
     {
@@ -47737,8 +47737,8 @@ export const organizations = [
     },
     {
         code: "IAU-013352",
-        fi: "State Higher Vocational School in Elbląg",
-        en: "State Higher Vocational School in Elbląg",
+        fi: "State Higher Vocational School in Elblag",
+        en: "State Higher Vocational School in Elblag",
         country_code: "POL"
     },
     {
@@ -47767,8 +47767,8 @@ export const organizations = [
     },
     {
         code: "IAU-013359",
-        fi: "State University of Applied Sciences in Nowy Sącz",
-        en: "State University of Applied Sciences in Nowy Sącz",
+        fi: "State University of Applied Sciences in Nowy Sacz",
+        en: "State University of Applied Sciences in Nowy Sacz",
         country_code: "POL"
     },
     {
