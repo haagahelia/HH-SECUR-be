@@ -47263,8 +47263,8 @@ export const organizations = [
     },
     {
         code: "IAU-021504",
-        fi: "General Tadeusz Kościuszko Military Academy of Land Forces",
-        en: "General Tadeusz Kościuszko Military Academy of Land Forces",
+        fi: "General Tadeusz Kosciuszko Military Academy of Land Forces",
+        en: "General Tadeusz Kosciuszko Military Academy of Land Forces",
         country_code: "POL"
     },
     {
@@ -47479,8 +47479,8 @@ export const organizations = [
     },
     {
         code: "IAU-000667",
-        fi: "Jedrzej Śniadecki Academy of Physical Education and Sport in Gdansk",
-        en: "Jedrzej Śniadecki Academy of Physical Education and Sport in Gdansk",
+        fi: "Jedrzej Sniadecki Academy of Physical Education and Sport in Gdansk",
+        en: "Jedrzej Sniadecki Academy of Physical Education and Sport in Gdansk",
         country_code: "POL"
     },
     {
@@ -47539,8 +47539,8 @@ export const organizations = [
     },
     {
         code: "IAU-021473",
-        fi: "Linguistic and Technical University in Świecie",
-        en: "Linguistic and Technical University in Świecie",
+        fi: "Linguistic and Technical University in Swiecie",
+        en: "Linguistic and Technical University in Swiecie",
         country_code: "POL"
     },
     {
@@ -47779,8 +47779,8 @@ export const organizations = [
     },
     {
         code: "IAU-020802",
-        fi: "Świetokrzyska Higher School in Kielce",
-        en: "Świetokrzyska Higher School in Kielce",
+        fi: "Swietokrzyska Higher School in Kielce",
+        en: "Swietokrzyska Higher School in Kielce",
         country_code: "POL"
     },
     {
