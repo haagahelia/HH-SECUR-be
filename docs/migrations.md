@@ -255,6 +255,8 @@ up 20261116101512-add-report-status.js
 npm run dev
 ```
 
+`npm run dev` runs `npm run migrate` first (the `predev` script in `package.json`), so after a `git pull` that brings a new migration you cannot forget it. Running step 4 by hand is still useful to see the output. If the database is not reachable the start stops there with the connection error.
+
 Expected log lines: `Backend is running`, `Succsefully connected to database` (the typo is in the code), `API running on 3000`.
 
 > **While Phase 4b is not done**, the server first drops and recreates all tables, then inserts the seed data. Your schema is then the one built from the models, which is identical to the migrated one (this was verified). It also means data you created is gone after each start.

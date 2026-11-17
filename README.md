@@ -3067,7 +3067,7 @@ Setup order for a local environment (full explanation, variations and troublesho
 npm ci
 cp .env.example .env        # then fill in the DB_* values, see the notes above
 docker compose -f docker-compose-dbbe.yaml up -d --wait hh_secur_db_service
-npm run migrate             # builds the schema (25 tables + SequelizeMeta)
+npm run migrate             # builds the schema (25 tables + SequelizeMeta); npm run dev also does this first
 npm run dev
 ```
 
