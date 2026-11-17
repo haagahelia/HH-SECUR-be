@@ -506,10 +506,11 @@ This avoids translation mistakes. For example, the `duration` table has the colu
 | The database... | What `npm run migrate` does |
 |---|---|
 | is empty | Creates the 24 tables |
-| already has all 24 tables (built earlier by `sync()`, as the existing Azure and Rahti databases were) | Does nothing to them and only records the baseline in `SequelizeMeta`. Log: `Baseline: schema already present, skipping` |
+| already has all 24 tables (built earlier by `sync()`, as the existing Azure and Rahti databases were) | Checks that every column of `baseline.sql` exists. If so it does nothing to the tables and only records the baseline in `SequelizeMeta`. Log: `Baseline: schema already present, skipping` |
+| has all 24 tables but some columns are missing (built from older models, for example by the old `main` branch: `collaboration_type_fi` instead of `name_fi`) | **Stops with an error** that lists the missing columns. If the data is disposable, drop all tables and migrate again. |
 | has some but not all of the tables | **Stops with an error** that lists the present and the missing tables. Someone must look at it. |
 
-The list of expected tables is read from `db/baseline.sql` itself, so it cannot go out of sync with the SQL. The SQL statements run inside one transaction object only to keep them on **one database connection**: `SET FOREIGN_KEY_CHECKS=0` is a per-connection setting and is needed because the dump lists tables alphabetically, so a foreign key often points to a table that does not exist yet. The check is switched back on afterwards. (The transaction gives no rollback, see [1.5](#15-one-limitation-you-must-know).)
+The list of expected tables and their columns is read from `db/baseline.sql` itself, so it cannot go out of sync with the SQL. Only column names are compared, not types, and extra columns are fine (later migrations add some). The SQL statements run inside one transaction object only to keep them on **one database connection**: `SET FOREIGN_KEY_CHECKS=0` is a per-connection setting and is needed because the dump lists tables alphabetically, so a foreign key often points to a table that does not exist yet. The check is switched back on afterwards. (The transaction gives no rollback, see [1.5](#15-one-limitation-you-must-know).)
 
 `down` throws an error on purpose: undoing the baseline would drop the whole schema.
 
@@ -694,6 +695,7 @@ Replace `hh_secur` with your `DB_DATABASE`. For a remote database use `mariadb-d
 | The database container exits immediately | `DB_USERNAME=root` (not allowed), or `MARIADB_ROOT_PASSWORD` is missing from `.env`. Fix `.env`, then "Start from scratch". |
 | `Unable to find migrations path` / config not found | You are not in the project root. `.sequelizerc` is read from the current directory. |
 | `Baseline: the database has only some of the 24 tables` | The database is half built, for example from an interrupted run. Locally: "Start from scratch". On a shared database: do not touch it, ask the team, restore from backup. |
+| `Baseline: all tables exist but their columns differ from the baseline` | The tables were built from older models (the error lists the missing columns). Disposable data: drop all tables, run `npm run migrate`. Otherwise stop and ask the team, do not force it. |
 | `The baseline cannot be undone` | Expected. `migrate:undo` refuses on the baseline. |
 | `Table '...' already exists` or `Duplicate column name` when a new migration runs | The old server (`drop()` + `sync()`) already built that table or column from the models. This is why real migrations wait for Phase 4b ([why](#why-not-yet)). Locally: "Start from scratch", then run `npm run migrate` **before** starting the server. |
 | `syntax error` mentioning strange characters like `ÿþ` in `baseline.sql` | The dump was written with PowerShell `>` (UTF-16). Redo step 3 of [8.3](#83-regenerating-the-baseline) with the redirect inside the container. |

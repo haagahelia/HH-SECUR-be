@@ -8,8 +8,9 @@
 //
 // Safe to run on every kind of database:
 //   - empty database                 -> creates the 24 tables
-//   - database that already has them -> skips and only gets recorded in SequelizeMeta
-//     (this is the case for the existing Azure and Rahti databases, which were built by sync())
+//   - database that already has them -> checks that every column of the baseline exists, then skips
+//     and only gets recorded in SequelizeMeta (the existing Azure and Rahti databases were built by
+//     sync()). If a column is missing the database was built from older models: it stops with an error.
 //   - only some of the tables exist  -> stops with an error, someone has to look at it
 
 const fs = require('fs');
@@ -31,12 +32,39 @@ const readBaseline = () => {
 
   // The expected table names come from the SQL itself, so the list can never drift from it.
   const tables = statements.map((statement) => /^CREATE TABLE `([^`]+)`/.exec(statement)[1]);
-  return { statements, tables };
+
+  // Column names per table, also read from the SQL: column lines start with two spaces and a backtick,
+  // key and constraint lines start with a keyword.
+  const columns = {};
+  statements.forEach((statement, index) => {
+    columns[tables[index]] = statement
+      .split(/\r?\n/)
+      .map((line) => /^ {2}`([^`]+)`/.exec(line))
+      .filter(Boolean)
+      .map((match) => match[1]);
+  });
+  return { statements, tables, columns };
+};
+
+// Compares the columns that exist in the database with the ones in baseline.sql. Only names are
+// compared, and extra columns are fine (later migrations add some). A missing column means the tables
+// were built from older models, for example by an older branch. Skipping the baseline would then leave
+// a schema the application cannot use.
+const findMissingColumns = async (queryInterface, tables, columns) => {
+  const missing = [];
+  for (const table of tables) {
+    const actual = Object.keys(await queryInterface.describeTable(table));
+    const absent = columns[table].filter((column) => !actual.includes(column));
+    if (absent.length > 0) {
+      missing.push(`${table}: ${absent.join(', ')}`);
+    }
+  }
+  return missing;
 };
 
 module.exports = {
   async up(queryInterface) {
-    const { statements, tables } = readBaseline();
+    const { statements, tables, columns } = readBaseline();
 
     // showAllTables() returns plain names with mariadb, the map is a guard for other shapes
     const existing = (await queryInterface.showAllTables())
@@ -44,6 +72,15 @@ module.exports = {
     const present = tables.filter((table) => existing.includes(table));
 
     if (present.length === tables.length) {
+      const missingColumns = await findMissingColumns(queryInterface, tables, columns);
+      if (missingColumns.length > 0) {
+        throw new Error(
+          'Baseline: all tables exist but their columns differ from the baseline, so the database was ' +
+          'built from older models. Missing columns: ' + missingColumns.join('; ') + '. ' +
+          'If the data is disposable, empty the database (drop all tables) and run the migration again. ' +
+          'Otherwise ask the team, restore from a backup or migrate the data by hand.'
+        );
+      }
       console.log('Baseline: schema already present, skipping');
       return;
     }
