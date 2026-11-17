@@ -619,7 +619,7 @@ The seed code was written for an empty database. Once `drop()` is removed (Phase
 
 ### 9.4 Testing the seed
 
-`scripts/test-seed.ts` runs `addDataToAllTables()` twice on a **scratch** database, with a manually added organization present, and checks that every seeded organization whose country exists still has its `country_id`, that the manual organization is unchanged, and that no error was logged. It refuses to run unless the database name contains `scratch`, `baseline` or `drift`, and it can be run repeatedly.
+`scripts/test-seed.ts` runs `addDataToAllTables()` twice on a **scratch** database, with a manually added organization present, and checks that every seeded organization whose country exists still has its `country_id`, that the manual organization is unchanged, and that no error was logged. It then runs the full organization list (`addOrganizations()`, about 10 900 rows, the code behind the admin endpoint `/populatedatabase`) twice on top, and the boot seed once more, with the same checks. The whole test takes about a minute. It refuses to run unless the database name contains `scratch`, `baseline` or `drift`, and it can be run repeatedly.
 
 ```bash
 # 1. As root (the password is MARIADB_ROOT_PASSWORD from .env, already inside the container), create the
