@@ -47065,8 +47065,8 @@ export const organizations = [
     },
     {
         code: "IAU-000656",
-        fi: "Polonia University in Częstochowa",
-        en: "Polonia University in Częstochowa",
+        fi: "Polonia University in Czestochowa",
+        en: "Polonia University in Czestochowa",
         country_code: "POL"
     },
     {
@@ -47173,8 +47173,8 @@ export const organizations = [
     },
     {
         code: "IAU-021483",
-        fi: "College of Linguistics in Częstochowa",
-        en: "College of Linguistics in Częstochowa",
+        fi: "College of Linguistics in Czestochowa",
+        en: "College of Linguistics in Czestochowa",
         country_code: "POL"
     },
     {
@@ -47455,8 +47455,8 @@ export const organizations = [
     },
     {
         code: "IAU-000640",
-        fi: "Jan Dlugosz University in Częstochowa",
-        en: "Jan Dlugosz University in Częstochowa",
+        fi: "Jan Dlugosz University in Czestochowa",
+        en: "Jan Dlugosz University in Czestochowa",
         country_code: "POL"
     },
     {
@@ -47479,8 +47479,8 @@ export const organizations = [
     },
     {
         code: "IAU-000667",
-        fi: "Jędrzej Śniadecki Academy of Physical Education and Sport in Gdańsk",
-        en: "Jędrzej Śniadecki Academy of Physical Education and Sport in Gdańsk",
+        fi: "Jedrzej Śniadecki Academy of Physical Education and Sport in Gdańsk",
+        en: "Jedrzej Śniadecki Academy of Physical Education and Sport in Gdańsk",
         country_code: "POL"
     },
     {
@@ -47641,8 +47641,8 @@ export const organizations = [
     },
     {
         code: "IAU-023414",
-        fi: "Polish Air Force University in Dęblin",
-        en: "Polish Air Force University in Dęblin",
+        fi: "Polish Air Force University in Deblin",
+        en: "Polish Air Force University in Deblin",
         country_code: "POL"
     },
     {
@@ -47779,8 +47779,8 @@ export const organizations = [
     },
     {
         code: "IAU-020802",
-        fi: "Świętokrzyska Higher School in Kielce",
-        en: "Świętokrzyska Higher School in Kielce",
+        fi: "Świetokrzyska Higher School in Kielce",
+        en: "Świetokrzyska Higher School in Kielce",
         country_code: "POL"
     },
     {
