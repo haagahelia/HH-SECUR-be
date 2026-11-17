@@ -295,7 +295,7 @@ docker compose -f docker-compose-dbbe.yaml up --build
 
 This also builds and starts the backend container. Inside Compose the backend reaches the database by the service name (`DB_HOST` and `DB_PORT` are overridden to `hh_secur_db_service` and `3306`), so `DB_PORT=3307` in your `.env` only affects the port published on your machine. See the Docker Compose guide in the README for details.
 
-The backend container runs `npm run migrate` before it starts the server (the `CMD` in the `Dockerfile`). If the migration fails the container exits, instead of running on the wrong schema.
+The backend container starts with `npm start`, and the `prestart` script in `package.json` runs `npm run migrate` first. If the migration fails the container exits, instead of running on the wrong schema. The same happens for any platform that starts the app with `npm start`. (Starting with `node dist/index.js` directly skips the migration; the server then stops with the "not migrated" message if the database is behind.)
 
 ### 4.4 Variations
 
@@ -575,7 +575,7 @@ docker cp hh_secur_db_container:/tmp/baseline.raw.sql baseline.raw.sql
 node scripts/clean-baseline.js baseline.raw.sql db/baseline.sql
 ```
 
-The cleaner removes the conditional `/*!40101 ... */` comment lines, the `AUTO_INCREMENT=<n>` table option, and `DEFAULT CHARSET` / `COLLATE` (so tables use the server's default exactly as `sync()` did; the MariaDB 12 default collation `utf8mb4_uca1400_ai_ci` does not exist on every server). Nothing else is changed. **Do not edit `db/baseline.sql` by hand.**
+The cleaner removes the conditional `/*!40101 ... */` comment lines, the `AUTO_INCREMENT=<n>` table option, and `DEFAULT CHARSET` / `COLLATE` (so tables use the server's default exactly as `sync()` did; the MariaDB 12 default collation `utf8mb4_uca1400_ai_ci` does not exist on every server). Nothing else is changed. **Do not edit `db/baseline.sql` by hand.** It also removes the generated foreign key names (`CONSTRAINT `1` FOREIGN KEY ...`): MariaDB 12 numbers them per table, so every table has a `1`, but MySQL and MariaDB 10.x require foreign key names to be unique in the whole database, and the baseline failed there with `errno 121 Duplicate key`. Without names each server generates its own.
 
 **5. Prove it** with the drift check below.
 
@@ -602,7 +602,7 @@ docker exec hh_secur_db_container sh /tmp/schema-diff.sh hh_secur_baseline hh_se
 
 In PowerShell set the variable first (`$env:DB_DATABASE = "hh_secur_baseline"`) and run the `npx` / `npm` command on the next line, and remove it afterwards with `Remove-Item Env:DB_DATABASE`.
 
-Expected: `SCHEMAS IDENTICAL`. Otherwise the script prints the differences and exits with an error. It compares the structure only (tables, columns, keys, indexes), not the data. To start a comparison over, drop the two scratch databases and create them again.
+Expected: `SCHEMAS IDENTICAL`. Otherwise the script prints the differences and exits with an error. It compares the structure only (tables, columns, keys, indexes), not the data, and it ignores the names and the order of foreign keys, because each server names them itself. To start a comparison over, drop the two scratch databases and create them again.
 
 This check is also the planned content of a CI job (Phase 6), which would fail any pull request that changes a model without a migration.
 
@@ -657,7 +657,7 @@ PowerShell: set `$env:DB_DATABASE = "hh_secur_scratch_seed"` first. The output i
 
 ### 10.2 What the switch-over does (Phases 4b and 5)
 
-**What the new version does on start:** the container runs `npm run migrate` (locked, see [section 3](#3-what-was-added-to-the-repository)), then starts the server. The server connects and checks that no migration is pending. If the database is unreachable or not migrated it exits with an error (the platform restarts the container and the error is in the log). Then it runs the seed. A failing seed is logged (`Seeding failed...`) and the API keeps running with the data that is there.
+**What the new version does on start:** `npm start` runs `npm run migrate` first (the `prestart` script, locked, see [section 3](#3-what-was-added-to-the-repository)), then starts the server. The Dockerfile `CMD` is `npm start`. If a platform overrides the start command, it must still be `npm start` (or run `npm run migrate` first). The server connects and checks that no migration is pending. If the database is unreachable or not migrated it exits with an error (the platform restarts the container and the error is in the log). Then it runs the seed. A failing seed is logged (`Seeding failed...`) and the API keeps running with the data that is there.
 
 **Checklist per environment** (Azure dev, then Rahti dev build, then Rahti-main after `dev` is merged to `main`):
 
@@ -745,7 +745,7 @@ Replace `hh_secur` with your `DB_DATABASE`. For a remote database use `mariadb-d
 ### 13.2 Findings made while building this
 
 - **The join tables already have unique keys.** `report_collaboration_type (report_id, collaboration_type_id)` and `consortium_organization (consortium_id, organization_id)` get a composite UNIQUE index automatically from Sequelize's many-to-many handling (visible in `db/baseline.sql`). The commented-out `@Index` blocks in `ReportCollaborationType.ts` and `ConsortiumOrganization.ts` were therefore redundant, and an earlier idea to add these indexes in a first real migration does not apply. Those comments can be removed. The first real migration turned out to be `add-report-status` (a table that `dev` gained after the baseline was generated).
-- **MariaDB 12 dumps show the foreign keys that `sync()` created without a name as `CONSTRAINT `1``, `` `2` ``** and so on, in every table. Replaying that SQL works (verified), no action needed.
+- **Foreign key names.** The `sync()`-built schema has unnamed foreign keys, and a MariaDB 12 dump shows them as `CONSTRAINT `1``, `` `2` `` in every table. Replaying that on MySQL 8.4 failed with "Duplicate foreign key constraint name '1'" and on a fresh MariaDB 10.11 with `errno 121 Duplicate key`, because those servers want unique names per database. Found while rehearsing the Rahti setup on MariaDB 10.11. The baseline therefore has no constraint names (the cleaner strips them), each server names the keys itself (`<table>_ibfk_N` on 10.x and MySQL), and the schema diff ignores names. Existing databases are not affected (the baseline skips them).
 - **Timestamp column naming is inconsistent** (20 tables `createdAt`, 4 tables `created_at`), see [6.2](#62-worked-example-hypothetical). Fixing it would be a (large) migration of its own.
 - **Character set.** The baseline does not name a character set, so tables take the server default. On a latin1 server the organization seed failed on characters such as `ć` and `č`, and the names were changed to ASCII to get around it (`University of Bihac`). The migration `ensure-utf8mb4` converts the database and every table that is not utf8mb4 yet and does nothing on environments that already are. It was tested on a latin1 MariaDB with existing rows (data intact, foreign keys and unique keys intact, `ć` accepted afterwards) and on utf8mb4 databases (no change, schema identical to a `sync()`-built one). **Only after it has run on an environment** may the original names be restored in `src/utils/organizations.ts`, otherwise the seed fails there again.
 - `drop()` leaves `SequelizeMeta` alone (it is not a model), verified.

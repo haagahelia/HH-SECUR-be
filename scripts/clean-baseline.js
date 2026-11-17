@@ -14,6 +14,10 @@
 //   - the table option AUTO_INCREMENT=<n> (a schema file must not carry a row counter)
 //   - DEFAULT CHARSET=... and COLLATE=... on tables, so tables take the database default exactly as
 //     sync() did (the MariaDB 12 default collation utf8mb4_uca1400_ai_ci does not exist on every server)
+//   - the names of foreign keys (CONSTRAINT `1` FOREIGN KEY ...). MariaDB 12 numbers unnamed keys per table,
+//     so every table has a `1`. MySQL and MariaDB 10.x need foreign key names to be unique in the whole
+//     database, so the baseline failed there with "Duplicate key" (errno 121). Without names each server
+//     generates its own, which is valid everywhere.
 // Nothing else is changed. Do not edit db/baseline.sql by hand.
 const fs = require("fs");
 
@@ -41,6 +45,8 @@ const cleaned = raw
             .replace(/ COLLATE=\w+/, "");
     })
     .join("\n")
+    // let every server name the foreign keys itself (see the header)
+    .replace(/CONSTRAINT `[^`]+` FOREIGN KEY/g, "FOREIGN KEY")
     .replace(/;\n+(?=CREATE TABLE )/g, ";\n\n") // exactly one blank line between statements
     .trim() + "\n";
 
