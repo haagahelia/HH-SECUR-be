@@ -2,9 +2,9 @@
 
 This document explains how the database schema of HH-SECUR-be is managed with **migrations**: what they are, why the project uses them, how to set up your environment, how to change the database, and what the rules are. It is written for the current team and for any future team that takes over the project, so it tries to explain things instead of assuming prior knowledge.
 
-> **Read this first: current status (last updated 2026-11-15)**
+> **Read this first: current status (last updated 2026-11-16)**
 >
-> The migration tooling and the baseline migration are in place, but the application **has not been switched over yet**. `src/index.ts` still runs `drop()` and `sync()` on every start, which deletes and recreates all tables, so **all data is still lost each time the server starts**. The switch-over (Phase 4b in [section 2](#2-status-and-roadmap)) removes this. Until then:
+> The migration tooling, the baseline migration and the persistence-safe seeding (Phase 4a) are in place, but the application **has not been switched over yet**. `src/index.ts` still runs `drop()` and `sync()` on every start, which deletes and recreates all tables, so **all data is still lost each time the server starts**. The switch-over (Phase 4b in [section 2](#2-status-and-roadmap)) removes this. Until then:
 >
 > - run `npm run migrate` to build or check the schema, as described below;
 > - **do not write new schema-changing migrations yet** (see [why](#why-not-yet));
@@ -124,7 +124,7 @@ The work is split into phases. Phases 1 to 4a change nothing about how the appli
 | 1 | Answer the open questions in [section 13](#13-decisions-findings-and-open-questions) and take verified backups of shared databases | **Open**, needs the team |
 | 2 | Tooling: `sequelize-cli`, `.sequelizerc`, `db/config.js`, npm scripts | **Done** |
 | 3 | Baseline: `db/baseline.sql` and the baseline migration, generated from the models | **Done** |
-| 4a | Make seeding safe for persistent data (see [section 9](#9-seed-data-and-migrations)) | **Not done** |
+| 4a | Make seeding safe for persistent data (see [section 9](#9-seed-data-and-migrations)) | **Done** |
 | **4b** | **Remove `drop()` and `sync()` from `src/index.ts`, run migrations when the container starts** | **Not done. Point of no return.** |
 | 5 | Switch the shared environments over, one at a time (Azure dev first, then Rahti) | Not done |
 | 6 | PR template, README section (done), optional CI workflow | Partly done |
@@ -148,10 +148,11 @@ While `drop()` and `sync()` still run on start, the server rebuilds every table 
 
 ## 3. What was added to the repository
 
-Nothing in `src/` (the application code) was changed.
+The only changes in `src/` (the application code) are the two seeding fixes of Phase 4a, see [9.2](#92-known-problems-that-appear-as-soon-as-data-persists). Start-up behavior is unchanged.
 
 | Path | What it is | Edit it? |
 |---|---|---|
+| `scripts/test-seed.ts` | Runs the seed twice on a scratch database and checks that it is safe on persistent data, see [9.4](#94-testing-the-seed) | Rarely |
 | `.sequelizerc` | Tells the CLI where the config and the migrations are | Rarely |
 | `db/config.js` | Database connection for the CLI. Reads the same `DB_*` variables as the app, with the same `DB_SSL` rule. One block is used for every environment. | Rarely |
 | `db/migrations/` | The migration files: the baseline and `add-report-status`. | Add new files, **never edit merged ones** |
@@ -600,19 +601,34 @@ The fixed data is inserted by `addDataToAllTables()` (`src/utils/utils.ts`), cal
 
 ### 9.2 Known problems that appear as soon as data persists
 
-The seed code was written for an empty database. Once `drop()` is removed (Phase 4b) it runs against real data on every start. These problems were found and **measured** (running the seed twice on a migrated database):
+The seed code was written for an empty database. Once `drop()` is removed (Phase 4b) it runs against real data on every start. These problems were found and **measured** (running the seed twice on a migrated database). Items 1 and 2 were fixed in Phase 4a (2026-11-16), items 3 and 4 are decisions and rules:
 
-1. **Organizations lose their country link on every restart.** In `src/controllers/populateDatabaseController.ts`, `addOrganizationsLimited` sets `organization.countryId = null` for existing rows, and only `createOrganization` links the country again. Measured: after the first run 330 of 331 organizations had a `country_id`, after the second run **none** had.
-2. **Country seeding is not awaited** (`src/utils/countryData.ts`, `country.save()` and `repository.createCountry(...)` without `await`). Errors become unhandled rejections, which stop a Node process, and organizations can be seeded before their countries exist.
-3. **The seed overwrites edits.** Countries and seeded organizations are rewritten from the code at every start, so a change made through `PATCH /countries/{id}` or `PATCH /organizations/{id}` is lost at the next restart. **A team decision is needed:** (A) the code is the source of truth and the overwrite stays (it is today's behavior and the recommended starting point; document it for admins), or (B) the seed only inserts missing rows, so edits survive, but changing a seeded value later needs a data migration.
+1. **Organizations lost their country link on every restart. Fixed.** In `src/controllers/populateDatabaseController.ts`, `addOrganizationsLimited` set `organization.countryId = null` for existing rows, and only `createOrganization` linked the country again. Measured: after the first run 330 of 331 organizations had a `country_id`, after the second run **none** had. Now the update branch looks the country up by `country_code` and keeps the link.
+2. **Country seeding was not awaited. Fixed.** `country.save()` and `repository.createCountry(...)` in `src/utils/countryData.ts` had no `await`, so errors became unhandled rejections, which stop a Node process, and organizations could be seeded before their countries existed. Both calls are now awaited. A failing country save now stops the seeding and is logged by `src/index.ts`.
+3. **The seed overwrites edits. Decision: option A (the code is the source of truth).** Countries and seeded organizations are rewritten from the code at every start, so a change made through `PATCH /countries/{id}` or `PATCH /organizations/{id}` **is lost at the next restart**. Tell admins. This is today's behavior, so nothing changed in the code. The alternative, option B (the seed only inserts missing rows, so edits survive, but changing a seeded value later needs a data migration), can be chosen later if the team wants it.
 4. **Seeded rows are never deleted.** Removing or renaming a seeded row (a `code`) needs a data migration, because saved reports refer to those rows by id.
-
-These are the content of Phase 4a and must be fixed **before** Phase 4b. They are not fixed yet.
 
 ### 9.3 Rules
 
 - Seed data stays in `addDataToAllTables()`. Do not put it in migrations or in CLI seeders (`db/seeders` is configured but unused).
 - Anything that must be *removed or renamed* in seeded data is a data migration.
+- The seed must be safe to run on every start: it may insert and update seeded rows, it must never delete rows or clear columns that the application or its users own (for example `country_id`).
+
+### 9.4 Testing the seed
+
+`scripts/test-seed.ts` runs `addDataToAllTables()` twice on a **scratch** database, with a manually added organization present, and checks that every seeded organization whose country exists still has its `country_id`, that the manual organization is unchanged, and that no error was logged. It refuses to run unless the database name contains `scratch`, `baseline` or `drift`, and it can be run repeatedly.
+
+```bash
+# 1. As root (the password is MARIADB_ROOT_PASSWORD from .env, already inside the container), create the
+#    scratch database and give the app user access.
+docker exec hh_secur_db_container sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS hh_secur_scratch_seed; GRANT ALL ON hh_secur_scratch_seed.* TO \`$MARIADB_USER\`@\`%\`;"'
+
+# 2. Build the schema with migrations, then run the test.
+DB_DATABASE=hh_secur_scratch_seed npm run migrate
+DB_DATABASE=hh_secur_scratch_seed npx tsx scripts/test-seed.ts | tail -5
+```
+
+PowerShell: set `$env:DB_DATABASE = "hh_secur_scratch_seed"` first. The output is very long, because Sequelize logs every query, so look at the last lines: `PASSED: ...` or `FAILED:` with the reasons. Run it after any change to the seed code.
 
 ---
 
@@ -701,6 +717,7 @@ Replace `hh_secur` with your `DB_DATABASE`. For a remote database use `mariadb-d
 | `sequelize-cli` is a dev dependency | The Dockerfile runs a full `npm ci` |
 | `@sequelize/mariadb` was removed | It was an unused alpha package, not imported anywhere |
 | Phase 4b is the point of no return | Phases 1 to 4a are invisible to the running application |
+| Seed policy A: the code is the source of truth (2026-11-16) | Seeded countries and organizations are overwritten at every start, so API edits to them do not survive a restart. Option B can be chosen later. |
 
 ### 13.2 Findings made while building this
 
@@ -715,7 +732,7 @@ Replace `hh_secur` with your `DB_DATABASE`. For a remote database use `mariadb-d
 1. Are the **Azure and Rahti databases on persistent storage?**
 2. **Who runs migrations** on shared environments? Proposal: the container runs them automatically on start (Phase 4b).
 3. After Phase 4b, keep an **opt-in old mode** (an environment flag that still runs `drop()` + `sync()`, ignored unless the host is local), or a hard cutover? The recommendation is the hard cutover, with a manual reset procedure for local databases.
-4. **Seed overwrite policy** for countries and organizations: option A or B in [9.2](#92-known-problems-that-appear-as-soon-as-data-persists).
+4. ~~**Seed overwrite policy** for countries and organizations~~ Chosen: option A (see [13.1](#131-decisions)). The team can revisit it.
 5. Should the default users' passwords keep being overwritten from the environment on every start?
 
 ---

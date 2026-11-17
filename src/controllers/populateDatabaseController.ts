@@ -189,8 +189,10 @@ export const addOrganizationsLimited = async () => {
             let organization = await repository.findOrganizationByCode(organizations[i].code)
             try {
                 if (organization) {
-                    organization.countryId = null,
-                        organization.fi = organizations[i].fi;
+                    // Keep the country link: createOrganization only links it for new rows.
+                    const country = await repository.findCountryByCode(organizations[i].country_code);
+                    organization.countryId = country ? country.id : null;
+                    organization.fi = organizations[i].fi;
                     organization.en = organizations[i].en;
                     organization.country_code = organizations[i].country_code;
                     organization.added_manually = false;
