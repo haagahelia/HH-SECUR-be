@@ -34975,8 +34975,8 @@ export const organizations = [
     },
     {
         code: "IAU-019410",
-        fi: "Alecu Russo State University of Bălti",
-        en: "Alecu Russo State University of Bălti",
+        fi: "Alecu Russo State University of Balti",
+        en: "Alecu Russo State University of Balti",
         country_code: "MDA"
     },
     {
@@ -49189,8 +49189,8 @@ export const organizations = [
     },
     {
         code: "IAU-019391",
-        fi: "Bogdan-Vodă University of Cluj-Napoca",
-        en: "Bogdan-Vodă University of Cluj-Napoca",
+        fi: "Bogdan-Voda University of Cluj-Napoca",
+        en: "Bogdan-Voda University of Cluj-Napoca",
         country_code: "ROU"
     },
     {
@@ -49213,8 +49213,8 @@ export const organizations = [
     },
     {
         code: "IAU-019438",
-        fi: "Drăgan European University of Lugoj",
-        en: "Drăgan European University of Lugoj",
+        fi: "Dragan European University of Lugoj",
+        en: "Dragan European University of Lugoj",
         country_code: "ROU"
     },
     {
@@ -49225,8 +49225,8 @@ export const organizations = [
     },
     {
         code: "IAU-019440",
-        fi: "George Bacovia University of Bacău",
-        en: "George Bacovia University of Bacău",
+        fi: "George Bacovia University of Bacau",
+        en: "George Bacovia University of Bacau",
         country_code: "ROU"
     },
     {
@@ -49345,8 +49345,8 @@ export const organizations = [
     },
     {
         code: "IAU-019475",
-        fi: "Vasile Alecsandri University of Bacău",
-        en: "Vasile Alecsandri University of Bacău",
+        fi: "Vasile Alecsandri University of Bacau",
+        en: "Vasile Alecsandri University of Bacau",
         country_code: "ROU"
     },
     {
