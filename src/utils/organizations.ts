@@ -3235,8 +3235,8 @@ export const organizations = [
     },
     {
         code: "IAU-020695",
-        fi: "University of Bihać",
-        en: "University of Bihać",
+        fi: "University of Bihac",
+        en: "University of Bihac",
         country_code: "BIH"
     },
     {
@@ -14209,8 +14209,8 @@ export const organizations = [
     },
     {
         code: "IAU-009860",
-        fi: "Janáček Academy of Music and Performing Arts Brno",
-        en: "Janáček Academy of Music and Performing Arts Brno",
+        fi: "Janácek Academy of Music and Performing Arts Brno",
+        en: "Janácek Academy of Music and Performing Arts Brno",
         country_code: "CZE"
     },
     {
@@ -21085,8 +21085,8 @@ export const organizations = [
     },
     {
         code: "IAU-020841",
-        fi: "Polytechnic Marko Marulić in Knin",
-        en: "Polytechnic Marko Marulić in Knin",
+        fi: "Polytechnic Marko Marulic in Knin",
+        en: "Polytechnic Marko Marulic in Knin",
         country_code: "HRV"
     },
     {
@@ -21109,8 +21109,8 @@ export const organizations = [
     },
     {
         code: "IAU-020932",
-        fi: "University of Applied Sciences Baltazar Zaprešić",
-        en: "University of Applied Sciences Baltazar Zaprešić",
+        fi: "University of Applied Sciences Baltazar Zaprešic",
+        en: "University of Applied Sciences Baltazar Zaprešic",
         country_code: "HRV"
     },
     {
@@ -34483,8 +34483,8 @@ export const organizations = [
     },
     {
         code: "IAU-022872",
-        fi: "Kazimieras Simonavičius University",
-        en: "Kazimieras Simonavičius University",
+        fi: "Kazimieras Simonavicius University",
+        en: "Kazimieras Simonavicius University",
         country_code: "LTU"
     },
     {
@@ -34537,8 +34537,8 @@ export const organizations = [
     },
     {
         code: "IAU-009884",
-        fi: "Jāzeps Vītols Latvian Academy of Music",
-        en: "Jāzeps Vītols Latvian Academy of Music",
+        fi: "Jazeps Vitols Latvian Academy of Music",
+        en: "Jazeps Vitols Latvian Academy of Music",
         country_code: "LVA"
     },
     {
@@ -36961,8 +36961,8 @@ export const organizations = [
     },
     {
         code: "IAU-023495",
-        fi: "International University",
-        en: "International University",
+        fi: "International University 2",
+        en: "International University 2",
         country_code: "MEX"
     },
     {
@@ -50479,8 +50479,8 @@ export const organizations = [
     },
     {
         code: "IAU-014028",
-        fi: "Rjazan State University of Agrotechnology named after P.A. Kostyčev",
-        en: "Rjazan State University of Agrotechnology named after P.A. Kostyčev",
+        fi: "Rjazan State University of Agrotechnology named after P.A. Kostycev",
+        en: "Rjazan State University of Agrotechnology named after P.A. Kostycev",
         country_code: "RUS"
     },
     {
@@ -56737,8 +56737,8 @@ export const organizations = [
     },
     {
         code: "IAU-011017",
-        fi: "Loma Linda University",
-        en: "Loma Linda University",
+        fi: "Loma Linda University 2",
+        en: "Loma Linda University 2",
         country_code: "USA"
     },
     {
@@ -59851,8 +59851,8 @@ export const organizations = [
     },
     {
         code: "IAU-010985",
-        fi: "Lincoln University",
-        en: "Lincoln University",
+        fi: "Lincoln University 3",
+        en: "Lincoln University 3",
         country_code: "USA"
     },
     {
@@ -61699,8 +61699,8 @@ export const organizations = [
     },
     {
         code: "IAU-010986",
-        fi: "Lincoln University",
-        en: "Lincoln University",
+        fi: "Lincoln University 4",
+        en: "Lincoln University 4",
         country_code: "USA"
     },
     {
@@ -62869,8 +62869,8 @@ export const organizations = [
     },
     {
         code: "IAU-029636",
-        fi: "West Coast University",
-        en: "West Coast University",
+        fi: "West Coast University 2",
+        en: "West Coast University 2",
         country_code: "USA"
     },
     {
@@ -63553,8 +63553,8 @@ export const organizations = [
     },
     {
         code: "IAU-011389",
-        fi: "Marian University",
-        en: "Marian University",
+        fi: "Marian University 2",
+        en: "Marian University 2",
         country_code: "USA"
     },
     {
