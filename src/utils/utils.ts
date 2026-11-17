@@ -1,4 +1,4 @@
-import { addCollaborationHistory, addCollaborationTypes, addConsortiumTypes, addContractInfo, addDualUse, addDuration, addEthicsAssessment, addHHRole, addLiability, addOrganizations, addOrganizationType, addPersonalInformation, addFundingSource, addFundingOption, addFundingHistory, addFundingExchange, addReportStatuses } from "../controllers/populateDatabaseController";
+import { addCollaborationHistory, addCollaborationTypes, addConsortiumTypes, addContractInfo, addDualUse, addDuration, addEthicsAssessment, addHHRole, addLiability, addOrganizations, addOrganizationType, addPersonalInformation, addFundingSource, addFundingOption, addFundingHistory, addFundingExchange, addReportStatuses, addOrganizationsLimited } from "../controllers/populateDatabaseController";
 import { addExtraUsers } from "../controllers/testController";
 import User from "../data/models/User";
 import { addCountryData } from "./countryData";
@@ -28,7 +28,8 @@ export const addDataToAllTables = async () => {
     await addHHRole();
     await addReportStatuses();
     await addCountryData();
-    await addOrganizations();
+    //await addOrganizations();
+    await addOrganizationsLimited();
     await addCollaborationTypes();
     await addConsortiumTypes();
     await addOrganizationType();

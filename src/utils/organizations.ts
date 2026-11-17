@@ -36961,8 +36961,8 @@ export const organizations = [
     },
     {
         code: "IAU-023495",
-        fi: "International University",
-        en: "International University",
+        fi: "International University 2",
+        en: "International University 2",
         country_code: "MEX"
     },
     {
@@ -56737,8 +56737,8 @@ export const organizations = [
     },
     {
         code: "IAU-011017",
-        fi: "Loma Linda University",
-        en: "Loma Linda University",
+        fi: "Loma Linda University 2",
+        en: "Loma Linda University 2",
         country_code: "USA"
     },
     {
@@ -59851,8 +59851,8 @@ export const organizations = [
     },
     {
         code: "IAU-010985",
-        fi: "Lincoln University",
-        en: "Lincoln University",
+        fi: "Lincoln University 3",
+        en: "Lincoln University 3",
         country_code: "USA"
     },
     {
@@ -61699,8 +61699,8 @@ export const organizations = [
     },
     {
         code: "IAU-010986",
-        fi: "Lincoln University",
-        en: "Lincoln University",
+        fi: "Lincoln University 4",
+        en: "Lincoln University 4",
         country_code: "USA"
     },
     {
@@ -62869,8 +62869,8 @@ export const organizations = [
     },
     {
         code: "IAU-029636",
-        fi: "West Coast University",
-        en: "West Coast University",
+        fi: "West Coast University 2",
+        en: "West Coast University 2",
         country_code: "USA"
     },
     {
@@ -63553,8 +63553,8 @@ export const organizations = [
     },
     {
         code: "IAU-011389",
-        fi: "Marian University",
-        en: "Marian University",
+        fi: "Marian University 2",
+        en: "Marian University 2",
         country_code: "USA"
     },
     {

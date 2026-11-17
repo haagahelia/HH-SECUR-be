@@ -142,74 +142,29 @@ export async function addConsortiumTypes() {
 }
 
 export async function addOrganizations() {
-    /*
-    //Old organizations source
-    const organizations = [
-        {
-            code: "halmstad",
-            country_code: "SWE",
-            fi: "Halmstadin yliopisto",
-            en: "Halmstad University"
-        },
-        {
-            code: "stockholm",
-            country_code: "SWE",
-            fi: "Tukholman yliopisto",
-            en: "Stockholm University"
-        },
-        {
-            code: "harvard",
-            country_code: "USA",
-            fi: "Harvardin yliopisto",
-            en: "Harvard University"
-        },
-        {
-            code: "mit",
-            country_code: "USA",
-            fi: "MIT",
-            en: "MIT"
-        },
-        {
-            code: "moldova-state",
-            country_code: "MDA",
-            fi: "Moldovan valtionyliopisto",
-            en: "Moldova State University"
-        },
-        {
-            code: "peking",
-            country_code: "CHN",
-            fi: "Pekingin yliopisto",
-            en: "Peking University"
-        },
-        {
-            code: "tsinghua",
-            country_code: "CHN",
-            fi: "Tsinghuan yliopisto",
-            en: "Tsinghua University"
-        },
-        {
-            code: "other",
-            country_code: "OTH",
-            fi: "Muu",
-            en: "Other"
+
+    for (let i = 0; i < organizations.length; i++) {
+        const organizationNew = {
+            countryId: null,
+            code: organizations[i].code,
+            fi: organizations[i].fi,
+            en: organizations[i].en,
+            country_code: organizations[i].country_code,
+            added_manually: false,
         }
-    ]
-*/
-    /*
-        for (let i = 0; i < organizations.length; i++) {
-    
-            let organization = await repository.findOrganizationByCode(organizations[i].code)
-            if (organization) {
-                organization.fi = organizations[i].fi;
-                organization.en = organizations[i].en;
-                organization.country_code = organizations[i].country_code;
-                await organization.save();
-            } else {
-                await repository.createOrganization(organizations[i]);
-            }
+
+        let organization = await repository.findOrganizationByCode(organizations[i].code)
+        if (organization) {
+            organization.fi = organizations[i].fi;
+            organization.en = organizations[i].en;
+            organization.country_code = organizations[i].country_code;
+            await organization.save();
+        } else {
+            await repository.createOrganization(organizationNew);
         }
-    */
-    await addOrganizationsLimited();
+    }
+
+    // await addOrganizationsLimited();
 }
 
 export const addOrganizationsLimited = async () => {
