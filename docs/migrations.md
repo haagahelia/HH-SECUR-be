@@ -234,6 +234,10 @@ Baseline: created 24 tables
 == 20261115184302-baseline: migrated (0.161s)
 == 20261116101512-add-report-status: migrating =======
 == 20261116101512-add-report-status: migrated (0.047s)
+== 20261117180000-ensure-utf8mb4: migrating =======
+ensure-utf8mb4: database default is already utf8mb4
+ensure-utf8mb4: all tables are already utf8mb4
+== 20261117180000-ensure-utf8mb4: migrated (0.006s)
 ```
 
 Check it:
@@ -245,6 +249,7 @@ npm run migrate:status
 ```
 up 20261115184302-baseline.js
 up 20261116101512-add-report-status.js
+up 20261117180000-ensure-utf8mb4.js
 ```
 
 `up` means the migration has been applied, `down` means it is waiting to be applied.
