@@ -2,13 +2,13 @@
 
 This document explains how the database schema of HH-SECUR-be is managed with **migrations**: what they are, why the project uses them, how to set up your environment, how to change the database, and what the rules are. It is written for the current team and for any future team that takes over the project, so it tries to explain things instead of assuming prior knowledge.
 
-> **Read this first: current status (last updated 2026-11-16)**
+> **Read this first: current status (last updated 2026-11-17)**
 >
-> The migration tooling, the baseline migration and the persistence-safe seeding (Phase 4a) are in place, but the application **has not been switched over yet**. `src/index.ts` still runs `drop()` and `sync()` on every start, which deletes and recreates all tables, so **all data is still lost each time the server starts**. The switch-over (Phase 4b in [section 2](#2-status-and-roadmap)) removes this. Until then:
+> The application **no longer drops or recreates tables**. The schema is created and changed only by migrations (`npm run migrate`), the server checks on start that none is pending, and data survives restarts. This is the switch-over (Phase 4b in [section 2](#2-status-and-roadmap)).
 >
-> - run `npm run migrate` to build or check the schema, as described below;
-> - **do not write new schema-changing migrations yet** (see [why](#why-not-yet));
-> - the sections that describe the future behavior are marked **(planned)**.
+> - **A shared environment switches over when it first runs this version.** For Azure dev that is the deployment after the push to `dev`, so read [10.2](#102-what-the-switch-over-does-phases-4b-and-5) and the checklist there **before** merging.
+> - Locally: `npm run dev` migrates first. To start over with an empty database run `npm run db:reset`.
+> - Until every shared environment has run this version once, a schema change still gets a migration that skips what already exists ([6.6](#66-writing-schema-changes-before-the-switch-over)).
 >
 > When a phase is completed, update the status table in section 2 and this box.
 
@@ -117,7 +117,7 @@ An early report suggested Umzug as an alternative. The decision taken was Sequel
 
 ## 2. Status and roadmap
 
-The work is split into phases. Phases 1 to 4a change nothing about how the application behaves, so the old behavior and the migration tooling can exist side by side until Phase 4b.
+The work is split into phases. Phases 1 to 4a changed nothing about how the application behaves. Phase 4b is the switch-over: from the version that contains it, the application never changes the schema by itself.
 
 | Phase | What | Status |
 |---|---|---|
@@ -125,34 +125,37 @@ The work is split into phases. Phases 1 to 4a change nothing about how the appli
 | 2 | Tooling: `sequelize-cli`, `.sequelizerc`, `db/config.js`, npm scripts | **Done** |
 | 3 | Baseline: `db/baseline.sql` and the baseline migration, generated from the models | **Done** |
 | 4a | Make seeding safe for persistent data (see [section 9](#9-seed-data-and-migrations)) | **Done** |
-| **4b** | **Remove `drop()` and `sync()` from `src/index.ts`, run migrations when the container starts** | **Not done. Point of no return.** |
-| 5 | Switch the shared environments over, one at a time (Azure dev first, then Rahti) | Not done |
+| **4b** | **Remove `drop()` and `sync()` from `src/index.ts`, run migrations when the container starts** | **Done in the code** (hard cutover, no opt-in old mode). Takes effect per environment at its first deployment, see Phase 5. **Point of no return.** |
+| 5 | Switch the shared environments over, one at a time: Azure dev, Rahti (dev build), then Rahti-main after `dev` is merged to `main` | **Not done**, needs the answers of Phase 1 and the checklist in [10.2](#102-what-the-switch-over-does-phases-4b-and-5) |
 | 6 | PR template, README section (done), optional CI workflow | Partly done |
-| 7 | First real migrations | **Started:** `add-report-status` (see [6.6](#66-writing-schema-changes-before-phase-4b)) and `ensure-utf8mb4` (character set, see [13.2](#132-findings-made-while-building-this)). The rest needs its scope revisited ([section 13](#13-decisions-findings-and-open-questions)) |
+| 7 | First real migrations | **Started:** `add-report-status` (see [6.6](#66-writing-schema-changes-before-the-switch-over)) and `ensure-utf8mb4` (character set, see [13.2](#132-findings-made-while-building-this)). The rest needs its scope revisited ([section 13](#13-decisions-findings-and-open-questions)) |
 
 ### What is *not* done yet
 
 So that nobody assumes otherwise:
 
-- the server still deletes and recreates all tables on start (`src/index.ts` lines 14-15);
-- the `Dockerfile` still ends with `CMD ["npm", "start"]`, it does not run migrations;
-- the Azure workflow (`.github/workflows/azure-backend-dev.yml`) is unchanged and no environment has been switched over;
-- there is no CI check that compares the models with the migrations;
-- there is no `npm run db:reset` script (use the manual commands in [section 4.4](#44-variations)).
+- no shared environment has run this version yet, and the Phase 1 questions (persistent storage, engine and charset, backups) are not answered;
+- there is no CI check that compares the models with the migrations (planned for Phase 6);
+- the Azure workflow (`.github/workflows/azure-backend-dev.yml`) is unchanged: pushing to `dev` deploys the image and therefore performs the switch-over of Azure dev;
+- the single-replica setting on Azure and Rahti has to be applied by DevOps (see [10.2](#102-what-the-switch-over-does-phases-4b-and-5)).
 
-### <a id="why-not-yet"></a>Why not write schema-changing migrations yet
+### <a id="why-not-yet"></a>Schema changes before and after the switch-over
 
-While `drop()` and `sync()` still run on start, the server rebuilds every table from the models each time. A migration such as "add column X" would then find that the column already exists (the model created it) and fail, and the data it was meant to keep is gone anyway. Real migrations only make sense from Phase 4b on, **unless they skip what already exists**. That is how `add-report-status` was written, because `dev` gained a table before Phase 4b and the baseline could not include it (see [6.6](#66-writing-schema-changes-before-phase-4b)).
+The old server rebuilt every table from the models on each start. A migration such as "add column X" would then find that the column already exists (the model created it) and fail. That is why `add-report-status` and `ensure-utf8mb4` were written to skip what is already there ([6.6](#66-writing-schema-changes-before-the-switch-over)).
+
+After the switch-over only migrations change the schema, so a migration can be written plainly. **But** a shared database that has not run this version yet still holds what the old server built from the models of its last deployment. Until Azure dev, Rahti (dev build) and Rahti-main have each run this version once, a new schema-changing migration should still check first and skip what exists. When all of them have, 6.6 can be retired.
 
 ---
 
 ## 3. What was added to the repository
 
-The only changes in `src/` (the application code) are the two seeding fixes of Phase 4a, see [9.2](#92-known-problems-that-appear-as-soon-as-data-persists). Start-up behavior is unchanged.
+The changes in `src/` (the application code) are the two seeding fixes of Phase 4a ([9.2](#92-known-problems-that-appear-as-soon-as-data-persists)) and the new start-up in `src/index.ts` with `src/utils/schemaCheck.ts` (Phase 4b).
 
 | Path | What it is | Edit it? |
 |---|---|---|
 | `scripts/test-seed.ts` | Runs the seed twice on a scratch database and checks that it is safe on persistent data, see [9.4](#94-testing-the-seed) | Rarely |
+| `scripts/migrate.js` | What `npm run migrate` runs: takes a database lock (`GET_LOCK`), runs `sequelize-cli db:migrate`, releases the lock. The CLI has no locking of its own, this keeps two containers that start at once from running the same migration. | Rarely |
+| `src/utils/schemaCheck.ts` | Called by `src/index.ts` on start. Stops the server if a migration file has not been run yet (or `SequelizeMeta` is missing). | Rarely |
 | `.sequelizerc` | Tells the CLI where the config and the migrations are | Rarely |
 | `db/config.js` | Database connection for the CLI. Reads the same `DB_*` variables as the app, with the same `DB_SSL` rule. One block is used for every environment. | Rarely |
 | `db/migrations/` | The migration files: the baseline, `add-report-status` and `ensure-utf8mb4`. | Add new files, **never edit merged ones** |
@@ -264,7 +267,7 @@ npm run dev
 
 Expected log lines: `Backend is running`, `Succsefully connected to database` (the typo is in the code), `API running on 3000`.
 
-> **While Phase 4b is not done**, the server first drops and recreates all tables, then inserts the seed data. Your schema is then the one built from the models, which is identical to the migrated one (this was verified). It also means data you created is gone after each start.
+> **Your data now survives restarts.** The server does not touch the schema any more. If it starts on a database that is not migrated it stops with `Database connection or schema check failed` and tells you to run `npm run migrate`. A local database built earlier by the old server (all tables, no `SequelizeMeta`) is accepted by the baseline, which checks the column names and records itself. To start over with an empty database run `npm run db:reset` (local only, deletes the local database).
 
 **Step 6. Check that it works**
 
@@ -292,7 +295,7 @@ docker compose -f docker-compose-dbbe.yaml up --build
 
 This also builds and starts the backend container. Inside Compose the backend reaches the database by the service name (`DB_HOST` and `DB_PORT` are overridden to `hh_secur_db_service` and `3306`), so `DB_PORT=3307` in your `.env` only affects the port published on your machine. See the Docker Compose guide in the README for details.
 
-Note that the backend container does **not** run migrations yet (Dockerfile, [section 2](#what-is-not-done-yet)). Because the old behavior still builds the tables itself, the container works as before.
+The backend container runs `npm run migrate` before it starts the server (the `CMD` in the `Dockerfile`). If the migration fails the container exits, instead of running on the wrong schema.
 
 ### 4.4 Variations
 
@@ -347,6 +350,7 @@ Run them in the project root. The database in `.env` must be running.
 | Start the database only | `docker compose -f docker-compose-dbbe.yaml up -d --wait hh_secur_db_service` | |
 | Stop it (keep data) | `docker compose -f docker-compose-dbbe.yaml down` | |
 | Delete the local database | `docker compose -f docker-compose-dbbe.yaml down -v` | **Local only.** Deletes all data. |
+| Delete and rebuild the local database | `npm run db:reset` | **Local only.** Deletes the compose database, starts a new one and migrates it. The seed runs on the next `npm run dev`. |
 
 There is deliberately no "undo all" script. `npm run migrate:undo` goes back one step at a time. Do not use `model:generate` from the CLI: the models are `sequelize-typescript` classes and are written by hand.
 
@@ -354,7 +358,7 @@ There is deliberately no "undo all" script. `npm run migrate:undo` goes back one
 
 ## 6. How to change the database schema
 
-> **Wait for Phase 4b before doing this for real** ([why](#why-not-yet)). The procedure below is what the team will follow from then on. If a schema change reaches `dev` before that, follow [6.6](#66-writing-schema-changes-before-phase-4b).
+> This is the procedure for every schema change. While a shared environment has not run the switch-over version yet, also follow [6.6](#66-writing-schema-changes-before-the-switch-over) ([why](#why-not-yet)).
 
 ### 6.1 Checklist
 
@@ -465,9 +469,9 @@ async down() {
 
 The part that ran stays applied, and the migration is **not** recorded in `SequelizeMeta`. On your local database, the easiest fix is [Start from scratch](#44-variations). On a shared database, stop and ask: look at what was applied, either revert it by hand or restore the backup, fix the migration in a **new** commit (it was never recorded, but another environment may have run it successfully), and run again.
 
-### 6.6 Writing schema changes before Phase 4b
+### 6.6 Writing schema changes before the switch-over
 
-Until Phase 4b is merged, `sync()` still builds every table from the models on each start. A migration that only says "add column X" would find the column already there and fail. A schema change that reaches `dev` in this period therefore gets a migration that **checks first and skips** what exists. The baseline is not regenerated for it: the baseline stays the 24 tables it was made from, because regenerating it would break the "all 24 tables exist" test for databases built before the change.
+Until Azure dev, Rahti (dev build) and Rahti-main have each run the switch-over version once, their databases still hold what `sync()` built from the models of their last deployment. A migration that only says "add column X" would find the column already there and fail. A schema change in this period therefore gets a migration that **checks first and skips** what exists. The baseline is not regenerated for it: the baseline stays the 24 tables it was made from, because regenerating it would break the "all 24 tables exist" test for databases built before the change.
 
 Rules for such a migration:
 
@@ -526,9 +530,9 @@ The list of expected tables and their columns is read from `db/baseline.sql` its
 
 ### 8.3 Regenerating the baseline
 
-> **Only allowed until Phase 4b is merged and the baseline has run on a shared database.** After that the baseline is history: never regenerate it, add normal migrations instead ([rule 2](#7-team-rules)).
+> **Only allowed until the baseline has run on a shared database** (that happens at the first deployment of the switch-over version). After that the baseline is history: never regenerate it, add normal migrations instead ([rule 2](#7-team-rules)).
 
-Regeneration is needed if a model changed the schema after the baseline was generated and before Phase 4b was merged. From the moment the baseline is generated until Phase 4b is merged, schema-changing model changes should wait, or the baseline must be regenerated before the merge.
+Regeneration would be needed if the baseline had to change before any shared environment has run it. Schema changes after the baseline go into normal migrations, so this should not be needed.
 
 All commands run in the project root, with the database container running.
 
@@ -556,7 +560,7 @@ DB_DATABASE=hh_secur_baseline npx tsx scripts/sync-schema.ts
 
 PowerShell: `$env:DB_DATABASE = "hh_secur_baseline"; npx tsx scripts/sync-schema.ts` (and afterwards `Remove-Item Env:DB_DATABASE`).
 
-Expected last line: `sync() finished on "hh_secur_baseline": 25 tables` (or more, if later migrations added tables). `db/baseline.sql` itself stays at 24 tables, see [6.6](#66-writing-schema-changes-before-phase-4b).
+Expected last line: `sync() finished on "hh_secur_baseline": 25 tables` (or more, if later migrations added tables). `db/baseline.sql` itself stays at 24 tables, see [6.6](#66-writing-schema-changes-before-the-switch-over).
 
 **3. Dump it inside the container.** Do **not** use `>` in PowerShell here: Windows PowerShell 5.1 writes UTF-16, which corrupts the SQL.
 
@@ -649,24 +653,25 @@ PowerShell: set `$env:DB_DATABASE = "hh_secur_scratch_seed"` first. The output i
 
 - **Azure (dev):** `.github/workflows/azure-backend-dev.yml` builds the Docker image and updates the Azure Container App `hh-secur-be-dev` (resource group `hh-secur-i-rg`) on every push to `dev`. The workflow only swaps the image. How the app gets its database settings is not visible in this repository; it is presumably configured on the container app itself. Support for `DB_SSL=true` was added to the code for it.
 - **Rahti:** used as a shared environment too. Its deployment configuration is not in this repository. Credentials are in the team's Teams channel (DevOps > Shared).
-- Neither environment has been switched to migrations. They run the old behavior.
+- Neither environment has run the switch-over version yet. **Azure dev deploys automatically on every push to `dev`, so merging the switch-over to `dev` is the switch-over of Azure dev.** Rahti also builds the `dev` branch (and `main` for Rahti-main), how it is triggered is not in this repository.
 
-### 10.2 What the switch-over will do (planned, Phases 4b and 5)
+### 10.2 What the switch-over does (Phases 4b and 5)
 
-1. **Back up** the database ([section 11](#11-backups-and-restore)) and test the restore.
-2. Remove `drop()` and `sync()` from `src/index.ts`. Keep `authenticate()` and the seeding, in two separate `try/catch` blocks, so a forgotten migrate gives the message "Seeding failed. Did you run `npm run migrate`?".
-3. Change the Dockerfile to `CMD ["sh", "-c", "npm run migrate && npm start"]`. If the migration fails the container exits instead of running on the wrong schema.
-4. **Pin the Azure container app to one replica**, because the CLI has no locking:
+**What the new version does on start:** the container runs `npm run migrate` (locked, see [section 3](#3-what-was-added-to-the-repository)), then starts the server. The server connects and checks that no migration is pending. If the database is unreachable or not migrated it exits with an error (the platform restarts the container and the error is in the log). Then it runs the seed. A failing seed is logged (`Seeding failed...`) and the API keeps running with the data that is there.
 
-   ```bash
-   az containerapp update --name hh-secur-be-dev --resource-group hh-secur-i-rg --min-replicas 1 --max-replicas 1
-   ```
+**Checklist per environment** (Azure dev, then Rahti dev build, then Rahti-main after `dev` is merged to `main`):
 
-5. Deploy. In the logs look for `Baseline: schema already present, skipping`, and check that `SequelizeMeta` has one row. The existing tables are untouched.
-6. **Persistence test:** create a report, restart the server twice and check that the report is still there, that seeded organizations still have their `country_id`, then trigger a second deployment and check again.
-7. Repeat for the next environment.
+1. The Phase 1 answers exist for this environment: persistent storage, database engine and version, character set, backup and restore.
+2. **Back up** the database ([section 11](#11-backups-and-restore)) and test the restore.
+3. The environment runs **one replica**. Azure: `az containerapp update --name hh-secur-be-dev --resource-group hh-secur-i-rg --min-replicas 1 --max-replicas 1`. Rahti: one pod and the deployment strategy Recreate. (The lock protects against two migrations at once, but one replica is still the rule.)
+4. The database user may create and alter tables ([rule 12](#7-team-rules)).
+5. **Stop the old version before starting the new one.** The old image runs `drop()` on every start, so if an old container restarts while the new one runs, it wipes every table under it. Stop the app (or scale to zero), then deploy. A short downtime is fine on dev environments.
+6. Is the data disposable (it was wiped on every start until now)? Then empty the database first (drop all tables). The baseline then builds the schema from scratch. This is the safe choice for **Rahti-main**, whose tables may have been built by the old `main` branch (the baseline stops with a list of missing columns if so). If the data has to be kept, ask the team first.
+7. Deploy. In the log look for the migration lines (`Baseline: schema already present, skipping` or `Baseline: created 24 tables`, then `ensure-utf8mb4: ...`) and for `API running`. `SequelizeMeta` should list all migrations.
+8. **Persistence test:** create a report, restart the app twice and check that the report is still there and that seeded organizations still have their `country_id`. Trigger a second deployment and check again.
+9. Only then restore the original organization names in `src/utils/organizations.ts` (if the character set was converted by `ensure-utf8mb4` on that environment).
 
-During an Azure deployment the new revision starts while the old one is still serving. The migration runs in the new one, so for a short time the old code sees the new schema. This is why [rule 9](#7-team-rules) exists.
+During a normal deployment after the switch-over the new revision starts while the old one is still serving. The migration runs in the new one, so for a short time the old code sees the new schema. This is why [rule 9](#7-team-rules) exists.
 
 ### 10.3 Open questions for the team
 
@@ -706,13 +711,15 @@ Replace `hh_secur` with your `DB_DATABASE`. For a remote database use `mariadb-d
 | `Unable to find migrations path` / config not found | You are not in the project root. `.sequelizerc` is read from the current directory. |
 | `Baseline: the database has only some of the 24 tables` | The database is half built, for example from an interrupted run. Locally: "Start from scratch". On a shared database: do not touch it, ask the team, restore from backup. |
 | `Baseline: all tables exist but their columns differ from the baseline` | The tables were built from older models (the error lists the missing columns). Disposable data: drop all tables, run `npm run migrate`. Otherwise stop and ask the team, do not force it. |
-| `Incorrect string value: 'Ä'` (or similar) when inserting text | The table is not utf8mb4 (for example a latin1 server default). Run `npm run migrate`: `ensure-utf8mb4` converts it. Do not strip characters from the data. |
+| `Incorrect string value` when inserting text | The table is not utf8mb4 (for example a latin1 server default). Run `npm run migrate`: `ensure-utf8mb4` converts it. Do not strip characters from the data. |
 | `The baseline cannot be undone` | Expected. `migrate:undo` refuses on the baseline. |
-| `Table '...' already exists` or `Duplicate column name` when a new migration runs | The old server (`drop()` + `sync()`) already built that table or column from the models. This is why real migrations wait for Phase 4b ([why](#why-not-yet)). Locally: "Start from scratch", then run `npm run migrate` **before** starting the server. |
+| `Table '...' already exists` or `Duplicate column name` when a new migration runs | The database was built by the old server (`drop()` + `sync()`) from models that already contain the change ([why](#why-not-yet)). Locally: `npm run db:reset`. On a shared database write the migration so it skips what exists ([6.6](#66-writing-schema-changes-before-the-switch-over)). |
 | `syntax error` mentioning strange characters like `ÿþ` in `baseline.sql` | The dump was written with PowerShell `>` (UTF-16). Redo step 3 of [8.3](#83-regenerating-the-baseline) with the redirect inside the container. |
 | `sh: ... not found` or `\r` errors when running `schema-diff.sh` | The file got Windows line endings. `.gitattributes` prevents this for new checkouts. Re-checkout the file, or run `git add --renormalize .`. |
 | `npm run migrate:new -- name` does nothing or ignores the name | The `--` before the name is missing. |
-| The server keeps resetting my data | Expected until Phase 4b: `drop()` + `sync()` still run on start ([section 2](#2-status-and-roadmap)). |
+| `Database connection or schema check failed` with `1 migration(s) have not been run` or `The table SequelizeMeta does not exist` | The database is not migrated. Run `npm run migrate` (`npm run dev` does it for you). On a shared environment the container's migrate step did not run or failed: read the log above it. |
+| `Could not get the migration lock` | Another `npm run migrate` has held the lock for more than 120 s. Look at that process (a hung migration); the lock is released when its connection ends. |
+| My local data disappeared | The server no longer deletes data. Did you run `npm run db:reset` or `docker compose down -v`? Both delete the local database. |
 
 ---
 
@@ -730,6 +737,9 @@ Replace `hh_secur` with your `DB_DATABASE`. For a remote database use `mariadb-d
 | `sequelize-cli` is a dev dependency | The Dockerfile runs a full `npm ci` |
 | `@sequelize/mariadb` was removed | It was an unused alpha package, not imported anywhere |
 | Phase 4b is the point of no return | Phases 1 to 4a are invisible to the running application |
+| Hard cutover: no opt-in old mode (2026-11-17) | `drop()` + `sync()` are gone from the server. `npm run db:reset` replaces them locally. One code path, no flag that could wipe a shared database. |
+| The server exits when the schema is not up to date, a failing seed does not stop it | An unmigrated schema makes every request fail, so a restart with a clear error is better. A seed error leaves a working API with the old data, and restarting would not fix it. |
+| `npm run migrate` takes a database lock | The CLI has no locking. `GET_LOCK` makes two containers starting at once safe. One replica is still the rule. |
 | Seed policy A: the code is the source of truth (2026-11-16) | Seeded countries and organizations are overwritten at every start, so API edits to them do not survive a restart. Option B can be chosen later. |
 
 ### 13.2 Findings made while building this
@@ -744,8 +754,8 @@ Replace `hh_secur` with your `DB_DATABASE`. For a remote database use `mariadb-d
 ### 13.3 Open questions (need an owner)
 
 1. Are the **Azure and Rahti databases on persistent storage?**
-2. **Who runs migrations** on shared environments? Proposal: the container runs them automatically on start (Phase 4b).
-3. After Phase 4b, keep an **opt-in old mode** (an environment flag that still runs `drop()` + `sync()`, ignored unless the host is local), or a hard cutover? The recommendation is the hard cutover, with a manual reset procedure for local databases.
+2. ~~**Who runs migrations** on shared environments?~~ The container, automatically on start, behind a lock (Phase 4b). DevOps confirms one replica.
+3. ~~Keep an opt-in old mode after Phase 4b?~~ Chosen: hard cutover, `npm run db:reset` for local databases (see [13.1](#131-decisions)).
 4. ~~**Seed overwrite policy** for countries and organizations~~ Chosen: option A (see [13.1](#131-decisions)). The team can revisit it.
 5. Should the default users' passwords keep being overwritten from the environment on every start?
 

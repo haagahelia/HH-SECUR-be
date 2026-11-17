@@ -3059,7 +3059,7 @@ Then fill in your own values.
 
 The database structure is managed with **migrations** ([Sequelize-CLI](https://sequelize.org/docs/v6/other-topics/migrations/)). A migration is a small file in `db/migrations/` that describes one change to the database, so the schema has a reviewed history in git and can be changed without deleting data. Models (`src/data/models/`) describe how the code sees the tables, migrations change the real database, and a schema change updates both.
 
-> **Current status:** the migration tooling, the baseline migration (the first 24 tables) and the migration `add-report-status` are in place, but the application has **not been switched over yet**. `src/index.ts` still drops and recreates all tables on every start, so data is still lost on each start. Until that switch-over is done, a schema change on `dev` needs a migration that skips what already exists, because `sync()` has already created it (`add-report-status` is the example). See the status table in [docs/migrations.md](docs/migrations.md#2-status-and-roadmap).
+> **Current status:** the application no longer drops or recreates tables. The schema is created and changed only by migrations, the server stops on start if a migration is pending, and data survives restarts. A shared environment switches over when it first runs this version (Azure dev: the deployment after a push to `dev`), see the checklist in [docs/migrations.md](docs/migrations.md#102-what-the-switch-over-does-phases-4b-and-5). To start over with an empty local database run `npm run db:reset`.
 
 Setup order for a local environment (full explanation, variations and troubleshooting in [docs/migrations.md](docs/migrations.md#4-setting-up-your-environment)):
 
@@ -3077,6 +3077,7 @@ npm run dev
 | See what has run | `npm run migrate:status` |
 | Undo the latest migration (local only, never on a shared database) | `npm run migrate:undo` |
 | Create a new empty migration | `npm run migrate:new -- name-of-the-change` |
+| Delete and rebuild the local database (local only, deletes all local data) | `npm run db:reset` |
 
 The full guide covers what migrations are, the team rules, how to change the schema, how the baseline was generated and can be regenerated, backups, deployment, troubleshooting and the open decisions: **[docs/migrations.md](docs/migrations.md)**.
 
