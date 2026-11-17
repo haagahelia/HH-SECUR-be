@@ -49123,8 +49123,8 @@ export const organizations = [
     },
     {
         code: "IAU-019382",
-        fi: "Alexandru Ioan Cuza University of Iaşi",
-        en: "Alexandru Ioan Cuza University of Iaşi",
+        fi: "Alexandru Ioan Cuza University of Iasi",
+        en: "Alexandru Ioan Cuza University of Iasi",
         country_code: "ROU"
     },
     {
@@ -49141,8 +49141,8 @@ export const organizations = [
     },
     {
         code: "IAU-019454",
-        fi: "Petre Andrei University of Iaşi",
-        en: "Petre Andrei University of Iaşi",
+        fi: "Petre Andrei University of Iasi",
+        en: "Petre Andrei University of Iasi",
         country_code: "ROU"
     },
     {
@@ -49153,8 +49153,8 @@ export const organizations = [
     },
     {
         code: "IAU-019421",
-        fi: "West University of Timişoara",
-        en: "West University of Timişoara",
+        fi: "West University of Timisoara",
+        en: "West University of Timisoara",
         country_code: "ROU"
     },
     {
@@ -49165,8 +49165,8 @@ export const organizations = [
     },
     {
         code: "IAU-019384",
-        fi: "Apollonia University of Iaşi",
-        en: "Apollonia University of Iaşi",
+        fi: "Apollonia University of Iasi",
+        en: "Apollonia University of Iasi",
         country_code: "ROU"
     },
     {
@@ -49183,8 +49183,8 @@ export const organizations = [
     },
     {
         code: "IAU-019423",
-        fi: "Banat University of Agricultural Sciences and Veterinary Medicine of Timişoara",
-        en: "Banat University of Agricultural Sciences and Veterinary Medicine of Timişoara",
+        fi: "Banat University of Agricultural Sciences and Veterinary Medicine of Timisoara",
+        en: "Banat University of Agricultural Sciences and Veterinary Medicine of Timisoara",
         country_code: "ROU"
     },
     {
@@ -49201,8 +49201,8 @@ export const organizations = [
     },
     {
         code: "IAU-019393",
-        fi: "Constantin Brâncuşi University of Târgu-Jiu",
-        en: "Constantin Brâncuşi University of Târgu-Jiu",
+        fi: "Constantin Brâncusi University of Târgu-Jiu",
+        en: "Constantin Brâncusi University of Târgu-Jiu",
         country_code: "ROU"
     },
     {
@@ -49231,8 +49231,8 @@ export const organizations = [
     },
     {
         code: "IAU-019402",
-        fi: "George Enescu National University of Arts of Iaşi",
-        en: "George Enescu National University of Arts of Iaşi",
+        fi: "George Enescu National University of Arts of Iasi",
+        en: "George Enescu National University of Arts of Iasi",
         country_code: "ROU"
     },
     {
@@ -49285,8 +49285,8 @@ export const organizations = [
     },
     {
         code: "IAU-019455",
-        fi: "Petroleum and Gas University of Ploieşti",
-        en: "Petroleum and Gas University of Ploieşti",
+        fi: "Petroleum and Gas University of Ploiesti",
+        en: "Petroleum and Gas University of Ploiesti",
         country_code: "ROU"
     },
     {
@@ -49309,14 +49309,14 @@ export const organizations = [
     },
     {
         code: "IAU-019470",
-        fi: "Tibiscus University of Timişoara",
-        en: "Tibiscus University of Timişoara",
+        fi: "Tibiscus University of Timisoara",
+        en: "Tibiscus University of Timisoara",
         country_code: "ROU"
     },
     {
         code: "IAU-019472",
-        fi: "Transylvania University of Braşov",
-        en: "Transylvania University of Braşov",
+        fi: "Transylvania University of Brasov",
+        en: "Transylvania University of Brasov",
         country_code: "ROU"
     },
     {
@@ -49339,8 +49339,8 @@ export const organizations = [
     },
     {
         code: "IAU-019432",
-        fi: "University of Petroşani",
-        en: "University of Petroşani",
+        fi: "University of Petrosani",
+        en: "University of Petrosani",
         country_code: "ROU"
     },
     {
@@ -53839,8 +53839,8 @@ export const organizations = [
     },
     {
         code: "IAU-024820",
-        fi: "Adana Alparslan Türkeş Science and Technology University",
-        en: "Adana Alparslan Türkeş Science and Technology University",
+        fi: "Adana Alparslan Türkes Science and Technology University",
+        en: "Adana Alparslan Türkes Science and Technology University",
         country_code: "TUR"
     },
     {
@@ -53929,8 +53929,8 @@ export const organizations = [
     },
     {
         code: "IAU-001665",
-        fi: "Bilecik Şeyh Edebali University",
-        en: "Bilecik Şeyh Edebali University",
+        fi: "Bilecik Seyh Edebali University",
+        en: "Bilecik Seyh Edebali University",
         country_code: "TUR"
     },
     {
@@ -54025,8 +54025,8 @@ export const organizations = [
     },
     {
         code: "IAU-006890",
-        fi: "Gümüşhane University",
-        en: "Gümüşhane University",
+        fi: "Gümüshane University",
+        en: "Gümüshane University",
         country_code: "TUR"
     },
     {
@@ -54055,8 +54055,8 @@ export const organizations = [
     },
     {
         code: "IAU-009727",
-        fi: "Işik University",
-        en: "Işik University",
+        fi: "Isik University",
+        en: "Isik University",
         country_code: "TUR"
     },
     {
@@ -54091,8 +54091,8 @@ export const organizations = [
     },
     {
         code: "IAU-009655",
-        fi: "Istanbul Gelişim University",
-        en: "Istanbul Gelişim University",
+        fi: "Istanbul Gelisim University",
+        en: "Istanbul Gelisim University",
         country_code: "TUR"
     },
     {
@@ -54139,8 +54139,8 @@ export const organizations = [
     },
     {
         code: "IAU-010050",
-        fi: "Kahramanmaraş Sütçü Imam University",
-        en: "Kahramanmaraş Sütçü Imam University",
+        fi: "Kahramanmaras Sütçü Imam University",
+        en: "Kahramanmaras Sütçü Imam University",
         country_code: "TUR"
     },
     {
@@ -54163,8 +54163,8 @@ export const organizations = [
     },
     {
         code: "IAU-000187",
-        fi: "Kırşehir Ahi Evran University",
-        en: "Kırşehir Ahi Evran University",
+        fi: "Kırsehir Ahi Evran University",
+        en: "Kırsehir Ahi Evran University",
         country_code: "TUR"
     },
     {
