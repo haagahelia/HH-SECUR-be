@@ -14209,8 +14209,8 @@ export const organizations = [
     },
     {
         code: "IAU-009860",
-        fi: "Janáček Academy of Music and Performing Arts Brno",
-        en: "Janáček Academy of Music and Performing Arts Brno",
+        fi: "Janácek Academy of Music and Performing Arts Brno",
+        en: "Janácek Academy of Music and Performing Arts Brno",
         country_code: "CZE"
     },
     {
@@ -34483,8 +34483,8 @@ export const organizations = [
     },
     {
         code: "IAU-022872",
-        fi: "Kazimieras Simonavičius University",
-        en: "Kazimieras Simonavičius University",
+        fi: "Kazimieras Simonavicius University",
+        en: "Kazimieras Simonavicius University",
         country_code: "LTU"
     },
     {
@@ -50479,8 +50479,8 @@ export const organizations = [
     },
     {
         code: "IAU-014028",
-        fi: "Rjazan State University of Agrotechnology named after P.A. Kostyčev",
-        en: "Rjazan State University of Agrotechnology named after P.A. Kostyčev",
+        fi: "Rjazan State University of Agrotechnology named after P.A. Kostycev",
+        en: "Rjazan State University of Agrotechnology named after P.A. Kostycev",
         country_code: "RUS"
     },
     {
