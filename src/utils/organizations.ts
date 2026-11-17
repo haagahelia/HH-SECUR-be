@@ -3235,8 +3235,8 @@ export const organizations = [
     },
     {
         code: "IAU-020695",
-        fi: "University of Bihać",
-        en: "University of Bihać",
+        fi: "University of Bihac",
+        en: "University of Bihac",
         country_code: "BIH"
     },
     {
@@ -21085,8 +21085,8 @@ export const organizations = [
     },
     {
         code: "IAU-020841",
-        fi: "Polytechnic Marko Marulić in Knin",
-        en: "Polytechnic Marko Marulić in Knin",
+        fi: "Polytechnic Marko Marulic in Knin",
+        en: "Polytechnic Marko Marulic in Knin",
         country_code: "HRV"
     },
     {
@@ -21109,8 +21109,8 @@ export const organizations = [
     },
     {
         code: "IAU-020932",
-        fi: "University of Applied Sciences Baltazar Zaprešić",
-        en: "University of Applied Sciences Baltazar Zaprešić",
+        fi: "University of Applied Sciences Baltazar Zaprešic",
+        en: "University of Applied Sciences Baltazar Zaprešic",
         country_code: "HRV"
     },
     {
