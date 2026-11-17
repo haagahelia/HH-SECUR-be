@@ -47155,8 +47155,8 @@ export const organizations = [
     },
     {
         code: "IAU-027090",
-        fi: "College of Democracy Fr. Jerzy Popiełuszko in Grudziadz",
-        en: "College of Democracy Fr. Jerzy Popiełuszko in Grudziadz",
+        fi: "College of Democracy Fr. Jerzy Popieluszko in Grudziadz",
+        en: "College of Democracy Fr. Jerzy Popieluszko in Grudziadz",
         country_code: "POL"
     },
     {
@@ -47269,8 +47269,8 @@ export const organizations = [
     },
     {
         code: "IAU-000647",
-        fi: "Grażyna and Kiejstut Bacewicz Academy of Music in Łódź",
-        en: "Grażyna and Kiejstut Bacewicz Academy of Music in Łódź",
+        fi: "Grażyna and Kiejstut Bacewicz Academy of Music in lódź",
+        en: "Grażyna and Kiejstut Bacewicz Academy of Music in lódź",
         country_code: "POL"
     },
     {
@@ -47317,8 +47317,8 @@ export const organizations = [
     },
     {
         code: "IAU-027100",
-        fi: "Higher School of Entrepreneurship named after Prince Kazimierz Kujawski in Inowrocław",
-        en: "Higher School of Entrepreneurship named after Prince Kazimierz Kujawski in Inowrocław",
+        fi: "Higher School of Entrepreneurship named after Prince Kazimierz Kujawski in Inowroclaw",
+        en: "Higher School of Entrepreneurship named after Prince Kazimierz Kujawski in Inowroclaw",
         country_code: "POL"
     },
     {
@@ -47329,8 +47329,8 @@ export const organizations = [
     },
     {
         code: "IAU-021446",
-        fi: "Higher School of Humanities King Stanisław Leszczynski in Leszno",
-        en: "Higher School of Humanities King Stanisław Leszczynski in Leszno",
+        fi: "Higher School of Humanities King Stanislaw Leszczynski in Leszno",
+        en: "Higher School of Humanities King Stanislaw Leszczynski in Leszno",
         country_code: "POL"
     },
     {
@@ -47341,8 +47341,8 @@ export const organizations = [
     },
     {
         code: "IAU-021530",
-        fi: "Higher School of International Relations and Social Communications in Chełm",
-        en: "Higher School of International Relations and Social Communications in Chełm",
+        fi: "Higher School of International Relations and Social Communications in Chelm",
+        en: "Higher School of International Relations and Social Communications in Chelm",
         country_code: "POL"
     },
     {
@@ -47359,8 +47359,8 @@ export const organizations = [
     },
     {
         code: "IAU-021560",
-        fi: "Higher School of Management and Coaching in Wrocław",
-        en: "Higher School of Management and Coaching in Wrocław",
+        fi: "Higher School of Management and Coaching in Wroclaw",
+        en: "Higher School of Management and Coaching in Wroclaw",
         country_code: "POL"
     },
     {
@@ -47437,14 +47437,14 @@ export const organizations = [
     },
     {
         code: "IAU-021380",
-        fi: "International Academy of Applied Sciences in Łomża",
-        en: "International Academy of Applied Sciences in Łomża",
+        fi: "International Academy of Applied Sciences in lomża",
+        en: "International Academy of Applied Sciences in lomża",
         country_code: "POL"
     },
     {
         code: "IAU-011985",
-        fi: "International University of Logistics and Transport, Wrocław",
-        en: "International University of Logistics and Transport, Wrocław",
+        fi: "International University of Logistics and Transport, Wroclaw",
+        en: "International University of Logistics and Transport, Wroclaw",
         country_code: "POL"
     },
     {
@@ -47473,8 +47473,8 @@ export const organizations = [
     },
     {
         code: "IAU-021565",
-        fi: "Janski University in Łomża",
-        en: "Janski University in Łomża",
+        fi: "Janski University in lomża",
+        en: "Janski University in lomża",
         country_code: "POL"
     },
     {
@@ -47563,14 +47563,14 @@ export const organizations = [
     },
     {
         code: "IAU-020721",
-        fi: "Marie Curie-Skłodowska University",
-        en: "Marie Curie-Skłodowska University",
+        fi: "Marie Curie-Sklodowska University",
+        en: "Marie Curie-Sklodowska University",
         country_code: "POL"
     },
     {
         code: "IAU-011478",
-        fi: "Małopolska Higher School Józef Dietla in Cracow",
-        en: "Małopolska Higher School Józef Dietla in Cracow",
+        fi: "Malopolska Higher School Józef Dietla in Cracow",
+        en: "Malopolska Higher School Józef Dietla in Cracow",
         country_code: "POL"
     },
     {
@@ -47623,8 +47623,8 @@ export const organizations = [
     },
     {
         code: "IAU-016048",
-        fi: "Pawel Wlodkowic University College, Płock",
-        en: "Pawel Wlodkowic University College, Płock",
+        fi: "Pawel Wlodkowic University College, Plock",
+        en: "Pawel Wlodkowic University College, Plock",
         country_code: "POL"
     },
     {
@@ -47635,8 +47635,8 @@ export const organizations = [
     },
     {
         code: "IAU-013547",
-        fi: "Podkarpackie College Bl. Fr. Władysław Findysz in Jasło",
-        en: "Podkarpackie College Bl. Fr. Władysław Findysz in Jasło",
+        fi: "Podkarpackie College Bl. Fr. Wladyslaw Findysz in Jaslo",
+        en: "Podkarpackie College Bl. Fr. Wladyslaw Findysz in Jaslo",
         country_code: "POL"
     },
     {
@@ -47701,8 +47701,8 @@ export const organizations = [
     },
     {
         code: "IAU-021471",
-        fi: "Samuela Bogumiła Lindego College of Foreign Languages",
-        en: "Samuela Bogumiła Lindego College of Foreign Languages",
+        fi: "Samuela Bogumila Lindego College of Foreign Languages",
+        en: "Samuela Bogumila Lindego College of Foreign Languages",
         country_code: "POL"
     },
     {
@@ -47725,14 +47725,14 @@ export const organizations = [
     },
     {
         code: "IAU-013347",
-        fi: "Stanislaw Staszic University of Applied Sciences in Piła",
-        en: "Stanislaw Staszic University of Applied Sciences in Piła",
+        fi: "Stanislaw Staszic University of Applied Sciences in Pila",
+        en: "Stanislaw Staszic University of Applied Sciences in Pila",
         country_code: "POL"
     },
     {
         code: "IAU-000651",
-        fi: "Stanisław Moniuszko Academy of Music in Gdansk",
-        en: "Stanisław Moniuszko Academy of Music in Gdansk",
+        fi: "Stanislaw Moniuszko Academy of Music in Gdansk",
+        en: "Stanislaw Moniuszko Academy of Music in Gdansk",
         country_code: "POL"
     },
     {
@@ -47749,14 +47749,14 @@ export const organizations = [
     },
     {
         code: "IAU-013369",
-        fi: "State Higher Vocational School in Włocławek",
-        en: "State Higher Vocational School in Włocławek",
+        fi: "State Higher Vocational School in Wloclawek",
+        en: "State Higher Vocational School in Wloclawek",
         country_code: "POL"
     },
     {
         code: "IAU-013358",
-        fi: "State Higher Vocational School Stanisława Pigonia in Krosno",
-        en: "State Higher Vocational School Stanisława Pigonia in Krosno",
+        fi: "State Higher Vocational School Stanislawa Pigonia in Krosno",
+        en: "State Higher Vocational School Stanislawa Pigonia in Krosno",
         country_code: "POL"
     },
     {
@@ -47803,8 +47803,8 @@ export const organizations = [
     },
     {
         code: "IAU-013339",
-        fi: "The Bronisław Markiewicz State Higher School of Technology and Economics in Jarosław",
-        en: "The Bronisław Markiewicz State Higher School of Technology and Economics in Jarosław",
+        fi: "The Bronislaw Markiewicz State Higher School of Technology and Economics in Jaroslaw",
+        en: "The Bronislaw Markiewicz State Higher School of Technology and Economics in Jaroslaw",
         country_code: "POL"
     },
     {
@@ -47977,20 +47977,20 @@ export const organizations = [
     },
     {
         code: "IAU-013344",
-        fi: "The President Stanisław Wojciechowski State University of Applied Sciences in Kalisz",
-        en: "The President Stanisław Wojciechowski State University of Applied Sciences in Kalisz",
+        fi: "The President Stanislaw Wojciechowski State University of Applied Sciences in Kalisz",
+        en: "The President Stanislaw Wojciechowski State University of Applied Sciences in Kalisz",
         country_code: "POL"
     },
     {
         code: "IAU-013335",
-        fi: "The State Higher School Pope John Paul II in Biała Podlaska",
-        en: "The State Higher School Pope John Paul II in Biała Podlaska",
+        fi: "The State Higher School Pope John Paul II in Biala Podlaska",
+        en: "The State Higher School Pope John Paul II in Biala Podlaska",
         country_code: "POL"
     },
     {
         code: "IAU-013361",
-        fi: "The State School of Higher Professional Education in Płock",
-        en: "The State School of Higher Professional Education in Płock",
+        fi: "The State School of Higher Professional Education in Plock",
+        en: "The State School of Higher Professional Education in Plock",
         country_code: "POL"
     },
     {
@@ -48037,8 +48037,8 @@ export const organizations = [
     },
     {
         code: "IAU-020741-027271",
-        fi: "University of Białystok – University of Bialystok Faculty of Economics and Informatics",
-        en: "University of Białystok – University of Bialystok Faculty of Economics and Informatics",
+        fi: "University of Bialystok – University of Bialystok Faculty of Economics and Informatics",
+        en: "University of Bialystok – University of Bialystok Faculty of Economics and Informatics",
         country_code: "POL"
     },
     {
@@ -48085,8 +48085,8 @@ export const organizations = [
     },
     {
         code: "IAU-021424",
-        fi: "University of Finance and Computer Science Prof. Janusz Chechlinski in Łódź",
-        en: "University of Finance and Computer Science Prof. Janusz Chechlinski in Łódź",
+        fi: "University of Finance and Computer Science Prof. Janusz Chechlinski in lódź",
+        en: "University of Finance and Computer Science Prof. Janusz Chechlinski in lódź",
         country_code: "POL"
     },
     {
@@ -48157,8 +48157,8 @@ export const organizations = [
     },
     {
         code: "IAU-020744",
-        fi: "University of Wrocław",
-        en: "University of Wrocław",
+        fi: "University of Wroclaw",
+        en: "University of Wroclaw",
         country_code: "POL"
     },
     {
@@ -48223,8 +48223,8 @@ export const organizations = [
     },
     {
         code: "IAU-021150",
-        fi: "Wałbrzych Higher School of Management and Enterprise",
-        en: "Wałbrzych Higher School of Management and Enterprise",
+        fi: "Walbrzych Higher School of Management and Enterprise",
+        en: "Walbrzych Higher School of Management and Enterprise",
         country_code: "POL"
     },
     {
@@ -48241,14 +48241,14 @@ export const organizations = [
     },
     {
         code: "IAU-021346",
-        fi: "Wrocław School of Information Technology 'Horyzont'",
-        en: "Wrocław School of Information Technology 'Horyzont'",
+        fi: "Wroclaw School of Information Technology 'Horyzont'",
+        en: "Wroclaw School of Information Technology 'Horyzont'",
         country_code: "POL"
     },
     {
         code: "IAU-020734",
-        fi: "Wrocław University of Environmental and Life Sciences",
-        en: "Wrocław University of Environmental and Life Sciences",
+        fi: "Wroclaw University of Environmental and Life Sciences",
+        en: "Wroclaw University of Environmental and Life Sciences",
         country_code: "POL"
     },
     {
@@ -48271,8 +48271,8 @@ export const organizations = [
     },
     {
         code: "IAU-021385",
-        fi: "WSB University in Wrocław",
-        en: "WSB University in Wrocław",
+        fi: "WSB University in Wroclaw",
+        en: "WSB University in Wroclaw",
         country_code: "POL"
     },
     {
@@ -48283,8 +48283,8 @@ export const organizations = [
     },
     {
         code: "IAU-016973",
-        fi: "Łazarski University",
-        en: "Łazarski University",
+        fi: "lazarski University",
+        en: "lazarski University",
         country_code: "POL"
     },
     {
