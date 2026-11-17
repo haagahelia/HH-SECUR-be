@@ -34555,8 +34555,8 @@ export const organizations = [
     },
     {
         code: "IAU-014003",
-        fi: "Riga Stradiņš University",
-        en: "Riga Stradiņš University",
+        fi: "Riga Stradinš University",
+        en: "Riga Stradinš University",
         country_code: "LVA"
     },
     {
