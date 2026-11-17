@@ -53941,8 +53941,8 @@ export const organizations = [
     },
     {
         code: "IAU-001741",
-        fi: "Boğaziçi University",
-        en: "Boğaziçi University",
+        fi: "Bogaziçi University",
+        en: "Bogaziçi University",
         country_code: "TUR"
     },
     {
@@ -53953,8 +53953,8 @@ export const organizations = [
     },
     {
         code: "IAU-017019",
-        fi: "Bursa Uludağ University",
-        en: "Bursa Uludağ University",
+        fi: "Bursa Uludag University",
+        en: "Bursa Uludag University",
         country_code: "TUR"
     },
     {
@@ -54049,8 +54049,8 @@ export const organizations = [
     },
     {
         code: "IAU-009726",
-        fi: "Ìğdir University",
-        en: "Ìğdir University",
+        fi: "Ìgdir University",
+        en: "Ìgdir University",
         country_code: "TUR"
     },
     {
@@ -54223,8 +54223,8 @@ export const organizations = [
     },
     {
         code: "IAU-012746",
-        fi: "Niğde Ömer Halisdemir University",
-        en: "Niğde Ömer Halisdemir University",
+        fi: "Nigde Ömer Halisdemir University",
+        en: "Nigde Ömer Halisdemir University",
         country_code: "TUR"
     },
     {
@@ -54241,14 +54241,14 @@ export const organizations = [
     },
     {
         code: "IAU-013224",
-        fi: "Özyeğin University",
-        en: "Özyeğin University",
+        fi: "Özyegin University",
+        en: "Özyegin University",
         country_code: "TUR"
     },
     {
         code: "IAU-014027",
-        fi: "Recep Tayyip Erdoğan University",
-        en: "Recep Tayyip Erdoğan University",
+        fi: "Recep Tayyip Erdogan University",
+        en: "Recep Tayyip Erdogan University",
         country_code: "TUR"
     },
     {
