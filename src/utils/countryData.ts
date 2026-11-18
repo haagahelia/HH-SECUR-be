@@ -2713,9 +2713,9 @@ export async function addCountryData() {
             country.gdpr = countries[i].gdpr;
             country.sanctions = countries[i].sanctions;
             country.ruleOfLaw = countries[i].ruleOfLaw;
-            country.save();
+            await country.save();
         } else {
-            repository.createCountry(countries[i]);
+            await repository.createCountry(countries[i]);
         }
     }
 }

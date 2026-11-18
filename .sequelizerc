@@ -1,0 +1,10 @@
+// Sequelize-CLI configuration. Paths are relative to the project root (run npm scripts from there).
+// Used by: npm run migrate, migrate:undo, migrate:status, migrate:new
+const path = require("path");
+
+module.exports = {
+    config: path.resolve("db", "config.js"),
+    "migrations-path": path.resolve("db", "migrations"),
+    // Unused: seed data lives in addDataToAllTables() (src/utils/utils.ts), not in CLI seeders.
+    "seeders-path": path.resolve("db", "seeders"),
+};

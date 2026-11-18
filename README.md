@@ -23,7 +23,7 @@ Responds `{ok: true}` if server is running. Doesn't require successful database 
 
 </summary>
 
-**Request body format:**
+Request body format:
 
 ```
 {
@@ -33,7 +33,7 @@ Responds `{ok: true}` if server is running. Doesn't require successful database 
 
 ```
 
-Credentials for default user and admin are defined in env variables.
+Credentials for premade users are defined via env variables. 
 
 </details>
 
@@ -45,13 +45,35 @@ Credentials for default user and admin are defined in env variables.
 
 </summary>
 
-    - Returns list of users with password_hash omitted
+Requires: 
 
-    - Requires authentication
+    - Authentication
 
-Responses:
+Response format:
 
-    - Failures: 401: Auth failure
+```
+{
+    "users": [
+        {
+            "id": 1,
+            "username": "User",
+            "email": "user@testing.com",
+            "role": "user",
+            "created_at": "2026-11-03T11:41:13.000Z",
+            "updated_at": "2026-11-03T11:41:13.000Z"
+        },
+        {
+            "id": 2,
+            "username": "Admin",
+            "email": "admin@testing.com",
+            "role": "admin",
+            "created_at": "2026-11-03T11:41:13.000Z",
+            "updated_at": "2026-11-03T11:41:13.000Z"
+        },
+        ...
+    ]
+}
+```
 
 </details>
 
@@ -63,15 +85,25 @@ Responses:
 
 </summary>
 
-    - Returns specific user by ID
 
-    - Requires authentication
+Requires:
 
-Responses:
+    - Authentication
 
-    - Success: 200
+Response format:
 
-    - Failures: 401: Auth failure, 404: user not found
+```
+{
+    "user": {
+        "id": 1,
+        "username": "User",
+        "email": "user@testing.com",
+        "role": "user",
+        "created_at": "2026-11-03T11:41:13.000Z",
+        "updated_at": "2026-11-03T11:41:13.000Z"
+    }
+}
+```
     
 </details>
 
@@ -83,9 +115,10 @@ Responses:
 
 </summary>
 
-    - Create new user
 
-    - Requires authentication and admin role
+Requires:
+
+    - Authentication, admin
 
 Request body:
 
@@ -94,11 +127,13 @@ Request body:
     "username": "Username",
     "email": "valid@emailformat.com",
     "password": "password",
-    "role": "role"
+    "role": "user"
 }
 ```
 
-Requirements:
+Requires:
+
+    - Authentication, admin
 
     - Not empty / null: username, email, password, role
 
@@ -106,11 +141,20 @@ Requirements:
 
     - Valid format: email
 
-Responses:
+Response format:
 
-    - Success: 200 - Json of generated user with password_hash omitted
-
-    - Failures: 401, 403: Auth errors, 422: Validation errors
+```
+{
+    "user": {
+        "id": 8,
+        "username": "Username",
+        "email": "valid@emailformat.com",
+        "role": "user",
+        "updated_at": "2026-11-03T11:43:30.381Z",
+        "created_at": "2026-11-03T11:43:30.381Z"
+    }
+}
+```
     
 </details>
 
@@ -122,26 +166,43 @@ Responses:
 
 </summary>
 
-    - Update information of a specific user.
 
-    - Requires authentication and admin role
+Requires:
+
+    - Authentication, admin
 
 Request body (attributes can be omitted, only included ones will be updated):
 
 ```
 {
-    "username": "Username",
-    "email": "valid@emailformat.com",
-    "password": "password",
-    "role": "role"
+    "username": "Newname",
+    "email": "validnew@emailformat.com",
+    "password": "pass",
+    "role": "admin"
 }
 ```
 
-Responses:
+Requires:
 
-    - Success: 200 - Success message and updated json of user with password_hash omitted
+    - Authentication, admin
+    
+    - Same unique rules as posting user
 
-    - Failures: 401, 403 - Auth failures
+Response format:
+
+```
+{
+    "message": "User with id 1 has been updated",
+    "user": {
+        "id": 1,
+        "username": "Newname",
+        "email": "validnew@emailformat.com",
+        "role": "admin",
+        "created_at": "2026-11-03T11:41:13.000Z",
+        "updated_at": "2026-11-03T11:48:04.198Z"
+    }
+}
+```
 
 </details>
 
@@ -153,15 +214,17 @@ Responses:
 
 </summary>
 
-    - Deletes a specific user
-    
-    - Requires authentication and admin role
+Requires:
 
-Responses:
+    - Authentication, admin
 
-    - Success: 200 - User has been deleted message
+Response format:
 
-    - Failures: 401, 403 - Auth failures, 404 - User not found
+```
+{
+    "message": "User with id 3 has been deleted"
+}
+```
 
 </details>
 
@@ -173,7 +236,9 @@ Responses:
 
 </summary>
 
-Requires: Authentication
+Requires:
+
+    - Authentication
 
 Response format:
 
@@ -243,12 +308,13 @@ Response format:
 
 </summary>
     
-Requires: authentication, admin
+Requires:
+
+    - Authentication, admin
 
 Request body:
 
 ```
-
 {
     "code": "ESM",
     "en": "Example Country",
@@ -292,7 +358,9 @@ ruleoflaw: number
 
 </summary>
     
-Requires: authentication, admin
+Requires:
+
+    - Authentication, admin
 
 Request body:
 
@@ -310,7 +378,9 @@ Request body:
 
 </summary>
 
-Requires: Authentication, Admin
+Requires:
+
+    - Authentication, admin
 
     - Countries in reports cannot be deleted
 
@@ -324,11 +394,13 @@ Requires: Authentication, Admin
 
 </summary>
 
-    - Returns list of organizations (id, name:(fi, en), country id)
+Returns list of organizations (id, name:(fi, en), country id)
 
-    - Requires authentication
+Requires:
 
-Response body:
+    - Authentication
+
+Response format:
 
 ```
 {
@@ -339,17 +411,21 @@ Response body:
                 "fi": "Name in Finnish",
                 "en": "Name in English"
             },
-            "countryId": "XXX"
+            "countryId": "XXX",
+            "manuallyAdded": false
+        },
+        {
+            "id": null,
+            "name": {
+                "fi": "Other valinnalla lisätty organisaatio",
+                "en": "Organization added when selecting other"
+            },
+            "countryId": "XXX",
+            "manuallyAdded": true
         }
     ]
 }
 ```
-
-Responses:
-
-    - Success: 200
-
-    - Failures: 401: Auth failure
 
 </details>
 
@@ -361,14 +437,13 @@ Responses:
 
 </summary>
 
-    - Post a new partnership organization
-    
-    - Requires: authentication, admin
+Requires:
+
+    - Authentication, admin
 
 Request body:
 
 ```
-
 {
     "code": "qwerty123",
     "fi": "testi organisaatio",
@@ -404,7 +479,9 @@ Combinations of (countrycode + fi) and (countrycode + en) have to be unique, mea
 
 </summary>
 
-Requires: Authentication, Admin
+Requires:
+
+    - Authentication, admin
 
     - Same format as POST organization but fields can be omitted
 
@@ -421,7 +498,9 @@ Requires: Authentication, Admin
 
 </summary>
 
-Requires: Authentication, Admin
+Requires:
+
+    - Authentication, Admin
 
     - Organizations in consortiums cannot be deleted
 
@@ -435,7 +514,9 @@ Requires: Authentication, Admin
 
 </summary>
 
-Requires: authentication
+Requires:
+
+    - Authentication
 
 Request body:
 
@@ -776,7 +857,9 @@ Response body:
 
 Fetches all reports with `id`, `name`, `risk`, `ownername`, `creatorname`, `country: {code, fi, en}`,`organizations: [{id, fi, en, countrycode}]`, `created_at` and `updated_at` included.
 
-Requires: Authentication
+Requires:
+
+    - Authentication
 
 Example response:
 
@@ -843,7 +926,9 @@ Example response:
 
 Saves report to database and returns that report and its relations.
 
-Requires: Authentication
+Requires:
+
+    - Authentication
 
 Request body:
 
@@ -1355,9 +1440,11 @@ Example response:
 
 Fetches a specific report, its relations, and its verbose risk report
 
-Requires: Authentication
+Requires:
 
-Reponse:
+    - Authentication
+
+Response:
 
 Elements:
 
@@ -1864,11 +1951,11 @@ Example response:
 
 Uses the same function as saving the report and updating is done instead of creation of id param is found.
 
-Requires: Authentication, ownership or admin role
+Requires:
 
-Reponse:
+    - Authentication, ownership or admin
 
-Elements:
+Response elements:
 
     - "reportDeails": {} - representation of report data in the database
 
@@ -1877,6 +1964,8 @@ Elements:
     - "choices": {} - list of choices for form page options
 
 Report and choices content can be used fill results and form pages.
+
+Response body:
 
 ```
 {
@@ -2369,7 +2458,9 @@ Report and choices content can be used fill results and form pages.
 
 </summary>
 
-Requires: Authentication, ownership or admin role
+Requires:
+
+    - Authentication, ownership or admin
 
 </details>
 
@@ -2380,6 +2471,10 @@ Requires: Authentication, ownership or admin role
 **/formcontent** - GET: Content for most form page selections
 
 </summary>
+
+Requires:
+
+    - Authentication
 
 Includes:
 
@@ -2417,7 +2512,7 @@ Includes:
 
     - additionalInformation
 
-Reponse: 
+Response: 
 
 ```
 
@@ -2958,6 +3053,33 @@ Then fill in your own values.
 - `DB_HOST=localhost` is used when running the backend directly with `npm run dev`. With Docker Compose it is overridden automatically (see below).
 - `DEFAULT_USER_*` and `DEFAULT_ADMIN_*` are the credentials used to log in via `/login`.
 - Extra users (`EXTRA_USER_1..5_*`) are created on startup if all four values are set. The placeholder values in `.env.example` are for local development only.
+- Database settings (`DB_*`) are used by the app **and** by the migration tool. `DB_USERNAME` must not be `root` and `DB_PASSWORD` must not be empty when you use the Docker database. If port 3306 on your machine is already used by another MariaDB/MySQL, set `DB_PORT=3307`. `DB_SSL=true` is only for remote databases that require SSL. Details: [docs/migrations.md](docs/migrations.md#4-setting-up-your-environment).
+
+## Database and migrations
+
+The database structure is managed with **migrations** ([Sequelize-CLI](https://sequelize.org/docs/v6/other-topics/migrations/)). A migration is a small file in `db/migrations/` that describes one change to the database, so the schema has a reviewed history in git and can be changed without deleting data. Models (`src/data/models/`) describe how the code sees the tables, migrations change the real database, and a schema change updates both.
+
+> **Current status:** the application no longer drops or recreates tables. The schema is created and changed only by migrations, the server stops on start if a migration is pending, and data survives restarts. A shared environment switches over when it first runs this version (Azure dev: the deployment after a push to `dev`), see the checklist in [docs/migrations.md](docs/migrations.md#102-what-the-switch-over-does-phases-4b-and-5). To start over with an empty local database run `npm run db:reset`.
+
+Setup order for a local environment (full explanation, variations and troubleshooting in [docs/migrations.md](docs/migrations.md#4-setting-up-your-environment)):
+
+```bash
+npm ci
+cp .env.example .env        # then fill in the DB_* values, see the notes above
+docker compose -f docker-compose-dbbe.yaml up -d --wait hh_secur_db_service
+npm run migrate             # builds the schema (25 tables + SequelizeMeta); npm run dev also does this first
+npm run dev
+```
+
+| Goal | Command |
+|---|---|
+| Apply pending migrations | `npm run migrate` |
+| See what has run | `npm run migrate:status` |
+| Undo the latest migration (local only, never on a shared database) | `npm run migrate:undo` |
+| Create a new empty migration | `npm run migrate:new -- name-of-the-change` |
+| Delete and rebuild the local database (local only, deletes all local data) | `npm run db:reset` |
+
+The full guide covers what migrations are, the team rules, how to change the schema, how the baseline was generated and can be regenerated, backups, deployment, troubleshooting and the open decisions: **[docs/migrations.md](docs/migrations.md)**.
 
 ## Default users (Rahti)
 
@@ -3053,7 +3175,7 @@ The full test flow (login, tokens, default users), in short:
 docker compose -f docker-compose-dbbe.yaml down
 ```
 
-The database persists across restarts in the named volume (`hh_secur_db_data`). Add `-v` if you want a clean, empty database:
+The database files persist across restarts in the named volume (`hh_secur_db_data`). Note that the backend still drops and recreates all tables when it starts (see [Database and migrations](#database-and-migrations)), so the *data* in them does not survive a backend restart yet. Add `-v` if you want a clean, empty database:
 
 ```bash
 docker compose -f docker-compose-dbbe.yaml down -v
@@ -3069,6 +3191,8 @@ docker compose -f docker-compose-dbbe.yaml down -v
 * **Changed `DB_*` values without `down -v`:** the database still has the old user and password, so the backend gets `Access denied`.
 * **Only `.env.example` updated:** Compose reads `.env`, not `.env.example`. Copy new variables into your own `.env` as well. For example, extra users are skipped silently if their values are missing from `.env`.
 * **Forgetting `--build` after a code change:** the container starts with the old code and your changes won't show up.
+* **Empty `DB_PASSWORD`:** the MariaDB image then does not create the user at all, and every login fails with `Access denied (using password: NO)`. Set a password and run `down -v`.
+* **Another database already uses port 3306 on your machine** (a Windows service, XAMPP, Homebrew...): `localhost:3306` then reaches *that* server and not the container, and you get `Access denied for user '...'@'localhost'` with the correct password. Set `DB_PORT=3307` in `.env` and run `up -d` again. Details in [docs/migrations.md](docs/migrations.md#45-port-3306-is-already-in-use).
 
 
 ## Testing
@@ -3120,3 +3244,8 @@ PowerShell:
 ```powershell
 $env:API_BASE_URL="http://localhost:4000"; npm test
 ```
+
+## Documentation
+
+- [Database migrations: introduction, environment setup, rules, deployment, troubleshooting](docs/migrations.md)
+- [Database model and table explanations](docs/database_model.md)

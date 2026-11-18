@@ -44,13 +44,13 @@ export default class Duration extends Model<
 
     @AllowNull(true)
     @Column({
-        type: DataType.BIGINT,
+        type: DataType.BIGINT
     })
     declare lowerlimit: number | null
 
     @AllowNull(true)
     @Column({
-        type: DataType.BIGINT,
+        type: DataType.BIGINT
     })
     declare upperlimit: number | null
 

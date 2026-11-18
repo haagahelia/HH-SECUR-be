@@ -8,11 +8,12 @@ import { addExtraUsers } from "./testController";
 
 export const populateDatabase = async (req: Request, res: Response) => {
     await addHHRole();
+    await addReportStatuses();
+    await addCountryData();
     await addOrganizations();
     await addCollaborationTypes();
     await addConsortiumTypes();
     await addOrganizationType();
-    await addCountryData();
     await addDuration();
     await addCollaborationHistory();
     await addContractInfo();
@@ -33,7 +34,7 @@ export async function addHHRole() {
         {
             code: "option1",
             fi: "Yhteistyön koordinaattori",
-            en: "Collaboration Coordnator"
+            en: "Collaboration Coordinator"
         },
         {
             code: "option2",
@@ -141,81 +142,39 @@ export async function addConsortiumTypes() {
 }
 
 export async function addOrganizations() {
-    /*
-    //Old organizations source
-    const organizations = [
-        {
-            code: "halmstad",
-            country_code: "SWE",
-            fi: "Halmstadin yliopisto",
-            en: "Halmstad University"
-        },
-        {
-            code: "stockholm",
-            country_code: "SWE",
-            fi: "Tukholman yliopisto",
-            en: "Stockholm University"
-        },
-        {
-            code: "harvard",
-            country_code: "USA",
-            fi: "Harvardin yliopisto",
-            en: "Harvard University"
-        },
-        {
-            code: "mit",
-            country_code: "USA",
-            fi: "MIT",
-            en: "MIT"
-        },
-        {
-            code: "moldova-state",
-            country_code: "MDA",
-            fi: "Moldovan valtionyliopisto",
-            en: "Moldova State University"
-        },
-        {
-            code: "peking",
-            country_code: "CHN",
-            fi: "Pekingin yliopisto",
-            en: "Peking University"
-        },
-        {
-            code: "tsinghua",
-            country_code: "CHN",
-            fi: "Tsinghuan yliopisto",
-            en: "Tsinghua University"
-        },
-        {
-            code: "other",
-            country_code: "OTH",
-            fi: "Muu",
-            en: "Other"
+
+    for (let i = 0; i < organizations.length; i++) {
+        const organizationNew = {
+            countryId: null,
+            code: organizations[i].code,
+            fi: organizations[i].fi,
+            en: organizations[i].en,
+            country_code: organizations[i].country_code,
+            added_manually: false,
         }
-    ]
-*/
-    /*
-        for (let i = 0; i < organizations.length; i++) {
-    
+        try {
             let organization = await repository.findOrganizationByCode(organizations[i].code)
+
             if (organization) {
                 organization.fi = organizations[i].fi;
                 organization.en = organizations[i].en;
                 organization.country_code = organizations[i].country_code;
                 await organization.save();
             } else {
-                await repository.createOrganization(organizations[i]);
+                await repository.createOrganization(organizationNew);
             }
+        } catch (error) {
+            console.log(error)
         }
-    */
-    await addOrganizationsLimited();
+    }
+
+    // await addOrganizationsLimited();
 }
 
 export const addOrganizationsLimited = async () => {
     let limit = 0;
     let countryCode = ""
     for (let i = 0; i < organizations.length; i++) {
-
         if (organizations[i].country_code !== countryCode) {
             countryCode = organizations[i].country_code
             limit = 0
@@ -223,7 +182,8 @@ export const addOrganizationsLimited = async () => {
 
         if (limit < 2) {
             limit++;
-            let organizationNew = {
+            const organizationNew = {
+                countryId: null,
                 code: organizations[i].code,
                 fi: organizations[i].fi,
                 en: organizations[i].en,
@@ -233,6 +193,9 @@ export const addOrganizationsLimited = async () => {
             let organization = await repository.findOrganizationByCode(organizations[i].code)
             try {
                 if (organization) {
+                    // Keep the country link: createOrganization only links it for new rows.
+                    const country = await repository.findCountryByCode(organizations[i].country_code);
+                    organization.countryId = country ? country.id : null;
                     organization.fi = organizations[i].fi;
                     organization.en = organizations[i].en;
                     organization.country_code = organizations[i].country_code;
@@ -648,6 +611,48 @@ export async function addPersonalInformation() {
             await personalInformation.save();
         } else {
             await repository.createPersonalInformation(personalInformations[i]);
+        }
+    }
+}
+
+export const addReportStatuses = async () => {
+    const reportStatuses = [
+        {
+            code: "option1",
+            fi: "Suunniteltu",
+            en: "Planned"
+        },
+        {
+            code: "option2",
+            fi: "Hyväksytty",
+            en: "Accepted"
+        },
+        {
+            code: "option3",
+            fi: "Hylätty",
+            en: "Rejected"
+        },
+        {
+            code: "option4",
+            fi: "Käynnissä",
+            en: "In progress"
+        },
+        {
+            code: "option5",
+            fi: "Valmis",
+            en: "Finished"
+        }
+    ]
+
+    for (let i = 0; i < reportStatuses.length; i++) {
+
+        let reportStatus = await repository.findReportStatusByCode(reportStatuses[i].code)
+        if (reportStatus) {
+            reportStatus.fi = reportStatuses[i].fi;
+            reportStatus.en = reportStatuses[i].en;
+            await reportStatus.save();
+        } else {
+            await repository.createReportStatus(reportStatuses[i]);
         }
     }
 }

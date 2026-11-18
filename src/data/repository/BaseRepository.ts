@@ -13,6 +13,9 @@ export default class BaseRepository {
             dialect: "mariadb",
             username: config.db.username,
             password: config.db.password,
+             dialectOptions: process.env.DB_SSL === "true"      // New
+                ? { ssl: { rejectUnauthorized: true } }        // New
+                : undefined,                                   // New
             models: [__dirname + "/../models"],
         });
     }

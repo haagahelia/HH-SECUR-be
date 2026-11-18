@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { calculateRisk, getReportRisksFromReportSnapshot, generateVerboseReport, parseRiskPayload, validateRiskOptions, generateReportChoices, getReportChoicesFromReport, validateCollaboration, generateNewOrganizations } from "../utils/riskCalculation";
 import repository from "../data/repository/repository";
 import Consortium from "../data/models/Consortium";
+import { deleteReportByIdTransaction, patchReportTransaction, saveReportTransaction } from "../services/reportTransactions";
 
 export type ReportSnapshot = {
     reportId: number,
@@ -45,6 +46,7 @@ export type ReportCreationAttributes = {
     fundingId: number,
     organizationTypeId: number,
     personalInformationId: number,
+    reportStatusId: number
 }
 
 export type ReportChoiceIds = {
@@ -90,26 +92,6 @@ export const generateReport = async (req: Request, res: Response) => {
 
 export const patchReport = async (req: Request, res: Response) => {
 
-    const reportIdRaw = (req.params.id);
-    if (!reportIdRaw) {
-        res.status(400).json({
-            message: `Id required`
-        })
-        return;
-    }
-    let reportId = parseInt(reportIdRaw as string)
-    let report;
-    if (Number.isNaN(reportId)) {
-        res.status(400).json({
-            message: `Requested id ${reportIdRaw} is not a number`
-        })
-        return;
-    }
-
-    if (!parseRiskPayload(req, res)) {
-        return;
-    }
-
     const reportChoiceIds: ReportChoiceIds | null = await validateRiskOptions(req, res);
     if (!reportChoiceIds) {
         res.status(422).json({
@@ -117,155 +99,15 @@ export const patchReport = async (req: Request, res: Response) => {
         })
         return;
     }
-    if ((req.body.consortium === "option2" || reportChoiceIds.organizationIds.length === 0) && req.body.neworganization) {
-        let firstOnly = false;
-        if (req.body.consortium === "option2") {
-            firstOnly = true
-        }
-        const newOrganizations = await generateNewOrganizations(req, res, firstOnly);
-        if (newOrganizations) {
-            for (let i = 0; i < newOrganizations.length; i++) {
-                reportChoiceIds.organizationIds.push(newOrganizations[i].id)
-            }
-        }
-    }
-
-    const collaborationTypes = await validateCollaboration(res, req.body.collaborationtype);
-    if (!collaborationTypes) {
-        return;
-    }
-
-    report = await repository.findReportById(reportId);
-    if (!report) {
-        res.status(404).json({
-            message: `Report by the id of ${reportId} does not exist`
-        })
-        return;
-    }
-
-    const fundingCreationAttributes = {
-        fundingOptionId: reportChoiceIds.fundingTypeId,
-        fundingSourceId: reportChoiceIds.fundingSourceId,
-        fundingHistoryId: reportChoiceIds.fundingHistoryId,
-        fundingExchangeId: reportChoiceIds.fundingExchangeId
-    }
-    let funding = await repository.findFundingById(report.fundingId);
-    if (!funding) {
-        funding = await repository.createFunding(fundingCreationAttributes)
-    } else {
-        funding?.set(fundingCreationAttributes)
-    }
-
-    await funding.save();
-
-    const consortiumType = await repository.getConsortiumType(reportChoiceIds.consortiumTypeId)
-    if (!consortiumType) {
-        await funding.destroy();
-        res.status(404).json({
-            message: `Id ${reportChoiceIds.consortiumTypeId} is invalid for consortiumtype`
-        })
-        return;
-    }
-
-    let consortium = await generateConsortium(req, res, reportChoiceIds, report.consortiumId)
-    if (!consortium) {
-        res.status(404).json({
-            message: `Could not generate consortium`
-        })
-        return;
-    }
-
-    report.set({
-        name: reportChoiceIds.name,
-        collaborationHistoryId: reportChoiceIds.collaborationHistoryId,
-        contractInfoId: reportChoiceIds.contractInfoId,
-        consortiumId: consortium.id,
-        countryId: reportChoiceIds.countryId,
-        dualUseId: reportChoiceIds.dualUseId,
-        durationId: reportChoiceIds.durationId,
-        ethicsAssessmentId: reportChoiceIds.ethicsAssessmentId,
-        hhroleId: reportChoiceIds.hhroleId,
-        liabilityId: reportChoiceIds.liabilityId,
-        fundingId: funding.id,
-        organizationTypeId: reportChoiceIds.organizationTypeId,
-        personalInformationId: reportChoiceIds.personalInformationId,
-        userId: reportChoiceIds.userId,
-    });
-    await report.save();
-
-    if (!report) {
-        res.status(404).json({ message: `Failed to save report` })
-    }
-
-    await report?.$set("collaborationTypes", collaborationTypes);
 
     const reportRisks = await calculateRisk(req, res, reportChoiceIds);
     if (!reportRisks) {
         return;
     }
 
-    let name = req.body.name;
-    if (!name) {
-        name = "PlaceholderName"
-    }
-    let ownerUsername = req.body.ownerusername;
-    if (!ownerUsername) {
-        ownerUsername = req.body.ownername;
-        if (!ownerUsername) {
-            ownerUsername = "PlaceholderOwnerUsername";
-        }
-    }
-    let creatorUsername = req.body.creatorusername;
-    if (!creatorUsername) {
-        creatorUsername = req.body.creatorname;
-        if (!creatorUsername) {
-            creatorUsername = "PlaceholderCreatorUsername";
-        }
-    }
-    let organizationName = "";
-    const organizations = Array.isArray(consortium.organizations) ? consortium.organizations : [];
-    for (let i = 0; i < organizations.length; i++) {
-        if (organizations[i].code === "other") {
-            organizationName = req.body.organizationname;
-        }
-    }
-
-    const reportSnapshot: ReportSnapshot = {
-        reportId: reportId,
-        name: name,
-        ownerUsername: ownerUsername,
-        creatorUsername: creatorUsername,
-        organizationName: organizationName,
-        additionalInformation: reportRisks.additionalinformation,
-        organizationOther: reportRisks.organizationtypeother,
-        collaborationOther: reportRisks.collaborationtypeother,
-        collaboration: reportRisks.collaboration.risk,
-        countryOverall: reportRisks.country.overall.risk,
-        countryCorruption: reportRisks.country.corruption.risk,
-        countrySecurity: reportRisks.country.security.risk,
-        countryAcademicFreedom: reportRisks.country.academicfreedom.risk,
-        countryPoliticalStability: reportRisks.country.politicalstability.risk,
-        countryDevelopment: reportRisks.country.development.risk,
-        countryGdpr: reportRisks.country.gdpr.risk,
-        countrySanctions: reportRisks.country.sanctions.risk,
-        countryRuleOfLaw: reportRisks.country.ruleoflaw.risk,
-        organization: reportRisks.organization.risk,
-        financialOverall: reportRisks.financial.overall.risk,
-        financialExchange: reportRisks.financial.exchange.risk,
-        financialScope: reportRisks.financial.scope.risk,
-        dualUse: reportRisks.dualuse.risk,
-        ethics: reportRisks.ethics.risk,
-    }
-
-    await repository.deleteReportSnapshotByReportId(reportId);
-
-    await repository.createReportSnapshot(reportSnapshot);
-
-    const savedReport = await repository.findReportById(reportId);
+    const savedReport = await patchReportTransaction(req, res);
 
     const reportChoices = generateReportChoices(req.body);
-
-    const customOrganizationCleanup = await repository.deleteUnattachedCustomOrganizations();
 
     if (savedReport) {
         res.status(200).json({
@@ -282,150 +124,36 @@ export const patchReport = async (req: Request, res: Response) => {
 }
 
 export const saveReport = async (req: Request, res: Response) => {
-    if (!parseRiskPayload(req, res)) {
-        return;
-    }
 
     const reportChoiceIds: ReportChoiceIds | null = await validateRiskOptions(req, res);
-
     if (!reportChoiceIds) {
         return;
     }
-
-    if ((req.body.consortium === "option2" || reportChoiceIds.organizationIds.length === 0) && req.body.neworganization) {
-        let firstOnly = false;
-        if (req.body.consortium === "option1") {
-            firstOnly = true
-        }
-        const newOrganizations = await generateNewOrganizations(req, res, firstOnly);
-        if (newOrganizations) {
-            for (let i = 0; i < newOrganizations.length; i++) {
-                reportChoiceIds.organizationIds.push(newOrganizations[i].id)
-            }
-        }
-    }
-
-    const collaborationTypes = await validateCollaboration(res, req.body.collaborationtype);
-    if (!collaborationTypes) {
-        return;
-    }
-
-    const fundingCreationAttributes = {
-        fundingOptionId: reportChoiceIds.fundingTypeId,
-        fundingSourceId: reportChoiceIds.fundingSourceId,
-        fundingHistoryId: reportChoiceIds.fundingHistoryId,
-        fundingExchangeId: reportChoiceIds.fundingExchangeId
-    }
-    const funding = await repository.createFunding(fundingCreationAttributes);
-    reportChoiceIds.fundingTypeId = funding.id;
-
-    const consortium = await generateConsortium(req, res, reportChoiceIds, null)
-    if (!consortium) {
-        return;
-    }
-
-    const reportCreationAttributes: ReportCreationAttributes = {
-        name: reportChoiceIds.name,
-        userId: reportChoiceIds.userId,
-        collaborationHistoryId: reportChoiceIds.collaborationHistoryId,
-        consortiumId: consortium.id,
-        contractInfoId: reportChoiceIds.contractInfoId,
-        countryId: reportChoiceIds.countryId,
-        dualUseId: reportChoiceIds.dualUseId,
-        durationId: reportChoiceIds.durationId,
-        ethicsAssessmentId: reportChoiceIds.ethicsAssessmentId,
-        hhroleId: reportChoiceIds.hhroleId,
-        liabilityId: reportChoiceIds.liabilityId,
-        fundingId: funding.id,
-        organizationTypeId: reportChoiceIds.organizationTypeId,
-        personalInformationId: reportChoiceIds.personalInformationId,
-    }
-
-    let report = await repository.createReport(reportCreationAttributes);
-    let reportId = report.id;
-
-    if (!report) {
-        res.status(404).json({ message: `Failed to save report` })
-    }
-
-    await report?.$set("collaborationTypes", collaborationTypes);
 
     const reportRisks = await calculateRisk(req, res, reportChoiceIds);
     if (!reportRisks) {
         return;
     }
+    const savedReport = await saveReportTransaction(req, res);
 
-    let name = req.body.name;
-    if (!name) {
-        name = "PlaceholderName"
-    }
-    let ownerUsername = req.body.ownerusername;
-    if (!ownerUsername) {
-        ownerUsername = req.body.ownername;
-        if (!ownerUsername) {
-            ownerUsername = "";
-        }
-    }
-    let creatorUsername = req.body.creatorusername;
-    if (!creatorUsername) {
-        creatorUsername = req.body.creatorname;
-        if (!creatorUsername) {
-            creatorUsername = "";
-        }
-    }
-
-    let organizationName = "";
-    const organizations = Array.isArray(consortium.organizations) ? consortium.organizations : [];
-    for (let i = 0; i < organizations.length; i++) {
-        if (organizations[i].code === "other") {
-            organizationName = req.body.organizationname;
-        }
-    }
-
-    const reportSnapshot: ReportSnapshot = {
-        reportId: reportId,
-        name: name,
-        ownerUsername: ownerUsername,
-        creatorUsername: creatorUsername,
-        organizationName: organizationName,
-        additionalInformation: reportRisks.additionalinformation,
-        organizationOther: reportRisks.organizationtypeother,
-        collaborationOther: reportRisks.collaborationtypeother,
-        collaboration: reportRisks.collaboration.risk,
-        countryOverall: reportRisks.country.overall.risk,
-        countryCorruption: reportRisks.country.corruption.risk,
-        countrySecurity: reportRisks.country.security.risk,
-        countryAcademicFreedom: reportRisks.country.academicfreedom.risk,
-        countryPoliticalStability: reportRisks.country.politicalstability.risk,
-        countryDevelopment: reportRisks.country.development.risk,
-        countryGdpr: reportRisks.country.gdpr.risk,
-        countrySanctions: reportRisks.country.sanctions.risk,
-        countryRuleOfLaw: reportRisks.country.ruleoflaw.risk,
-        organization: reportRisks.organization.risk,
-        financialOverall: reportRisks.financial.overall.risk,
-        financialExchange: reportRisks.financial.exchange.risk,
-        financialScope: reportRisks.financial.scope.risk,
-        dualUse: reportRisks.dualuse.risk,
-        ethics: reportRisks.ethics.risk,
-    }
-
-    await repository.deleteReportSnapshotByReportId(reportId);
-
-    await repository.createReportSnapshot(reportSnapshot);
-
-    const savedReport = await repository.findReportById(reportId);
     const reportChoices = generateReportChoices(req.body);
-
-    const customOrganizationCleanup = await repository.deleteUnattachedCustomOrganizations();
-
     if (savedReport) {
-        res.status(200).json({
-            message: `Report by the id of ${savedReport.id} has been saved.`,
-            reportDetails: savedReport,
-            report: reportRisks,
-            choices: reportChoices,
-            debug: customOrganizationCleanup
-        })
+        const updatedReport = await repository.findReportById(savedReport.id);
+        if (updatedReport) {
+            res.status(200).json({
+                message: `Report by the id of ${updatedReport.id} has been saved.`,
+                reportDetails: updatedReport,
+                report: reportRisks,
+                choices: reportChoices
+            })
+        } else {
+            res.status(200).json({
+                message: `Report by the id of ${savedReport.id} has been saved.`,
+                reportDetails: savedReport,
+                report: reportRisks,
+                choices: reportChoices
+            })
+        }
     } else {
         res.status(400).json({
             message: "Something went wrong"
@@ -536,6 +264,13 @@ export const getReportById = async (req: Request, res: Response) => {
 }
 
 export const deleteReportById = async (req: Request, res: Response) => {
+    const destroyed = await deleteReportByIdTransaction(req);
+    if (destroyed) {
+        res.json({
+            message: `Report with the id ${req.params.id} has been deleted`
+        })
+    }
+    /*
     const idRaw = (req.params.id);
     const id = parseInt(idRaw as string)
     if (Number.isNaN(id)) {
@@ -559,6 +294,7 @@ export const deleteReportById = async (req: Request, res: Response) => {
                 message: `Report with the id ${id} has been deleted`
             })
         }
-    }
+    }*/
+
 }
 

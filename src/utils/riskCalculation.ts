@@ -66,7 +66,8 @@ type ReportChoices = {
     organizationname: string | null,
     ownerusername: string | null,
     creatorusername: string | null,
-    neworganization: Object[] | []
+    neworganization: Object[] | [],
+    reportstatus: string | null
 
 }
 
@@ -95,7 +96,8 @@ type ReportChoicesRaw = {
     organizationname: string | null | undefined,
     ownerusername: string | null | undefined,
     creatorusername: string | null | undefined,
-    neworganization: any
+    neworganization: any,
+    reportstatus: string | null
 }
 
 export const parseRiskPayload = async (req: Request, res: Response) => {
@@ -132,6 +134,7 @@ export const generateReportChoices = (choices: ReportChoicesRaw) => {
     }
     const reportChoices: ReportChoices = {
         country: choices.country ? choices.country : "",
+        reportstatus: choices.reportstatus ? choices.reportstatus : "",
         organization: organizationIds ? organizationIds : [],
         organizationtype: choices.organizationtype ? choices.organizationtype : "",
         hhrole: choices.hhrole ? choices.hhrole : "",
@@ -155,7 +158,7 @@ export const generateReportChoices = (choices: ReportChoicesRaw) => {
         organizationname: choices.organizationname ? choices.organizationname : "",
         ownerusername: choices.ownerusername ? choices.ownerusername : "",
         creatorusername: choices.creatorusername ? choices.creatorusername : "",
-        neworganization: choices.neworganization ? choices.neworganization : []
+        neworganization: choices.neworganization ? choices.neworganization : [],
     }
 
     return reportChoices;
@@ -174,6 +177,7 @@ export const getReportChoicesFromReport = async (id: number): Promise<ReportChoi
 
     const reportChoicesRaw: ReportChoicesRaw = {
         country: report.country?.code,
+        reportstatus: report.reportStatus?.code ? report.reportStatus?.code : "",
         organization: organizations,
         organizationtype: report.organizationType?.code,
         hhrole: report.hhrole?.code,
@@ -368,14 +372,14 @@ export const validateRiskOptions = async (req: Request, res: Response): Promise<
             return null;
         }
         fundingExchangeId = fundingExchange?.id;
-        const fundingHistoryCode = req.body.exchange;
+        const fundingHistoryCode = req.body.fundinghistory;
         const fundingHistory = await repository.findFundingHistoryByCode(fundingHistoryCode)
         if (!fundingHistory) {
             res.status(404).json({ message: `Code ${fundingHistoryCode} is invalid for field fundinghistory` })
             return null;
         }
         fundingHistoryId = fundingHistory?.id;
-        const fundingSourceCode = req.body.exchange;
+        const fundingSourceCode = req.body.fundingsource;
         const fundingSource = await repository.findFundingSourceByCode(fundingSourceCode)
         if (!fundingSource) {
             res.status(404).json({ message: `Code ${fundingSourceCode} is invalid for field fundingsource` })
@@ -493,6 +497,13 @@ export const calculateRisk = async (req: Request, res: Response, reportChoiceIds
     const collaborationTypeCodes = await validateCollaboration(res, collaborationtype)
     const dualUseRisk = calculateDualUseRisk(dualuse);
     let countryRisk = await calculateCountryRisk(country, personalinformation);
+    //Highest risk of member Country is used for multilateral collaboration if Haaga-Helia is the collaboration coordinator
+    if (hhrole === "option1" && consortium === "option2") {
+        const highestRisk = await calculateCountryRiskHighest(organization, personalinformation);
+        if (highestRisk.risk) {
+            countryRisk = highestRisk.risk;
+        }
+    }
     const ethicsRisk = calculateEthicsRisk(ethics);
     const financialRisk = calculateFinancialRisk(liability, funding, exchange, fundinghistory, fundingsource);
     const collaborationRisk = await calculateCollaborationRisk(countryRisk, collaborationTypeCodes, duration, hhrole, contract, history, consortium, reportChoiceIds.organizationIds, personalinformation)
@@ -503,16 +514,7 @@ export const calculateRisk = async (req: Request, res: Response, reportChoiceIds
     let additionalinformationOptional = "";
     let organizationNameOptional = "";
 
-    //Highest risk of member Country is used for multilateral collaboration if if Haaga-Helia is the collaboratin coordinator
-    //Currently the Country calculation is based on is selected by user, uncomment to enable this instead
-    /*
-    if (hhrole === "option1" && consortium === "option2") {
-        const highestRisk = await calculateCountryRiskHighest(organization, personalinformation);
-        if (highestRisk) {
-            countryRisk = highestRisk
-        }
-    }
-    */
+
 
     if (collaborationtype.includes("option7")) { //Collaboration description is added if option "other" is chosen
         collaborationtypeOptional = collaborationtypeother;
@@ -704,24 +706,33 @@ export const getReportRisksFromReportSnapshot = (reportSnapshot: ReportSnapshot)
     return reportRisks;
 }
 
-const calculateCountryRiskHighest = async (organizationRaw: any, personal: any) => {
+
+const calculateCountryRiskHighest = async (organizationRaw: any, personal: any): Promise<{ countryCode: string, risk: CountryRisk | null }> => {
     const organizations = Array.isArray(organizationRaw) ? organizationRaw : [organizationRaw];
     let riskHighest = null;
+    let countryCode = "";
     for (let i = 0; i < organizations.length; i++) {
-        const organization = await repository.findOrganizationById(organizationRaw)
+        const organization = await repository.findOrganizationById(organizationRaw[i])
         if (organization) {
             const risk = await calculateCountryRisk(organization.country_code, personal);
             if (risk.overall === 3) {
-                return risk;
-
+                countryCode = organization.country_code;
+                riskHighest = risk;
+                break
             } else if (!riskHighest) {
+                countryCode = organization.country_code;
                 riskHighest = risk;
             } else if (risk.overall > riskHighest.overall) {
+                countryCode = organization.country_code;
                 riskHighest = risk;
             }
         }
     }
-    return riskHighest;
+    return {
+        countryCode: countryCode,
+        risk: riskHighest
+    }
+
 }
 
 const countConsortiumCountries = async (organizationRaw: any) => {

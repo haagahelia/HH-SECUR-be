@@ -3235,8 +3235,8 @@ export const organizations = [
     },
     {
         code: "IAU-020695",
-        fi: "University of Bihać",
-        en: "University of Bihać",
+        fi: "University of Bihac",
+        en: "University of Bihac",
         country_code: "BIH"
     },
     {
@@ -8536,7 +8536,7 @@ export const organizations = [
         fi: "University of Teacher Education Zürich",
         en: "University of Teacher Education Zürich",
         country_code: "CHE"
-    },
+    }, 
     {
         code: "IAU-024254",
         fi: "Zurich University of Applied Sciences",
@@ -14209,8 +14209,8 @@ export const organizations = [
     },
     {
         code: "IAU-009860",
-        fi: "Janáček Academy of Music and Performing Arts Brno",
-        en: "Janáček Academy of Music and Performing Arts Brno",
+        fi: "Janácek Academy of Music and Performing Arts Brno",
+        en: "Janácek Academy of Music and Performing Arts Brno",
         country_code: "CZE"
     },
     {
@@ -21085,8 +21085,8 @@ export const organizations = [
     },
     {
         code: "IAU-020841",
-        fi: "Polytechnic Marko Marulić in Knin",
-        en: "Polytechnic Marko Marulić in Knin",
+        fi: "Polytechnic Marko Marulic in Knin",
+        en: "Polytechnic Marko Marulic in Knin",
         country_code: "HRV"
     },
     {
@@ -21109,8 +21109,8 @@ export const organizations = [
     },
     {
         code: "IAU-020932",
-        fi: "University of Applied Sciences Baltazar Zaprešić",
-        en: "University of Applied Sciences Baltazar Zaprešić",
+        fi: "University of Applied Sciences Baltazar Zaprešic",
+        en: "University of Applied Sciences Baltazar Zaprešic",
         country_code: "HRV"
     },
     {
@@ -34483,8 +34483,8 @@ export const organizations = [
     },
     {
         code: "IAU-022872",
-        fi: "Kazimieras Simonavičius University",
-        en: "Kazimieras Simonavičius University",
+        fi: "Kazimieras Simonavicius University",
+        en: "Kazimieras Simonavicius University",
         country_code: "LTU"
     },
     {
@@ -34537,8 +34537,8 @@ export const organizations = [
     },
     {
         code: "IAU-009884",
-        fi: "Jāzeps Vītols Latvian Academy of Music",
-        en: "Jāzeps Vītols Latvian Academy of Music",
+        fi: "Jazeps Vitols Latvian Academy of Music",
+        en: "Jazeps Vitols Latvian Academy of Music",
         country_code: "LVA"
     },
     {
@@ -34555,8 +34555,8 @@ export const organizations = [
     },
     {
         code: "IAU-014003",
-        fi: "Riga Stradiņš University",
-        en: "Riga Stradiņš University",
+        fi: "Riga Stradinš University",
+        en: "Riga Stradinš University",
         country_code: "LVA"
     },
     {
@@ -34975,8 +34975,8 @@ export const organizations = [
     },
     {
         code: "IAU-019410",
-        fi: "Alecu Russo State University of Bălti",
-        en: "Alecu Russo State University of Bălti",
+        fi: "Alecu Russo State University of Balti",
+        en: "Alecu Russo State University of Balti",
         country_code: "MDA"
     },
     {
@@ -36961,8 +36961,8 @@ export const organizations = [
     },
     {
         code: "IAU-023495",
-        fi: "International University",
-        en: "International University",
+        fi: "International University 2",
+        en: "International University 2",
         country_code: "MEX"
     },
     {
@@ -41911,38 +41911,38 @@ export const organizations = [
     },
     {
         code: "IAU-028944-002787",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Ara Institute of Canterbury",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Ara Institute of Canterbury",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Ara Institute of Canterbury",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Ara Institute of Canterbury",
         country_code: "NZL"
     },
     {
         code: "IAU-028944-013186",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Otago Polytechnic",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Otago Polytechnic",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Otago Polytechnic",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Otago Polytechnic",
         country_code: "NZL"
     },
     {
         code: "IAU-028944-021113",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Waikato Institute of Technology",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Waikato Institute of Technology",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Waikato Institute of Technology",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Waikato Institute of Technology",
         country_code: "NZL"
     },
     {
         code: "IAU-028944-003962",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Eastern Institute of Technology",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Eastern Institute of Technology",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Eastern Institute of Technology",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Eastern Institute of Technology",
         country_code: "NZL"
     },
     {
         code: "IAU-028944-012597",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Nelson Marlborough Institute of Technology",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Nelson Marlborough Institute of Technology",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Nelson Marlborough Institute of Technology",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Nelson Marlborough Institute of Technology",
         country_code: "NZL"
     },
     {
         code: "IAU-028944-017086",
-        fi: "Te Pūkenga - New Zealand Institute of Skills and Technology – Unitec New Zealand Limited",
-        en: "Te Pūkenga - New Zealand Institute of Skills and Technology – Unitec New Zealand Limited",
+        fi: "Te Pukenga - New Zealand Institute of Skills and Technology – Unitec New Zealand Limited",
+        en: "Te Pukenga - New Zealand Institute of Skills and Technology – Unitec New Zealand Limited",
         country_code: "NZL"
     },
     {
@@ -47065,8 +47065,8 @@ export const organizations = [
     },
     {
         code: "IAU-000656",
-        fi: "Polonia University in Częstochowa",
-        en: "Polonia University in Częstochowa",
+        fi: "Polonia University in Czestochowa",
+        en: "Polonia University in Czestochowa",
         country_code: "POL"
     },
     {
@@ -47077,8 +47077,8 @@ export const organizations = [
     },
     {
         code: "IAU-000661",
-        fi: "Academy of Fine Arts in Gdańsk",
-        en: "Academy of Fine Arts in Gdańsk",
+        fi: "Academy of Fine Arts in Gdansk",
+        en: "Academy of Fine Arts in Gdansk",
         country_code: "POL"
     },
     {
@@ -47101,8 +47101,8 @@ export const organizations = [
     },
     {
         code: "IAU-020717",
-        fi: "Adam Mickiewicz University in Poznań",
-        en: "Adam Mickiewicz University in Poznań",
+        fi: "Adam Mickiewicz University in Poznan",
+        en: "Adam Mickiewicz University in Poznan",
         country_code: "POL"
     },
     {
@@ -47119,8 +47119,8 @@ export const organizations = [
     },
     {
         code: "IAU-001256",
-        fi: "Ateneum University in Gdańsk",
-        en: "Ateneum University in Gdańsk",
+        fi: "Ateneum University in Gdansk",
+        en: "Ateneum University in Gdansk",
         country_code: "POL"
     },
     {
@@ -47155,8 +47155,8 @@ export const organizations = [
     },
     {
         code: "IAU-027090",
-        fi: "College of Democracy Fr. Jerzy Popiełuszko in Grudziadz",
-        en: "College of Democracy Fr. Jerzy Popiełuszko in Grudziadz",
+        fi: "College of Democracy Fr. Jerzy Popieluszko in Grudziadz",
+        en: "College of Democracy Fr. Jerzy Popieluszko in Grudziadz",
         country_code: "POL"
     },
     {
@@ -47173,8 +47173,8 @@ export const organizations = [
     },
     {
         code: "IAU-021483",
-        fi: "College of Linguistics in Częstochowa",
-        en: "College of Linguistics in Częstochowa",
+        fi: "College of Linguistics in Czestochowa",
+        en: "College of Linguistics in Czestochowa",
         country_code: "POL"
     },
     {
@@ -47203,8 +47203,8 @@ export const organizations = [
     },
     {
         code: "IAU-003058",
-        fi: "Collegium Masoviense - Higher School of Health Sciences in Żyrardów",
-        en: "Collegium Masoviense - Higher School of Health Sciences in Żyrardów",
+        fi: "Collegium Masoviense - Higher School of Health Sciences in Zyrardów",
+        en: "Collegium Masoviense - Higher School of Health Sciences in Zyrardów",
         country_code: "POL"
     },
     {
@@ -47227,8 +47227,8 @@ export const organizations = [
     },
     {
         code: "IAU-004464",
-        fi: "Elbląg University of Humanities and Economy",
-        en: "Elbląg University of Humanities and Economy",
+        fi: "Elblag University of Humanities and Economy",
+        en: "Elblag University of Humanities and Economy",
         country_code: "POL"
     },
     {
@@ -47245,14 +47245,14 @@ export const organizations = [
     },
     {
         code: "IAU-021571",
-        fi: "Gdańsk College of Health Sciences",
-        en: "Gdańsk College of Health Sciences",
+        fi: "Gdansk College of Health Sciences",
+        en: "Gdansk College of Health Sciences",
         country_code: "POL"
     },
     {
         code: "IAU-006598",
-        fi: "Gdańsk University of Humanities",
-        en: "Gdańsk University of Humanities",
+        fi: "Gdansk University of Humanities",
+        en: "Gdansk University of Humanities",
         country_code: "POL"
     },
     {
@@ -47263,14 +47263,14 @@ export const organizations = [
     },
     {
         code: "IAU-021504",
-        fi: "General Tadeusz Kościuszko Military Academy of Land Forces",
-        en: "General Tadeusz Kościuszko Military Academy of Land Forces",
+        fi: "General Tadeusz Kosciuszko Military Academy of Land Forces",
+        en: "General Tadeusz Kosciuszko Military Academy of Land Forces",
         country_code: "POL"
     },
     {
         code: "IAU-000647",
-        fi: "Grażyna and Kiejstut Bacewicz Academy of Music in Łódź",
-        en: "Grażyna and Kiejstut Bacewicz Academy of Music in Łódź",
+        fi: "Grazyna and Kiejstut Bacewicz Academy of Music in lódz",
+        en: "Grazyna and Kiejstut Bacewicz Academy of Music in lódz",
         country_code: "POL"
     },
     {
@@ -47317,8 +47317,8 @@ export const organizations = [
     },
     {
         code: "IAU-027100",
-        fi: "Higher School of Entrepreneurship named after Prince Kazimierz Kujawski in Inowrocław",
-        en: "Higher School of Entrepreneurship named after Prince Kazimierz Kujawski in Inowrocław",
+        fi: "Higher School of Entrepreneurship named after Prince Kazimierz Kujawski in Inowroclaw",
+        en: "Higher School of Entrepreneurship named after Prince Kazimierz Kujawski in Inowroclaw",
         country_code: "POL"
     },
     {
@@ -47329,8 +47329,8 @@ export const organizations = [
     },
     {
         code: "IAU-021446",
-        fi: "Higher School of Humanities King Stanisław Leszczyński in Leszno",
-        en: "Higher School of Humanities King Stanisław Leszczyński in Leszno",
+        fi: "Higher School of Humanities King Stanislaw Leszczynski in Leszno",
+        en: "Higher School of Humanities King Stanislaw Leszczynski in Leszno",
         country_code: "POL"
     },
     {
@@ -47341,8 +47341,8 @@ export const organizations = [
     },
     {
         code: "IAU-021530",
-        fi: "Higher School of International Relations and Social Communications in Chełm",
-        en: "Higher School of International Relations and Social Communications in Chełm",
+        fi: "Higher School of International Relations and Social Communications in Chelm",
+        en: "Higher School of International Relations and Social Communications in Chelm",
         country_code: "POL"
     },
     {
@@ -47359,8 +47359,8 @@ export const organizations = [
     },
     {
         code: "IAU-021560",
-        fi: "Higher School of Management and Coaching in Wrocław",
-        en: "Higher School of Management and Coaching in Wrocław",
+        fi: "Higher School of Management and Coaching in Wroclaw",
+        en: "Higher School of Management and Coaching in Wroclaw",
         country_code: "POL"
     },
     {
@@ -47413,8 +47413,8 @@ export const organizations = [
     },
     {
         code: "IAU-021580",
-        fi: "Higher Vocational School of Health and Beauty Treatment in Poznań",
-        en: "Higher Vocational School of Health and Beauty Treatment in Poznań",
+        fi: "Higher Vocational School of Health and Beauty Treatment in Poznan",
+        en: "Higher Vocational School of Health and Beauty Treatment in Poznan",
         country_code: "POL"
     },
     {
@@ -47431,20 +47431,20 @@ export const organizations = [
     },
     {
         code: "IAU-000648",
-        fi: "I.J. Paderewski Academy of Music in Poznań",
-        en: "I.J. Paderewski Academy of Music in Poznań",
+        fi: "I.J. Paderewski Academy of Music in Poznan",
+        en: "I.J. Paderewski Academy of Music in Poznan",
         country_code: "POL"
     },
     {
         code: "IAU-021380",
-        fi: "International Academy of Applied Sciences in Łomża",
-        en: "International Academy of Applied Sciences in Łomża",
+        fi: "International Academy of Applied Sciences in lomza",
+        en: "International Academy of Applied Sciences in lomza",
         country_code: "POL"
     },
     {
         code: "IAU-011985",
-        fi: "International University of Logistics and Transport, Wrocław",
-        en: "International University of Logistics and Transport, Wrocław",
+        fi: "International University of Logistics and Transport, Wroclaw",
+        en: "International University of Logistics and Transport, Wroclaw",
         country_code: "POL"
     },
     {
@@ -47455,8 +47455,8 @@ export const organizations = [
     },
     {
         code: "IAU-000640",
-        fi: "Jan Dlugosz University in Częstochowa",
-        en: "Jan Dlugosz University in Częstochowa",
+        fi: "Jan Dlugosz University in Czestochowa",
+        en: "Jan Dlugosz University in Czestochowa",
         country_code: "POL"
     },
     {
@@ -47467,20 +47467,20 @@ export const organizations = [
     },
     {
         code: "IAU-003809",
-        fi: "Jan Wyżykowski University",
-        en: "Jan Wyżykowski University",
+        fi: "Jan Wyzykowski University",
+        en: "Jan Wyzykowski University",
         country_code: "POL"
     },
     {
         code: "IAU-021565",
-        fi: "Jański University in Łomża",
-        en: "Jański University in Łomża",
+        fi: "Janski University in lomza",
+        en: "Janski University in lomza",
         country_code: "POL"
     },
     {
         code: "IAU-000667",
-        fi: "Jędrzej Śniadecki Academy of Physical Education and Sport in Gdańsk",
-        en: "Jędrzej Śniadecki Academy of Physical Education and Sport in Gdańsk",
+        fi: "Jedrzej Sniadecki Academy of Physical Education and Sport in Gdansk",
+        en: "Jedrzej Sniadecki Academy of Physical Education and Sport in Gdansk",
         country_code: "POL"
     },
     {
@@ -47539,8 +47539,8 @@ export const organizations = [
     },
     {
         code: "IAU-021473",
-        fi: "Linguistic and Technical University in Świecie",
-        en: "Linguistic and Technical University in Świecie",
+        fi: "Linguistic and Technical University in Swiecie",
+        en: "Linguistic and Technical University in Swiecie",
         country_code: "POL"
     },
     {
@@ -47563,14 +47563,14 @@ export const organizations = [
     },
     {
         code: "IAU-020721",
-        fi: "Marie Curie-Skłodowska University",
-        en: "Marie Curie-Skłodowska University",
+        fi: "Marie Curie-Sklodowska University",
+        en: "Marie Curie-Sklodowska University",
         country_code: "POL"
     },
     {
         code: "IAU-011478",
-        fi: "Małopolska Higher School Józef Dietla in Cracow",
-        en: "Małopolska Higher School Józef Dietla in Cracow",
+        fi: "Malopolska Higher School Józef Dietla in Cracow",
+        en: "Malopolska Higher School Józef Dietla in Cracow",
         country_code: "POL"
     },
     {
@@ -47599,14 +47599,14 @@ export const organizations = [
     },
     {
         code: "IAU-021510",
-        fi: "Mieszko I College of Education and Administration in Poznań",
-        en: "Mieszko I College of Education and Administration in Poznań",
+        fi: "Mieszko I College of Education and Administration in Poznan",
+        en: "Mieszko I College of Education and Administration in Poznan",
         country_code: "POL"
     },
     {
         code: "IAU-020726",
-        fi: "Nicolaus Copernicus University in Toruń",
-        en: "Nicolaus Copernicus University in Toruń",
+        fi: "Nicolaus Copernicus University in Torun",
+        en: "Nicolaus Copernicus University in Torun",
         country_code: "POL"
     },
     {
@@ -47623,8 +47623,8 @@ export const organizations = [
     },
     {
         code: "IAU-016048",
-        fi: "Pawel Wlodkowic University College, Płock",
-        en: "Pawel Wlodkowic University College, Płock",
+        fi: "Pawel Wlodkowic University College, Plock",
+        en: "Pawel Wlodkowic University College, Plock",
         country_code: "POL"
     },
     {
@@ -47635,14 +47635,14 @@ export const organizations = [
     },
     {
         code: "IAU-013547",
-        fi: "Podkarpackie College Bl. Fr. Władysław Findysz in Jasło",
-        en: "Podkarpackie College Bl. Fr. Władysław Findysz in Jasło",
+        fi: "Podkarpackie College Bl. Fr. Wladyslaw Findysz in Jaslo",
+        en: "Podkarpackie College Bl. Fr. Wladyslaw Findysz in Jaslo",
         country_code: "POL"
     },
     {
         code: "IAU-023414",
-        fi: "Polish Air Force University in Dęblin",
-        en: "Polish Air Force University in Dęblin",
+        fi: "Polish Air Force University in Deblin",
+        en: "Polish Air Force University in Deblin",
         country_code: "POL"
     },
     {
@@ -47659,8 +47659,8 @@ export const organizations = [
     },
     {
         code: "IAU-013642",
-        fi: "Pomeranian Higher School, Starogard Gdański",
-        en: "Pomeranian Higher School, Starogard Gdański",
+        fi: "Pomeranian Higher School, Starogard Gdanski",
+        en: "Pomeranian Higher School, Starogard Gdanski",
         country_code: "POL"
     },
     {
@@ -47671,8 +47671,8 @@ export const organizations = [
     },
     {
         code: "IAU-020713",
-        fi: "Poznań University of Economics and Business",
-        en: "Poznań University of Economics and Business",
+        fi: "Poznan University of Economics and Business",
+        en: "Poznan University of Economics and Business",
         country_code: "POL"
     },
     {
@@ -47701,8 +47701,8 @@ export const organizations = [
     },
     {
         code: "IAU-021471",
-        fi: "Samuela Bogumiła Lindego College of Foreign Languages",
-        en: "Samuela Bogumiła Lindego College of Foreign Languages",
+        fi: "Samuela Bogumila Lindego College of Foreign Languages",
+        en: "Samuela Bogumila Lindego College of Foreign Languages",
         country_code: "POL"
     },
     {
@@ -47725,20 +47725,20 @@ export const organizations = [
     },
     {
         code: "IAU-013347",
-        fi: "Stanislaw Staszic University of Applied Sciences in Piła",
-        en: "Stanislaw Staszic University of Applied Sciences in Piła",
+        fi: "Stanislaw Staszic University of Applied Sciences in Pila",
+        en: "Stanislaw Staszic University of Applied Sciences in Pila",
         country_code: "POL"
     },
     {
         code: "IAU-000651",
-        fi: "Stanisław Moniuszko Academy of Music in Gdansk",
-        en: "Stanisław Moniuszko Academy of Music in Gdansk",
+        fi: "Stanislaw Moniuszko Academy of Music in Gdansk",
+        en: "Stanislaw Moniuszko Academy of Music in Gdansk",
         country_code: "POL"
     },
     {
         code: "IAU-013352",
-        fi: "State Higher Vocational School in Elbląg",
-        en: "State Higher Vocational School in Elbląg",
+        fi: "State Higher Vocational School in Elblag",
+        en: "State Higher Vocational School in Elblag",
         country_code: "POL"
     },
     {
@@ -47749,14 +47749,14 @@ export const organizations = [
     },
     {
         code: "IAU-013369",
-        fi: "State Higher Vocational School in Włocławek",
-        en: "State Higher Vocational School in Włocławek",
+        fi: "State Higher Vocational School in Wloclawek",
+        en: "State Higher Vocational School in Wloclawek",
         country_code: "POL"
     },
     {
         code: "IAU-013358",
-        fi: "State Higher Vocational School Stanisława Pigonia in Krosno",
-        en: "State Higher Vocational School Stanisława Pigonia in Krosno",
+        fi: "State Higher Vocational School Stanislawa Pigonia in Krosno",
+        en: "State Higher Vocational School Stanislawa Pigonia in Krosno",
         country_code: "POL"
     },
     {
@@ -47767,8 +47767,8 @@ export const organizations = [
     },
     {
         code: "IAU-013359",
-        fi: "State University of Applied Sciences in Nowy Sącz",
-        en: "State University of Applied Sciences in Nowy Sącz",
+        fi: "State University of Applied Sciences in Nowy Sacz",
+        en: "State University of Applied Sciences in Nowy Sacz",
         country_code: "POL"
     },
     {
@@ -47779,8 +47779,8 @@ export const organizations = [
     },
     {
         code: "IAU-020802",
-        fi: "Świętokrzyska Higher School in Kielce",
-        en: "Świętokrzyska Higher School in Kielce",
+        fi: "Swietokrzyska Higher School in Kielce",
+        en: "Swietokrzyska Higher School in Kielce",
         country_code: "POL"
     },
     {
@@ -47797,14 +47797,14 @@ export const organizations = [
     },
     {
         code: "IAU-016047",
-        fi: "The Bogdan Jański Academy",
-        en: "The Bogdan Jański Academy",
+        fi: "The Bogdan Janski Academy",
+        en: "The Bogdan Janski Academy",
         country_code: "POL"
     },
     {
         code: "IAU-013339",
-        fi: "The Bronisław Markiewicz State Higher School of Technology and Economics in Jarosław",
-        en: "The Bronisław Markiewicz State Higher School of Technology and Economics in Jarosław",
+        fi: "The Bronislaw Markiewicz State Higher School of Technology and Economics in Jaroslaw",
+        en: "The Bronislaw Markiewicz State Higher School of Technology and Economics in Jaroslaw",
         country_code: "POL"
     },
     {
@@ -47977,20 +47977,20 @@ export const organizations = [
     },
     {
         code: "IAU-013344",
-        fi: "The President Stanisław Wojciechowski State University of Applied Sciences in Kalisz",
-        en: "The President Stanisław Wojciechowski State University of Applied Sciences in Kalisz",
+        fi: "The President Stanislaw Wojciechowski State University of Applied Sciences in Kalisz",
+        en: "The President Stanislaw Wojciechowski State University of Applied Sciences in Kalisz",
         country_code: "POL"
     },
     {
         code: "IAU-013335",
-        fi: "The State Higher School Pope John Paul II in Biała Podlaska",
-        en: "The State Higher School Pope John Paul II in Biała Podlaska",
+        fi: "The State Higher School Pope John Paul II in Biala Podlaska",
+        en: "The State Higher School Pope John Paul II in Biala Podlaska",
         country_code: "POL"
     },
     {
         code: "IAU-013361",
-        fi: "The State School of Higher Professional Education in Płock",
-        en: "The State School of Higher Professional Education in Płock",
+        fi: "The State School of Higher Professional Education in Plock",
+        en: "The State School of Higher Professional Education in Plock",
         country_code: "POL"
     },
     {
@@ -48037,8 +48037,8 @@ export const organizations = [
     },
     {
         code: "IAU-020741-027271",
-        fi: "University of Białystok – University of Bialystok Faculty of Economics and Informatics",
-        en: "University of Białystok – University of Bialystok Faculty of Economics and Informatics",
+        fi: "University of Bialystok – University of Bialystok Faculty of Economics and Informatics",
+        en: "University of Bialystok – University of Bialystok Faculty of Economics and Informatics",
         country_code: "POL"
     },
     {
@@ -48085,14 +48085,14 @@ export const organizations = [
     },
     {
         code: "IAU-021424",
-        fi: "University of Finance and Computer Science Prof. Janusz Chechliński in Łódź",
-        en: "University of Finance and Computer Science Prof. Janusz Chechliński in Łódź",
+        fi: "University of Finance and Computer Science Prof. Janusz Chechlinski in lódz",
+        en: "University of Finance and Computer Science Prof. Janusz Chechlinski in lódz",
         country_code: "POL"
     },
     {
         code: "IAU-020715",
-        fi: "University of Gdańsk",
-        en: "University of Gdańsk",
+        fi: "University of Gdansk",
+        en: "University of Gdansk",
         country_code: "POL"
     },
     {
@@ -48145,8 +48145,8 @@ export const organizations = [
     },
     {
         code: "IAU-020710",
-        fi: "University of the Arts Poznań",
-        en: "University of the Arts Poznań",
+        fi: "University of the Arts Poznan",
+        en: "University of the Arts Poznan",
         country_code: "POL"
     },
     {
@@ -48157,8 +48157,8 @@ export const organizations = [
     },
     {
         code: "IAU-020744",
-        fi: "University of Wrocław",
-        en: "University of Wrocław",
+        fi: "University of Wroclaw",
+        en: "University of Wroclaw",
         country_code: "POL"
     },
     {
@@ -48223,8 +48223,8 @@ export const organizations = [
     },
     {
         code: "IAU-021150",
-        fi: "Wałbrzych Higher School of Management and Enterprise",
-        en: "Wałbrzych Higher School of Management and Enterprise",
+        fi: "Walbrzych Higher School of Management and Enterprise",
+        en: "Walbrzych Higher School of Management and Enterprise",
         country_code: "POL"
     },
     {
@@ -48241,14 +48241,14 @@ export const organizations = [
     },
     {
         code: "IAU-021346",
-        fi: "Wrocław School of Information Technology 'Horyzont'",
-        en: "Wrocław School of Information Technology 'Horyzont'",
+        fi: "Wroclaw School of Information Technology 'Horyzont'",
+        en: "Wroclaw School of Information Technology 'Horyzont'",
         country_code: "POL"
     },
     {
         code: "IAU-020734",
-        fi: "Wrocław University of Environmental and Life Sciences",
-        en: "Wrocław University of Environmental and Life Sciences",
+        fi: "Wroclaw University of Environmental and Life Sciences",
+        en: "Wroclaw University of Environmental and Life Sciences",
         country_code: "POL"
     },
     {
@@ -48265,14 +48265,14 @@ export const organizations = [
     },
     {
         code: "IAU-021384",
-        fi: "WSB University in Toruń",
-        en: "WSB University in Toruń",
+        fi: "WSB University in Torun",
+        en: "WSB University in Torun",
         country_code: "POL"
     },
     {
         code: "IAU-021385",
-        fi: "WSB University in Wrocław",
-        en: "WSB University in Wrocław",
+        fi: "WSB University in Wroclaw",
+        en: "WSB University in Wroclaw",
         country_code: "POL"
     },
     {
@@ -48283,8 +48283,8 @@ export const organizations = [
     },
     {
         code: "IAU-016973",
-        fi: "Łazarski University",
-        en: "Łazarski University",
+        fi: "lazarski University",
+        en: "lazarski University",
         country_code: "POL"
     },
     {
@@ -49123,8 +49123,8 @@ export const organizations = [
     },
     {
         code: "IAU-019382",
-        fi: "Alexandru Ioan Cuza University of Iaşi",
-        en: "Alexandru Ioan Cuza University of Iaşi",
+        fi: "Alexandru Ioan Cuza University of Iasi",
+        en: "Alexandru Ioan Cuza University of Iasi",
         country_code: "ROU"
     },
     {
@@ -49141,8 +49141,8 @@ export const organizations = [
     },
     {
         code: "IAU-019454",
-        fi: "Petre Andrei University of Iaşi",
-        en: "Petre Andrei University of Iaşi",
+        fi: "Petre Andrei University of Iasi",
+        en: "Petre Andrei University of Iasi",
         country_code: "ROU"
     },
     {
@@ -49153,8 +49153,8 @@ export const organizations = [
     },
     {
         code: "IAU-019421",
-        fi: "West University of Timişoara",
-        en: "West University of Timişoara",
+        fi: "West University of Timisoara",
+        en: "West University of Timisoara",
         country_code: "ROU"
     },
     {
@@ -49165,8 +49165,8 @@ export const organizations = [
     },
     {
         code: "IAU-019384",
-        fi: "Apollonia University of Iaşi",
-        en: "Apollonia University of Iaşi",
+        fi: "Apollonia University of Iasi",
+        en: "Apollonia University of Iasi",
         country_code: "ROU"
     },
     {
@@ -49183,14 +49183,14 @@ export const organizations = [
     },
     {
         code: "IAU-019423",
-        fi: "Banat University of Agricultural Sciences and Veterinary Medicine of Timişoara",
-        en: "Banat University of Agricultural Sciences and Veterinary Medicine of Timişoara",
+        fi: "Banat University of Agricultural Sciences and Veterinary Medicine of Timisoara",
+        en: "Banat University of Agricultural Sciences and Veterinary Medicine of Timisoara",
         country_code: "ROU"
     },
     {
         code: "IAU-019391",
-        fi: "Bogdan-Vodă University of Cluj-Napoca",
-        en: "Bogdan-Vodă University of Cluj-Napoca",
+        fi: "Bogdan-Voda University of Cluj-Napoca",
+        en: "Bogdan-Voda University of Cluj-Napoca",
         country_code: "ROU"
     },
     {
@@ -49201,8 +49201,8 @@ export const organizations = [
     },
     {
         code: "IAU-019393",
-        fi: "Constantin Brâncuşi University of Târgu-Jiu",
-        en: "Constantin Brâncuşi University of Târgu-Jiu",
+        fi: "Constantin Brâncusi University of Târgu-Jiu",
+        en: "Constantin Brâncusi University of Târgu-Jiu",
         country_code: "ROU"
     },
     {
@@ -49213,8 +49213,8 @@ export const organizations = [
     },
     {
         code: "IAU-019438",
-        fi: "Drăgan European University of Lugoj",
-        en: "Drăgan European University of Lugoj",
+        fi: "Dragan European University of Lugoj",
+        en: "Dragan European University of Lugoj",
         country_code: "ROU"
     },
     {
@@ -49225,14 +49225,14 @@ export const organizations = [
     },
     {
         code: "IAU-019440",
-        fi: "George Bacovia University of Bacău",
-        en: "George Bacovia University of Bacău",
+        fi: "George Bacovia University of Bacau",
+        en: "George Bacovia University of Bacau",
         country_code: "ROU"
     },
     {
         code: "IAU-019402",
-        fi: "George Enescu National University of Arts of Iaşi",
-        en: "George Enescu National University of Arts of Iaşi",
+        fi: "George Enescu National University of Arts of Iasi",
+        en: "George Enescu National University of Arts of Iasi",
         country_code: "ROU"
     },
     {
@@ -49285,8 +49285,8 @@ export const organizations = [
     },
     {
         code: "IAU-019455",
-        fi: "Petroleum and Gas University of Ploieşti",
-        en: "Petroleum and Gas University of Ploieşti",
+        fi: "Petroleum and Gas University of Ploiesti",
+        en: "Petroleum and Gas University of Ploiesti",
         country_code: "ROU"
     },
     {
@@ -49309,14 +49309,14 @@ export const organizations = [
     },
     {
         code: "IAU-019470",
-        fi: "Tibiscus University of Timişoara",
-        en: "Tibiscus University of Timişoara",
+        fi: "Tibiscus University of Timisoara",
+        en: "Tibiscus University of Timisoara",
         country_code: "ROU"
     },
     {
         code: "IAU-019472",
-        fi: "Transylvania University of Braşov",
-        en: "Transylvania University of Braşov",
+        fi: "Transylvania University of Brasov",
+        en: "Transylvania University of Brasov",
         country_code: "ROU"
     },
     {
@@ -49339,14 +49339,14 @@ export const organizations = [
     },
     {
         code: "IAU-019432",
-        fi: "University of Petroşani",
-        en: "University of Petroşani",
+        fi: "University of Petrosani",
+        en: "University of Petrosani",
         country_code: "ROU"
     },
     {
         code: "IAU-019475",
-        fi: "Vasile Alecsandri University of Bacău",
-        en: "Vasile Alecsandri University of Bacău",
+        fi: "Vasile Alecsandri University of Bacau",
+        en: "Vasile Alecsandri University of Bacau",
         country_code: "ROU"
     },
     {
@@ -50479,8 +50479,8 @@ export const organizations = [
     },
     {
         code: "IAU-014028",
-        fi: "Rjazan State University of Agrotechnology named after P.A. Kostyčev",
-        en: "Rjazan State University of Agrotechnology named after P.A. Kostyčev",
+        fi: "Rjazan State University of Agrotechnology named after P.A. Kostycev",
+        en: "Rjazan State University of Agrotechnology named after P.A. Kostycev",
         country_code: "RUS"
     },
     {
@@ -53839,8 +53839,8 @@ export const organizations = [
     },
     {
         code: "IAU-024820",
-        fi: "Adana Alparslan Türkeş Science and Technology University",
-        en: "Adana Alparslan Türkeş Science and Technology University",
+        fi: "Adana Alparslan Türkes Science and Technology University",
+        en: "Adana Alparslan Türkes Science and Technology University",
         country_code: "TUR"
     },
     {
@@ -53929,8 +53929,8 @@ export const organizations = [
     },
     {
         code: "IAU-001665",
-        fi: "Bilecik Şeyh Edebali University",
-        en: "Bilecik Şeyh Edebali University",
+        fi: "Bilecik Seyh Edebali University",
+        en: "Bilecik Seyh Edebali University",
         country_code: "TUR"
     },
     {
@@ -53941,8 +53941,8 @@ export const organizations = [
     },
     {
         code: "IAU-001741",
-        fi: "Boğaziçi University",
-        en: "Boğaziçi University",
+        fi: "Bogaziçi University",
+        en: "Bogaziçi University",
         country_code: "TUR"
     },
     {
@@ -53953,8 +53953,8 @@ export const organizations = [
     },
     {
         code: "IAU-017019",
-        fi: "Bursa Uludağ University",
-        en: "Bursa Uludağ University",
+        fi: "Bursa Uludag University",
+        en: "Bursa Uludag University",
         country_code: "TUR"
     },
     {
@@ -54025,8 +54025,8 @@ export const organizations = [
     },
     {
         code: "IAU-006890",
-        fi: "Gümüşhane University",
-        en: "Gümüşhane University",
+        fi: "Gümüshane University",
+        en: "Gümüshane University",
         country_code: "TUR"
     },
     {
@@ -54049,14 +54049,14 @@ export const organizations = [
     },
     {
         code: "IAU-009726",
-        fi: "Ìğdir University",
-        en: "Ìğdir University",
+        fi: "Ìgdir University",
+        en: "Ìgdir University",
         country_code: "TUR"
     },
     {
         code: "IAU-009727",
-        fi: "Işik University",
-        en: "Işik University",
+        fi: "Isik University",
+        en: "Isik University",
         country_code: "TUR"
     },
     {
@@ -54091,8 +54091,8 @@ export const organizations = [
     },
     {
         code: "IAU-009655",
-        fi: "Istanbul Gelişim University",
-        en: "Istanbul Gelişim University",
+        fi: "Istanbul Gelisim University",
+        en: "Istanbul Gelisim University",
         country_code: "TUR"
     },
     {
@@ -54139,8 +54139,8 @@ export const organizations = [
     },
     {
         code: "IAU-010050",
-        fi: "Kahramanmaraş Sütçü Imam University",
-        en: "Kahramanmaraş Sütçü Imam University",
+        fi: "Kahramanmaras Sütçü Imam University",
+        en: "Kahramanmaras Sütçü Imam University",
         country_code: "TUR"
     },
     {
@@ -54163,8 +54163,8 @@ export const organizations = [
     },
     {
         code: "IAU-000187",
-        fi: "Kırşehir Ahi Evran University",
-        en: "Kırşehir Ahi Evran University",
+        fi: "Kırsehir Ahi Evran University",
+        en: "Kırsehir Ahi Evran University",
         country_code: "TUR"
     },
     {
@@ -54223,8 +54223,8 @@ export const organizations = [
     },
     {
         code: "IAU-012746",
-        fi: "Niğde Ömer Halisdemir University",
-        en: "Niğde Ömer Halisdemir University",
+        fi: "Nigde Ömer Halisdemir University",
+        en: "Nigde Ömer Halisdemir University",
         country_code: "TUR"
     },
     {
@@ -54241,14 +54241,14 @@ export const organizations = [
     },
     {
         code: "IAU-013224",
-        fi: "Özyeğin University",
-        en: "Özyeğin University",
+        fi: "Özyegin University",
+        en: "Özyegin University",
         country_code: "TUR"
     },
     {
         code: "IAU-014027",
-        fi: "Recep Tayyip Erdoğan University",
-        en: "Recep Tayyip Erdoğan University",
+        fi: "Recep Tayyip Erdogan University",
+        en: "Recep Tayyip Erdogan University",
         country_code: "TUR"
     },
     {
@@ -56737,8 +56737,8 @@ export const organizations = [
     },
     {
         code: "IAU-011017",
-        fi: "Loma Linda University",
-        en: "Loma Linda University",
+        fi: "Loma Linda University 2",
+        en: "Loma Linda University 2",
         country_code: "USA"
     },
     {
@@ -59851,8 +59851,8 @@ export const organizations = [
     },
     {
         code: "IAU-010985",
-        fi: "Lincoln University",
-        en: "Lincoln University",
+        fi: "Lincoln University 3",
+        en: "Lincoln University 3",
         country_code: "USA"
     },
     {
@@ -61699,8 +61699,8 @@ export const organizations = [
     },
     {
         code: "IAU-010986",
-        fi: "Lincoln University",
-        en: "Lincoln University",
+        fi: "Lincoln University 4",
+        en: "Lincoln University 4",
         country_code: "USA"
     },
     {
@@ -62869,8 +62869,8 @@ export const organizations = [
     },
     {
         code: "IAU-029636",
-        fi: "West Coast University",
-        en: "West Coast University",
+        fi: "West Coast University 2",
+        en: "West Coast University 2",
         country_code: "USA"
     },
     {
@@ -63553,8 +63553,8 @@ export const organizations = [
     },
     {
         code: "IAU-011389",
-        fi: "Marian University",
-        en: "Marian University",
+        fi: "Marian University 2",
+        en: "Marian University 2",
         country_code: "USA"
     },
     {
@@ -65249,4 +65249,5 @@ export const organizations = [
         en: "Other",
         country_code: "OTH"
     }
+    
 ]
