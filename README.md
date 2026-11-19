@@ -2475,8 +2475,6 @@ Requires:
 
 <details>
 
-<details>
-
 <summary>
 
 **/reports/{id}/status** - PATCH: Set new status for report
@@ -2500,6 +2498,24 @@ Valid values #description after:
 ```
 status: option1 | option2 | option3 | option4 | option5 # Suunniteltu / Planned | Hyväksytty/Accepted | Hylätty/Rejected | | Käynnissä/In Progress | Valmis/Finished
 ```
+
+Example response:
+
+```
+{
+    "message": "Report 2 status set to option2",
+    "details": {
+        "report": {
+            "name": "Example report",
+            "status": {
+                "fi": "Hyväksytty",
+                "en": "Accepted"
+            }
+        }
+    }
+}
+```
+
 
 </details>
 
