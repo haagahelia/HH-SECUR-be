@@ -298,3 +298,54 @@ export const deleteReportById = async (req: Request, res: Response) => {
 
 }
 
+export const setReportStatus = async (req: Request, res: Response) => {
+    const idRaw = (req.params.id);
+    const id = parseInt(idRaw as string);
+    if (Number.isNaN(id)) {
+        res.status(400).json({
+            message: `Requested id ${idRaw} is not a number`
+        })
+        return;
+    }
+
+    const report = await repository.findReportById(id);
+    if (!report) {
+        res.status(404).json({
+            message: `Repost by the id of ${id} does not exist`
+        })
+        return;
+    }
+
+    const status = req.body.status
+    if (!status) {
+        res.status(400).json({
+            message: `Field missing from request: status`
+        })
+        return;
+    }
+
+    const validStatus = await repository.findReportStatusByCode(status);
+    if (!validStatus) {
+        res.status(422).json({
+            message: `Code ${status} is invalid for field status`
+        })
+        return;
+    }
+
+    report.set({"reportStatusId" : validStatus.id})
+
+    await report.save();
+
+    res.status(200).json({
+        message: `Report ${report.id} status set to ${validStatus.code}`,
+        details: {
+            report: {
+                name: report.name,
+                status: {
+                    fi: validStatus.fi,
+                    en: validStatus.en
+                }
+            }
+        }
+    })
+}

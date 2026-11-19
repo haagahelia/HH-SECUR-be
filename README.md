@@ -932,7 +932,7 @@ Requires:
 
 Request body:
 
-Same as **/calculaterisk**
+Same as **/calculaterisk**. RepoortStatus is set to "option1" - Suunniteltu/Planned by default and can be updated at **/reports/{id}/status** endpoint. See endpoint documentation for specifics.
 
 Elements:
 
@@ -967,8 +967,17 @@ Example response:
         "organizationTypeId": 5,
         "personalInformationId": 1,
         "userId": 1,
+        "reportStatusId": 1,
         "created_at": "2026-10-02T14:16:38.000Z",
         "updated_at": "2026-10-02T14:16:38.000Z",
+        "reportStatus": {
+            "id": 1,
+            "code": "option1",
+            "fi": "Suunniteltu",
+            "en": "Planned",
+            "createdAt": "2026-10-02T14:16:38.000Z",
+            "updatedAt": "2026-10-02T14:16:38.000Z"
+        },
         "reportSnapshots": [
             {
                 "id": 1,
@@ -2461,6 +2470,36 @@ Response body:
 Requires:
 
     - Authentication, ownership or admin
+
+</details>
+
+<details>
+
+<details>
+
+<summary>
+
+**/reports/{id}/status** - PATCH: Set new status for report
+
+</summary>
+
+Requires:
+
+    - Authentication, ownership or admin
+
+Request body:
+
+```
+{
+    "status": "option2"
+}
+```
+
+Valid values #description after:
+
+```
+status: option1 | option2 | option3 | option4 | option5 # Suunniteltu / Planned | Hyväksytty/Accepted | Hylätty/Rejected | | Käynnissä/In Progress | Valmis/Finished
+```
 
 </details>
 

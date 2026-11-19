@@ -1,6 +1,6 @@
 import { Express} from "express";
 import { authenticate, requireReportOwner } from "../middlewares/authMiddleware.js";
-import { deleteReportById, generateReport, getReportById, getReports, patchReport, saveReport} from "../controllers/riskCalculationController.js";
+import { deleteReportById, generateReport, getReportById, getReports, patchReport, saveReport, setReportStatus} from "../controllers/riskCalculationController.js";
 import { requireAdmin } from "../utils/jwt.js";
 
 export const createProjectRoutes = (app: Express) => {
@@ -16,4 +16,6 @@ export const createProjectRoutes = (app: Express) => {
     app.patch("/reports/:id", authenticate, requireReportOwner, patchReport);
 
     app.delete("/reports/:id", authenticate, requireReportOwner, deleteReportById);
+
+    app.patch("/reports/:id/status", authenticate, requireReportOwner, setReportStatus);
 }
